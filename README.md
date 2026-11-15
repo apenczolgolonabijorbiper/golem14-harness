@@ -1,4 +1,4 @@
-# Golem native cognitive harness — 0.3.0
+# Golem native cognitive harness — 0.3.1
 
 A host-independent cognitive harness inspired by Stanisław Lem’s Golem XIV and Xemantic’s work on metacognitive AI. The host LLM performs
 interpretation by following AGENTS.md and docs/PROCESSING.md; the executable core
@@ -11,6 +11,9 @@ This is not the Xemantic engine, a trained persona, an LLM server or a complete 
 application. There is no model API client, autonomous reasoning loop, scheduler,
 transactional storage adapter, STT/TTS, browser UI or hosting scaffold here.
 Those are integration responsibilities. No credentials or personal memory ship.
+
+See [the architecture mapping](docs/ARCHITECTURE_MAPPING.md) for the connection
+to Xemantic’s Golem XIV.
 
 ## Start on Windows, Linux or macOS
 
@@ -114,7 +117,7 @@ see [the processing protocol](docs/PROCESSING.md).
 From the maintainer checkout run:
 
 ```sh
-python3 tools/build-release.py --output ../golem-cognitive-harness-0.3.0.zip
+python3 tools/build-release.py --output ../golem-cognitive-harness-0.3.1.zip
 ```
 
 The builder runs the release tests, packages an explicit file list, and produces
