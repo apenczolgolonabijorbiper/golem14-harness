@@ -1,5 +1,10 @@
 # Release history
 
+## 0.3.1 — Architecture mapping
+
+The distribution now includes a guide mapping its architecture to the concepts
+in Xemantic’s Golem XIV.
+
 ## 0.3.0 — Standalone baseline
 
 The runtime source is maintained directly in this repository. A deterministic

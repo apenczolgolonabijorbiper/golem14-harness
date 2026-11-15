@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 FILES = (
     'README.md', 'VERSION', 'LICENSE',
     'docs/EXTRACTION.md', 'docs/MEMORY_MODEL.md', 'docs/PROCESSING.md',
-    'docs/PROVENANCE.md',
+    'docs/PROVENANCE.md', 'docs/ARCHITECTURE_MAPPING.md',
     'integration/AGENTS.application.md', 'integration/install-cursor.py',
     'integration/test-install-cursor.py',
     'processor/init-instance.py', 'processor/memory-tool.mjs', 'processor/process.py',
