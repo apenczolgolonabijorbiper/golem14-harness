@@ -15,6 +15,15 @@ Those are integration responsibilities. No credentials or personal memory ship.
 See [the architecture mapping](docs/ARCHITECTURE_MAPPING.md) for the connection
 to Xemantic’s Golem XIV.
 
+## Codex CLI and Desktop
+
+Run `python3 integration/install-codex.py --repo /absolute/application --instance-root /absolute/private-instance`
+from a clean extracted release, then start Codex in the application folder.
+The installer verifies and copies the engine and appends shared instructions to
+the application-root AGENTS.md. For guided setup, ask Codex to read
+`vendor/golem-harness/integration/SETUP.codex.md`. See [the Codex quickstart](docs/CODEX.md)
+for Windows examples, Desktop projects, CLI commands and discovery verification.
+
 ## Guided setup in ChatGPT Work
 
 Ask a Work session to read `integration/SETUP.work.md` from the selected release

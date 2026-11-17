@@ -33,6 +33,15 @@ Keep the reusable setup record outside the engine. Use the active Work session
 for inference and the selected application adapter for persistent processing.
 See docs/CHATGPT_WORK.md for the starting and resume prompts.
 
+## Codex CLI and Desktop operation
+
+For an explicit first-install request, run integration/install-codex.py from a
+clean extracted release with --repo and --instance-root. It installs the verified
+engine and a shared application-root AGENTS.md block. Follow docs/CODEX.md for
+CLI launch, Desktop project selection, sandbox access and discovery checks.
+For guided instance setup, read integration/SETUP.codex.md. Use the active Codex
+session for inference. The application supplies persistent storage transactions.
+
 ## Cursor Desktop / Claude operation
 
 For an explicit first-install request, run integration/install-cursor.py from a
