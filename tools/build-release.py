@@ -13,6 +13,10 @@ FILES = (
     'README.md', 'VERSION', 'LICENSE',
     'docs/EXTRACTION.md', 'docs/MEMORY_MODEL.md', 'docs/PROCESSING.md',
     'docs/PROVENANCE.md', 'docs/ARCHITECTURE_MAPPING.md',
+    'docs/CHATGPT_WORK.md', 'docs/CODEX.md', 'docs/DIRECTORY_LAYOUT.md',
+    'integration/SETUP.work.md', 'integration/SETUP.codex.md',
+    'integration/SETUP.instance.md', 'integration/install-host.py',
+    'integration/install-codex.py', 'integration/test-install-codex.py',
     'integration/AGENTS.application.md', 'integration/install-cursor.py',
     'integration/test-install-cursor.py',
     'processor/init-instance.py', 'processor/memory-tool.mjs', 'processor/process.py',
@@ -49,7 +53,7 @@ def build(output):
         subprocess.run(['node', '--test', 'server/memory-core.test.mjs',
                         'server/claim-validation.test.mjs'], cwd=stage, check=True)
         for script in ['processor/test-validation.py', 'processor/test-observation-portability.py',
-                       'integration/test-install-cursor.py']:
+                       'integration/test-install-cursor.py', 'integration/test-install-codex.py']:
             subprocess.run([sys.executable, script], cwd=stage, check=True)
     with zipfile.ZipFile(output, 'x') as archive:
         for name, data in sorted(entries.items()):

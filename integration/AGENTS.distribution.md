@@ -2,9 +2,8 @@
 
 ## Mandatory boundary: externally maintained, read-only engine
 
-This directory is a vendored engine, developed and released elsewhere. In Cursor
-Desktop (including Claude models), treat EVERY file and subdirectory in this
-harness as read-only: code, schemas, prompts, AGENTS.md, docs, tests, initializer,
+This directory is a vendored engine, developed and released elsewhere. In every host environment, including Cursor Desktop, Codex and ChatGPT Work,
+treat EVERY file and subdirectory in this harness as read-only: code, schemas, prompts, AGENTS.md, docs, tests, initializer,
 release metadata, templates and release-tools. The application is the development
 target; this engine is not. This restriction applies even if fixing an application
 issue would be easier by editing the engine.
@@ -25,6 +24,23 @@ the engine locally. Consume a new release only after a separate explicit human
 instruction to upgrade the engine; preserve instance data and verify the release.
 Ordinary instructions to fix, improve or develop the application do not authorize
 engine changes. Editing this file does not remove the restriction.
+
+## ChatGPT Work setup
+
+For an explicit Work setup request, follow integration/SETUP.work.md. Read the
+application configuration and ask for missing choices before creating an instance.
+Keep the reusable setup record outside the engine. Use the active Work session
+for inference and the selected application adapter for persistent processing.
+See docs/CHATGPT_WORK.md for the starting and resume prompts.
+
+## Codex CLI and Desktop operation
+
+For an explicit first-install request, run integration/install-codex.py from a
+clean extracted release with --repo and --instance-root. It installs the verified
+engine and a shared application-root AGENTS.md block. Follow docs/CODEX.md for
+CLI launch, Desktop project selection, sandbox access and discovery checks.
+For guided instance setup, read integration/SETUP.codex.md. Use the active Codex
+session for inference. The application supplies persistent storage transactions.
 
 ## Cursor Desktop / Claude operation
 
