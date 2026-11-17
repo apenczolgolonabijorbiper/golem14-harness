@@ -1,5 +1,19 @@
 # Release history
 
+## 0.4.0 — ChatGPT Work and Codex integration
+
+- Guided instance setup for ChatGPT Work, Codex CLI and Codex Desktop uses a
+  shared procedure, host entry points and a reusable application setup record.
+- The Codex installer shares release verification and application integration
+  logic with Cursor. Existing generated Cursor blocks can adopt the shared
+  wording, and installer tests cover both host orders and no-op reruns.
+- The folder guide explains application, installed engine and instance data
+  paths, in-project or external storage, backup and deliberate sharing.
+- Runtime memory/schema and processing transaction contracts remain compatible
+  with 0.3.1. Local installer and release tests pass. Live client discovery,
+  conversational setup and adapter-backed processing acceptance remain tracked
+  in issue #4, with Cursor MDC exploration in issue #6.
+
 ## 0.3.1 — Architecture mapping
 
 The distribution now includes a guide mapping its architecture to the concepts
