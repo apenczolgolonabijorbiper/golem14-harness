@@ -15,6 +15,15 @@ Those are integration responsibilities. No credentials or personal memory ship.
 See [the architecture mapping](docs/ARCHITECTURE_MAPPING.md) for the connection
 to Xemantic’s Golem XIV.
 
+## Guided setup in ChatGPT Work
+
+Ask a Work session to read `integration/SETUP.work.md` from the selected release
+and follow it for your application. It reads existing configuration, asks for
+missing choices, presents the resolved setup, and uses the existing initializer
+for a new private instance. It records reusable settings outside the engine for
+future chats. See [the Work quickstart](docs/CHATGPT_WORK.md) for a copyable
+starting prompt, persistence requirements and acceptance scenarios.
+
 ## Start on Windows, Linux or macOS
 
 For Cursor Desktop with Claude, run the installer from a CLEAN extracted release.
