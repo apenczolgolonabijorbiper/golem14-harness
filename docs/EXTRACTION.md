@@ -1,5 +1,13 @@
 # Release history
 
+## 0.4.1 — Node 24 action runtimes
+
+The release workflow now uses actions/checkout v7.0.1, actions/setup-node v7.1.0
+and actions/setup-python v7.1.0. Their action metadata declares Node 24, removing
+the Node 20 deprecation migration warning. The harness continues to build with
+Node 24 and Python 3.12. This patch retains the 0.4.0 host integration and runtime
+contracts.
+
 ## 0.4.0 — ChatGPT Work and Codex integration
 
 - Guided instance setup for ChatGPT Work, Codex CLI and Codex Desktop uses a
