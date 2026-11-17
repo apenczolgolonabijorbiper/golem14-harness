@@ -15,9 +15,19 @@ Those are integration responsibilities. No credentials or personal memory ship.
 See [the architecture mapping](docs/ARCHITECTURE_MAPPING.md) for the connection
 to Xemantic’s Golem XIV.
 
+## Choose the application and data folders
+
+`--repo` selects your application's root. The installer places the engine at
+`--repo/vendor/golem-harness`. `--instance-root` selects that Golem instance's
+memory and observation data directory. For a new project, use one dedicated data
+directory per application, such as `C:/GolemData/MyApp`, outside the checkout.
+Data can also live inside the project, outside the installed engine and excluded
+from public version control. See [the folder guide](docs/DIRECTORY_LAYOUT.md)
+for the full mapping, both layouts and how sharing an instance works.
+
 ## Codex CLI and Desktop
 
-Run `python3 integration/install-codex.py --repo /absolute/application --instance-root /absolute/private-instance`
+Run `python3 integration/install-codex.py --repo /home/me/projects/MyApp --instance-root /home/me/golem-data/MyApp`
 from a clean extracted release, then start Codex in the application folder.
 The installer verifies and copies the engine and appends shared instructions to
 the application-root AGENTS.md. For guided setup, ask Codex to read
@@ -42,7 +52,7 @@ appends a clearly marked section to the application root AGENTS.md, and creates
 existing root instructions are preserved. Use absolute paths (PowerShell example):
 
 ```powershell
-py integration/install-cursor.py --repo "C:/Projects/MyApp" --instance-root "C:/Private/MyApp-golem"
+py integration/install-cursor.py --repo "C:/Projects/MyApp" --instance-root "C:/GolemData/MyApp"
 ```
 
 An identical rerun makes no changes. Conflicting engine versions, edited managed

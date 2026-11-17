@@ -26,6 +26,20 @@ and which settings came from existing configuration. Verify actual tool access.
 A repository link, attached file or familiar folder name alone does not establish
 write access or persistence. Ask for the missing source or connection when needed.
 
+## Explain the folder roles
+
+Read docs/DIRECTORY_LAYOUT.md from the selected harness. Explain that --repo is
+the application root, vendor/golem-harness under it is the installed engine, and
+--instance-root is this instance's data directory containing inbox, memory,
+persona and questions. Show their resolved locations in a small table before
+asking the user to choose storage. For a new application, suggest a dedicated
+external data directory per application. Explain that in-project data outside
+the engine is also supported and needs exclusion from public version control.
+Names such as GolemData/MyApp are examples. An external directory remains
+associated with the selected instance. Sharing it with another application is
+an explicit choice that shares its memory and identity. For remote storage,
+show the repository, branch and path instead of inventing a local machine path.
+
 ## Ask for missing choices
 
 Ask a compact group of questions in normal conversation. Use short choices when
@@ -35,7 +49,7 @@ permissions already supplied in the task. Ask only for unresolved choices:
 
 1. Which application repository/folder and branch should this instance use?
 2. Create a new instance, or connect to a named existing instance? Resolve its
-   exact private storage location, including repository and branch for remote
+   exact data storage location, including repository and branch for remote
    storage. For local storage resolve an absolute path outside the engine.
 3. What is the instance's purpose, preferred interaction language and initial
    domain guidance? Accept a short description. Existing identity and domain

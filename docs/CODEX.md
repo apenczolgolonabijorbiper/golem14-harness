@@ -4,19 +4,27 @@ Both hosts use the application-root AGENTS.md integration block and the packaged
 engine contract. The active Codex session supplies inference. The application
 supplies a private instance and an adapter for the processing protocol.
 
+## Choose folders
+
+`--repo` is your application root. The installer creates its engine copy at
+`--repo/vendor/golem-harness`. `--instance-root` is the data directory containing
+this instance's observations and memory. Start with a dedicated data directory
+per application. See [the folder guide](DIRECTORY_LAYOUT.md) for the recommended
+external layout, the in-project alternative and deliberate memory sharing.
+
 ## Install the integration
 
 Use a clean extracted release obtained through a trusted channel. Run this from
 its golem-harness directory on Windows:
 
 ```powershell
-py integration/install-codex.py --repo "C:/Projects/MyApp" --instance-root "C:/Private/MyApp-golem"
+py integration/install-codex.py --repo "C:/Projects/MyApp" --instance-root "C:/GolemData/MyApp"
 ```
 
 On Linux or macOS:
 
 ```sh
-python3 integration/install-codex.py --repo "/home/me/projects/my-app" --instance-root "/home/me/private/my-app-golem"
+python3 integration/install-codex.py --repo "/home/me/projects/MyApp" --instance-root "/home/me/golem-data/MyApp"
 ```
 
 The installer verifies RELEASE.json, copies the unchanged release into
@@ -43,7 +51,7 @@ are separate operations through the guided flow below.
 Start an interactive session at the application root:
 
 ```sh
-codex -C "/home/me/projects/my-app"
+codex -C "/home/me/projects/MyApp"
 ```
 
 Send this setup request in the session:
@@ -65,7 +73,7 @@ sandbox needs an additional directory, use the host's supported access controls.
 CLI versions exposing --add-dir can include the explicitly selected private path:
 
 ```sh
-codex -C "/home/me/projects/my-app" --add-dir "/home/me/private/my-app-golem"
+codex -C "/home/me/projects/MyApp" --add-dir "/home/me/golem-data/MyApp"
 ```
 
 Check your installed client's help for supported flags. Setup reports unavailable
@@ -74,7 +82,7 @@ access so the required directory can be granted explicitly.
 A noninteractive discovery check for a configured, authorized local checkout is:
 
 ```sh
-codex exec -C "/home/me/projects/my-app" --sandbox read-only "Read AGENTS.md and the referenced Golem contract. Report HARNESS_ROOT, INSTANCE_ROOT, engine version and the configured storage adapter. Do not modify files or process observations."
+codex exec -C "/home/me/projects/MyApp" --sandbox read-only "Read AGENTS.md and the referenced Golem contract. Report HARNESS_ROOT, INSTANCE_ROOT, engine version and the configured storage adapter. Do not modify files or process observations."
 ```
 
 Keep guided setup in an interactive session so the user can answer unresolved

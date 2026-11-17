@@ -5,8 +5,10 @@ import runpy
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--repo', required=True, type=Path)
-    parser.add_argument('--instance-root', required=True, type=Path)
+    parser.add_argument('--repo', required=True, type=Path,
+                        help='Application root; the engine is installed under vendor/golem-harness')
+    parser.add_argument('--instance-root', required=True, type=Path,
+                        help='Data directory for this instance (inbox, memory, persona, questions)')
     args = parser.parse_args()
     source = Path(__file__).resolve().parents[1]
     try:

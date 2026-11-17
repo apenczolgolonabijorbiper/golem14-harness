@@ -13,7 +13,7 @@ FILES = (
     'README.md', 'VERSION', 'LICENSE',
     'docs/EXTRACTION.md', 'docs/MEMORY_MODEL.md', 'docs/PROCESSING.md',
     'docs/PROVENANCE.md', 'docs/ARCHITECTURE_MAPPING.md',
-    'docs/CHATGPT_WORK.md', 'docs/CODEX.md',
+    'docs/CHATGPT_WORK.md', 'docs/CODEX.md', 'docs/DIRECTORY_LAYOUT.md',
     'integration/SETUP.work.md', 'integration/SETUP.codex.md',
     'integration/SETUP.instance.md', 'integration/install-host.py',
     'integration/install-codex.py', 'integration/test-install-codex.py',

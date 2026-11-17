@@ -30,6 +30,15 @@ verify access and validation, and report whether it is ready for manual processi
 Use the actual saved path if a different location was selected. Loading the record
 lets the agent check current access and revision and ask about missing choices.
 
+## Engine location and instance data
+
+The application normally has a verified engine at vendor/golem-harness. The
+instance data lives at the separately selected storage location and contains
+observations, memory, persona and questions. Use one dedicated instance per
+application or purpose as a starting point. For Work with a remote repository,
+record the repository, branch and path for each role explicitly. See
+[the folder guide](DIRECTORY_LAYOUT.md) for local examples and sharing rules.
+
 ## Execution and persistence
 
 The Work agent supplies inference in its session. Authorized tools read files,
