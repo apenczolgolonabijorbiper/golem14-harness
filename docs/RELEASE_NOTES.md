@@ -1,43 +1,31 @@
-# Golem XIV Harness 0.7.0
+# Golem XIV Harness 0.8.0
 
-This release implements the P1/P2 scope in tracker #20 (issues #21–#28). It targets
-fresh graph-v2 instances, strict hypotheses-v1 records and vocabulary-v2 policies.
-Old layouts, claim aliases and unversioned hypothesis records are not supported;
-incompatible previous instances may be scrapped/recreated. No migration is added.
-The configuration/ledger/lease/queue wrappers remain version 1.
+VP-013 (#35) adds `memory-tool.mjs merge --base BASE --ours OURS --theirs THEIRS
+--out OUT` for completed same-base candidate snapshots after the owner head moves.
 
-- Source capacity rises from 500 to 10,000 with schema-derived stats.capacity and
-  capacity_near_limit warnings at 80%. Linux/Windows capacity CI measures complete
-  file-reading/validation/retrieval and real Git candidate paths. See
-  CAPACITY_BENCHMARKS.md for payload and memory limitations.
-- Raw Git batch capture replaces process-per-file snapshots, preserving exact
-  bytes and CAS/index/recovery checks. A raw tree must fit the 64 MiB child budget.
-- Canonical scoped external_ids support exact value/scheme/namespace lookup,
-  explicitly declared prefix aliases, duplicate warnings and append-only history.
-  Identifier equality never merges records automatically.
-- single_valued policy detects conflicting active objects. --current and --valid-at
-  filter before truncation/graph expansion, expose ties/uncertain alternatives and
-  distinguish effective time from recording-time heuristics. As-of retrieval is
-  not a past knowledge-state reconstruction.
-- Hypotheses are parsed and validated, including version, references, confidence
-  range and evidence-bearing statuses. depends_on claims use bounded unique IDs,
-  iterative cycle checks and immutable history. dependency_changed prompts review
-  of direct changed support/refutation without deciding truth or changing status.
-- Vocabulary policy content is retained with claim guidance. Committed policy
-  changes during a lease require release/reclaim. core-policies-v2 advertises the
-  target checks; scaffolds can require capabilities before acquisition.
-- Reusable analysis/retrieval and producer recipes cover profile adoption, targeted
-  lookup, warnings/questions, semantic revision boundaries and incremental intake.
-  The synthetic repeated-fetch example emits 3 observations instead of 8 while
-  retaining all 3 unique revisions; no consumer app is modified.
-- Tool output bounds include 1,000 warnings with total/truncation metadata,
-  100 primary entities/source records and 64,000 total excerpt characters.
+- Keyed graph, queue and hypotheses merges retain history; inherited ledger rows
+  remain unchanged, while newly processed IDs on both sides refuse even if equal.
+- Exact source/evidence/journal bytes are preserved. Removal, divergent record
+  changes, immutable file edits, duplicate run paths and changed guidance refuse.
+- Both branches validate against base and the combined graph against ours.
+  Same-name new entities remain separate with bounded review warnings.
+- Conflicts produce JSON and exit 1 without output creation. Existing, overlapping,
+  engine, symlink and nonportable output paths are refused. Snapshot budgets are
+  64 MiB/50,000 entries per input; reports expose truncation metadata.
+- Concurrent Markdown edits keep ours and require regeneration. Combined graphs
+  also flag the index; inconsistent readable queues require repair. Such output
+  is a review draft, requiring summary review and full revalidation before commit.
+- Host-owned bounded source reservations may inform oldest eligible unreserved
+  selection. No reservation runtime or reference claim exclusion option is added.
 
-Local tests cover target formats and integrity, including 65 Node tests, four
-Python unittest cases and Cursor/Codex installer suites. Exact hosted platform and
-benchmark outcomes belong to the implementation PR. Build/manifest/checksum are
-produced by the release builder; no manual manifest edits are needed.
+See CANDIDATE_MERGE.md for the complete contract. The helper never modifies inputs,
+leases or Git refs and does not publish. Snapshot capture, authentication, ancestry,
+source/ledger/lease checks and atomic CAS publication remain host responsibilities.
+The reference adapter still completes only its own claimed sources. Selective
+cross-instance processed-memory transfer (#18) remains separate.
 
-P3 experiments and gated groups, attributed edges, units/structured values and
-identity reconciliation (#29–#33) remain pending. Processed-memory transfer #18
-also remains a separate feature request.
+Target formats remain graph v2, hypotheses v1 and vocabulary v2; canonical paths
+only. No backward compatibility or migration layer is introduced. The release
+builder runs the new regression suite plus existing runtime, conformance, Python
+and installer checks, then generates the manifest, ZIP and SHA-256 checksum.
+Hosted platform and capacity results are recorded in the implementation PR.

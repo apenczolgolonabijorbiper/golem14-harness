@@ -1,5 +1,13 @@
 # Release history
 
+## 0.8.0 — Completed candidate merge
+
+- VP-013 (#35): keyed three-way graph, ledger, queue and hypotheses merging.
+- Preserve inherited completion rows; reject newly duplicated processing.
+- Immutable exact-byte inputs, history checks, safe fresh output and bounded reports.
+- Explicit summary regeneration/review drafts and host-owned source reservations.
+- No schema migration, lease mutation, automatic publication or adapter scope change.
+
 ## 0.7.0 — Capacity, policies and evidence review
 
 - Target graph v2, hypotheses v1 and vocabulary v2; no old-format support or migration.
