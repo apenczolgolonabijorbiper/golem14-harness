@@ -21,7 +21,7 @@ test('profile selects only approved sections, validates vocabulary and forbids u
   const f=fixture(t,{profile:true});f.write('persona/core.md','Core');f.write('persona/one.md','One');f.write('persona/two.md','Two');
   const config={schema_version:1,profile:{path:'persona/core.md',sections:[{id:'one',path:'persona/one.md',kinds:['note']},{id:'two',path:'persona/two.md',kinds:['digest']}],vocabulary:'persona/vocabulary.json'}};
   f.write('persona/vocabulary.json',{schema_version:1,kinds:[],predicates:['links']});f.write('golem.config.json',config);
-  const p=await loadProfile(f.root,{kinds:['note','../../malicious']});assert.equal(p.guidance,'Core\n\nOne');assert.deepEqual(p.vocabulary.kinds,[]);
+  const p=await loadProfile(f.root,{kinds:['note','../../malicious']});assert.equal(p.guidance,'Core\n\nOne');assert.deepEqual(p.vocabulary.kinds,[]);const mixed=await loadProfile(f.root,{kinds:['digest','note']});assert.equal(mixed.guidance,'Core\n\nOne\n\nTwo');assert.equal(mixed.guidance_version.delivered_sha256,sha256(mixed.guidance));
   for(const path of ['inbox/input.md','vendor/engine.md','../outside.md','/tmp/file','persona/../core.md']){f.write('golem.config.json',{schema_version:1,profile:{path}});await assert.rejects(()=>loadProfile(f.root));}
   f.write('golem.config.json',{schema_version:1,profile:{path:'persona/missing.md'}});await assert.rejects(()=>loadProfile(f.root));
   symlinkSync(join(f.root,'persona/core.md'),join(f.root,'persona/link.md'));f.write('golem.config.json',{schema_version:1,profile:{path:'persona/link.md'}});await assert.rejects(()=>loadProfile(f.root),/Symlink/);
@@ -75,11 +75,26 @@ test('retrieval reports actual output and expansion limits independently of filt
 });
 
 test('profile configuration rejects invalid vocabulary, duplicate selectors and all unreadable sections',async t=>{
-  const f=fixture(t,{profile:true});const config={schema_version:1,profile:{path:'persona/profile.md',vocabulary:'persona/vocab.json'}};
+  const f=fixture(t,{profile:true});await assert.rejects(()=>loadProfile(harness),/outside the engine/);const config={schema_version:1,profile:{path:'persona/profile.md',vocabulary:'persona/vocab.json'}};
   for(const vocabulary of [{schema_version:2},{schema_version:1,kinds:['record','record']},{schema_version:1,predicates:['bad-name']},{schema_version:1,unknown:[]}]){f.write('persona/vocab.json',vocabulary);f.write('golem.config.json',config);await assert.rejects(()=>loadProfile(f.root));}
   delete config.profile.vocabulary;config.profile.sections=[{id:'missing',path:'persona/missing.md',kinds:['not-this-batch']}];f.write('golem.config.json',config);await assert.rejects(()=>loadProfile(f.root,{kinds:['note']}));
 });
 
 test('template fails closed until storage operations are implemented',async()=>{
   const {createAdapter}=await import('../adapters/template/adapter.mjs');const adapter=createAdapter({});for(const command of ['status','claim','renew','validate','commit','release-error'])assert.throws(()=>adapter[command]({}),/not implemented/);
+});
+
+test('compound filters and query/source seeds have deterministic endpoint closure',()=>{
+  const graph=chain();const sid='00000000-0000-4000-8000-000000000001';graph.sources=[{id:sid}];graph.claims[1].sources=[{observation_id:sid,quote:'Unique quotation'}];
+  const options={kind:'file',type:'person,other',predicate:'links',status:'all'};
+  const query=retrieveContext(graph,{...options,query:'quotation'});assert.deepEqual(query.entities.map(e=>e.id),['ent-2']);assert.ok(query.claims.some(c=>c.id==='clm-1'));
+  const source=retrieveContext(graph,{...options,source_id:sid});assert.ok(source.claims.some(c=>c.id==='clm-1'));assert.equal(source.sources[0].id,sid);
+  assert.equal(retrieveContext(graph,{...options,type:'place',query:'quotation'}).entities.length,0);
+  for(const c of query.claims)for(const id of [c.subject_id,c.speaker_id,c.object.entity_id])assert.ok([...query.entities,...query.supporting_entities].some(e=>e.id===id));
+});
+
+test('breadth-first traversal handles equal-length branches and cycles with stable parents',()=>{
+  const graph=chain(),make=(id,a,b)=>({...graph.claims[0],id,subject_id:'ent-'+a,object:{entity_id:'ent-'+b}});
+  graph.claims=[make('clm-a',0,1),make('clm-b',0,2),make('clm-c',1,3),make('clm-d',2,3),make('clm-e',3,4),make('clm-cycle',1,2)];
+  const result=retrieveContext(graph,{entity_id:'ent-0',hops:3});assert.equal(result.traversal['clm-e'].hop,3);assert.equal(result.traversal['clm-e'].parent_entity_id,'ent-3');assert.equal(result.traversal['clm-cycle'].parent_entity_id,'ent-1');assert.equal(new Set(result.claims.map(c=>c.id)).size,6);assert.deepEqual(result,retrieveContext({...graph,claims:[...graph.claims].reverse()},{entity_id:'ent-0',hops:3}));
 });

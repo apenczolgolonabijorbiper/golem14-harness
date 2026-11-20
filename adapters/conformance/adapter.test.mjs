@@ -13,7 +13,7 @@ function invoke(f,command,...args){const r=spawnSync(cli[0],[...cli.slice(1),com
 test('CLI conformance: no work, age gating, claim/owner checks, renew and error release',t=>{
   const f=fixture(t),before=f.git('rev-parse','HEAD');assert.equal(invoke(f,'claim').status,'no-work');assert.equal(f.git('rev-parse','HEAD'),before);
   f.observe(1,{age:0});assert.equal(invoke(f,'status').waiting_for_age.length,1);assert.equal(invoke(f,'claim').status,'no-work');
-  f.observe(1);const claimed=invoke(f,'claim');assert.equal(claimed.status,'claimed');assert.throws(()=>invoke(f,'claim'),/lease/);
+  f.observe(1);const claimed=invoke(f,'claim');assert.equal(claimed.status,'claimed');assert.equal('guidance_version' in claimed,false);assert.throws(()=>invoke(f,'claim'),/lease/);
   const wrong='00000000-0000-4000-8000-000000000099';assert.throws(()=>invoke(f,'renew','--run',wrong),/own/);assert.throws(()=>invoke(f,'release-error','--run',wrong),/own/);
   invoke(f,'renew','--run',claimed.run_id);invoke(f,'release-error','--run',claimed.run_id,'--reason','not stored');const status=invoke(f,'status');assert.equal(status.lease.status,'error');assert.equal(status.processed,0);assert.equal(status.ready.length,1);
 });
@@ -28,7 +28,7 @@ test('CLI conformance: exact candidate, successful completion, scope and no-op r
   assert.equal(invoke(f,'validate').ok,true);
 });
 test('CLI conformance: invalid graph and changed sources keep inputs pending',t=>{
-  const f=fixture(t);f.observe();let claim=invoke(f,'claim');f.analyze(claim,{bad:true});const ledger=f.read('memory/processed.json');assert.throws(()=>invoke(f,'commit','--run',claim.run_id),/validation/i);assert.equal(f.read('memory/processed.json'),ledger);assert.equal(invoke(f,'status').lease.status,'error');
+  const f=fixture(t);f.observe();let claim=invoke(f,'claim');f.analyze(claim,{bad:true});const ledger=f.read('memory/processed.json');assert.throws(()=>invoke(f,'commit','--run',claim.run_id),/validation/i);assert.equal(f.read('memory/processed.json'),ledger);assert.equal(invoke(f,'status').lease.status,'error');assert.match(invoke(f,'status').lease.reason,/Claim source\/quote mismatch/);
   claim=invoke(f,'claim');f.write(`memory/runs/${claim.run_id}.md`,'Review');f.write(claim.sources[0].path,f.read(claim.sources[0].path)+'Changed');assert.throws(()=>invoke(f,'commit','--run',claim.run_id),/source changed/i);assert.equal(invoke(f,'status').lease.status,'error');assert.equal(invoke(f,'status').processed,0);
 });
 test('CLI conformance: unsafe output paths are rejected without releasing the lease',t=>{
