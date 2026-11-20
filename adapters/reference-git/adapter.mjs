@@ -14,6 +14,7 @@ const json=value=>Buffer.from(JSON.stringify(value,null,2)+'\n');
 const hash=bytes=>bytes===null?null:createHash('sha256').update(bytes).digest('hex');
 const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 export class AdapterError extends Error {}
+function runChild(...args){try{return boundedSpawn(...args);}catch(e){throw new AdapterError(e.message);}}
 
 // The local filesystem implementation supports one dedicated, attached-branch instance clone.
 // Hooks are factory-only test seams, never CLI-loaded executable configuration.
@@ -22,7 +23,7 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
   if(within(engine,root)||within(root,engine)||physicallyWithin(engine,root)||physicallyWithin(root,engine))throw new AdapterError('Instance must be outside the installed engine');
   const exec=(args,{input,env={},encoding=null}={})=>{
     const inherited={...process.env};for(const name of ['GIT_INDEX_FILE','GIT_DIR','GIT_WORK_TREE','GIT_COMMON_DIR','GIT_OBJECT_DIRECTORY','GIT_ALTERNATE_OBJECT_DIRECTORIES'])delete inherited[name];
-    const r=boundedSpawn(git,['-C',root,...args],{input,encoding,env:{...inherited,GIT_OPTIONAL_LOCKS:'0',...env},maxBuffer:64*1024*1024});
+    const r=runChild(git,['-C',root,...args],{input,encoding,env:{...inherited,GIT_OPTIONAL_LOCKS:'0',...env},maxBuffer:64*1024*1024});
     if(r.error||r.status!==0)throw new AdapterError('Git operation refused: '+args[0]);
     return encoding?r.stdout:r.stdout;
   };
@@ -53,13 +54,28 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
     }
     file(path,{optional:true});writeFileSync(join(root,path),bytes);
   }
-  function blob(commit,path,optional=false) {
-    instancePath(path);
-    const rows=exec(['ls-tree','-z',commit,'--',path]).toString('utf8').split('\0').filter(Boolean);
-    if(!rows.length){if(optional)return null;throw new AdapterError('Committed file missing: '+path);}
-    const match=rows[0].match(/^(100644|100755) blob ([0-9a-f]+)\t/);
-    if(!match)throw new AdapterError('Unsafe committed path: '+path);
-    return exec(['cat-file','blob',match[2]]);
+  // One raw batch per immutable tree: no checkout filters, no process per file.
+  const snapshots=new Map();
+  function snapshot(commit){
+    if(snapshots.has(commit))return snapshots.get(commit);
+    const rows=exec(['ls-tree','-r','-z',commit]).toString('utf8').split('\0').filter(Boolean).map(row=>{
+      const m=row.match(/^(100644|100755) blob ([0-9a-f]+)\t([\s\S]+)$/);if(!m)throw new AdapterError('Candidate contains unsupported Git objects');
+      return {mode:m[1],sha:m[2],path:instancePath(m[3])};
+    });
+    const hashes=[...new Set(rows.map(r=>r.sha))],bytes=exec(['cat-file','--batch'],{input:hashes.join('\n')+(hashes.length?'\n':'')}),objects=new Map();let offset=0;
+    for(const sha of hashes){
+      const end=bytes.indexOf(10,offset),header=bytes.subarray(offset,end).toString('ascii'),m=header.match(/^([0-9a-f]+) blob ([0-9]+)$/);
+      if(end<0||!m||m[1]!==sha)throw new AdapterError('Invalid Git object batch');
+      const size=Number(m[2]),start=end+1,finish=start+size;if(!Number.isSafeInteger(size)||finish>=bytes.length||bytes[finish]!==10)throw new AdapterError('Truncated Git object batch');
+      objects.set(sha,bytes.subarray(start,finish));offset=finish+1;
+    }
+    if(offset!==bytes.length)throw new AdapterError('Unexpected Git batch bytes');
+    const result=new Map(rows.map(row=>[row.path,{...row,bytes:objects.get(row.sha)}]));
+    snapshots.set(commit,result);while(snapshots.size>2)snapshots.delete(snapshots.keys().next().value);return result;
+  }
+  function blob(commit,path,optional=false){
+    instancePath(path);const row=snapshot(commit).get(path);
+    if(!row){if(optional)return null;throw new AdapterError('Committed file missing: '+path);}return row.bytes;
   }
   function state(commit=head()) {
     const lease=JSON.parse(utf8(blob(commit,LEASE))),ledger=JSON.parse(utf8(blob(commit,LEDGER)));
@@ -197,6 +213,8 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
     for(const path of [...mandatory,layout.hypotheses_path,journal,...paths])entries.set(path,file(path));
     for(const source of s.lease.sources){entries.set(source.path,file(source.path));const evidence=`evidence/${source.id}.json`;const bytes=file(evidence,{optional:true});if(bytes)entries.set(evidence,bytes);}
     if(s.lease.guidance_version){
+      const bound=await profileAt(s.head,[...new Set(s.lease.sources.map(x=>x.kind).filter(Boolean))]);
+      if(JSON.stringify(bound?.guidance_version)!==JSON.stringify(s.lease.guidance_version))throw new AdapterError('Claimed profile changed; release and reclaim before completion');
       const identity=sha256(json(s.lease.guidance_version));
       if(!utf8(journalBytes).split('\n').includes('guidance_version: '+identity))throw new AdapterError('Journal guidance_version missing or mismatched');
       const path=`memory/runs/${run}.guidance.json`,bytes=blob(s.head,path),snapshot=JSON.parse(utf8(bytes));
@@ -210,19 +228,18 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
     const built=treeFrom(s.head,entries),stage=join(built.temporary,'snapshot');mkdirSync(stage);
     try{
       // Read blobs, never checkout filters; all candidate bytes equal committed bytes.
-      const rows=exec(['ls-tree','-r','-z',built.tree]).toString('utf8').split('\0').filter(Boolean);
-      for(const row of rows){const m=row.match(/^(100644|100755) blob ([0-9a-f]+)\t([\s\S]+)$/);if(!m)throw new AdapterError('Candidate contains unsupported Git objects');const path=instancePath(m[3]);mkdirSync(dirname(join(stage,path)),{recursive:true});writeFileSync(join(stage,path),exec(['cat-file','blob',m[2]]));}
+      for(const [path,row]of snapshot(built.tree)){mkdirSync(dirname(join(stage,path)),{recursive:true});writeFileSync(join(stage,path),row.bytes);}
       // Runtime-required empty directories are not represented in Git trees.
       mkdirSync(join(stage,'inbox'),{recursive:true});
       const previous=join(built.temporary,'previous.json');writeFileSync(previous,blob(s.head,'memory/graph.json'));
-      const r=boundedSpawn(node,[join(engine,'processor/memory-tool.mjs'),'validate','--root',stage,'--previous',previous],{encoding:'utf8',maxBuffer:8*1024*1024});
-      if(r.error||r.status!==0){const first=(r.stderr??'').split('\n')[0];throw new AdapterError('Candidate validation failed: '+(first.startsWith('Memory validation failed: ')?first.slice(26,526):'invalid snapshot; inspect with memory-tool validate'));}
+      const r=runChild(node,[join(engine,'processor/memory-tool.mjs'),'validate','--root',stage,'--previous',previous],{encoding:'utf8',maxBuffer:8*1024*1024});
+      if(r.error||r.status!==0){const first=(r.stderr??'').split('\n')[0];throw new AdapterError('Candidate validation failed: '+(first.startsWith('Memory validation failed: ')?first.slice(26,526):first.startsWith('Hypotheses file invalid: ')?first.slice(0,500):'invalid snapshot; inspect with memory-tool validate'));}
       const validation=JSON.parse(r.stdout);
       return {...built,entries,validation,files:[...entries.keys()],left_uncommitted:dirty().filter(p=>!entries.has(p))};
     }catch(e){rmSync(built.temporary,{recursive:true,force:true});throw e;}
   }
   const api={
-    async status(){const s=state();return {contract_version:1,capabilities:['candidate-validation-v1','profile-guidance-v1'],head:s.head,lease:{...s.lease,held:s.held},...scan(s),recovery_required:existsSync(marker)||[LEASE,LEDGER].some(path=>hash(file(path,{optional:true}))!==hash(blob(s.head,path)))};},
+    async status(){const s=state();return {contract_version:1,capabilities:['candidate-validation-v1','profile-guidance-v1','core-policies-v2'],head:s.head,lease:{...s.lease,held:s.held},...scan(s),recovery_required:existsSync(marker)||[LEASE,LEDGER].some(path=>hash(file(path,{optional:true}))!==hash(blob(s.head,path)))};},
     async claim({max=20}={}){return locked(async()=>{
       if(!Number.isInteger(Number(max))||Number(max)<1||Number(max)>20)throw new AdapterError('max must be an integer in 1..20');
       const s=state();assertLocalProtocol(s);
@@ -246,7 +263,7 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
     async renew({run}={}){return locked(async()=>{const s=state();assertLocalProtocol(s);own(s,run);const lease={...s.lease,expires_at:new Date(now()+900000).toISOString()};const next=publish(s,new Map([[LEASE,json(lease)]]),[LEASE],`renew ${run}`);return {head:next,expires_at:lease.expires_at};});},
     async 'release-error'({run}={}){return locked(async()=>{const s=state();assertLocalProtocol(s);const next=errorLease(s,run);return {status:'error',head:next};});},
     async validate({run,outputs}={}){
-      if(!run){const s=state(),tmp=mkdtempSync(join(gitdir,'golem-validate-'));try{const previous=join(tmp,'previous.json');writeFileSync(previous,blob(s.head,'memory/graph.json'));const r=boundedSpawn(node,[join(engine,'processor/memory-tool.mjs'),'validate','--root',root,'--previous',previous],{encoding:'utf8'});if(r.status!==0)throw new AdapterError('Working-tree validation failed');return {ok:true,mode:'working-tree',head:s.head,output:JSON.parse(r.stdout)};}finally{rmSync(tmp,{recursive:true,force:true});}}
+      if(!run){const s=state(),tmp=mkdtempSync(join(gitdir,'golem-validate-'));try{const previous=join(tmp,'previous.json');writeFileSync(previous,blob(s.head,'memory/graph.json'));const r=runChild(node,[join(engine,'processor/memory-tool.mjs'),'validate','--root',root,'--previous',previous],{encoding:'utf8',maxBuffer:8*1024*1024});if(r.status!==0)throw new AdapterError('Working-tree validation failed: '+(r.stderr??'').split('\n')[0].slice(0,500));return {ok:true,mode:'working-tree',head:s.head,output:JSON.parse(r.stdout)};}finally{rmSync(tmp,{recursive:true,force:true});}}
       const s=state();const built=await candidate(s,run,outputs);try{return {ok:true,mode:'candidate',head:s.head,output:built.validation,files:built.files,left_uncommitted:built.left_uncommitted};}finally{rmSync(built.temporary,{recursive:true,force:true});}
     },
     async commit({run,outputs}={}){return locked(async()=>{
@@ -261,7 +278,7 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
         own(state(),run);try{sourceCheck(s);}catch(e){errorLease(s,run);throw new AdapterError('Claimed source changed; inputs remain pending');}
         const next=publish(s,built.entries,[LEDGER,LEASE],`complete ${run}`,built.tree);
         const saved=state(next);for(const source of s.lease.sources)if(!saved.ledger.observations.some(r=>r.id===source.id&&r.source_sha256===source.sha256))throw new AdapterError('Persisted completion verification failed');
-        return {status:'committed',head:next,processed:s.lease.observation_ids,files:built.files,left_uncommitted:dirty(),warnings:built.validation.warnings??[]};
+        return {status:'committed',head:next,processed:s.lease.observation_ids,files:built.files,left_uncommitted:dirty(),warnings:built.validation.warnings??[],warning_summary:built.validation.warning_summary};
       }finally{rmSync(built.temporary,{recursive:true,force:true});}
     });}
   };

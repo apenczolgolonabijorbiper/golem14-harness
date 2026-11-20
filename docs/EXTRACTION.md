@@ -1,5 +1,15 @@
 # Release history
 
+## 0.7.0 — Capacity, policies and evidence review
+
+- Target graph v2, hypotheses v1 and vocabulary v2; no old-format support or migration.
+- 10,000-source measured envelope, capacity reporting and bounded tool outputs.
+- Scoped identifiers, conflict-aware current/as-of retrieval, strict hypotheses
+  and immutable dependencies with direct changed-evidence warnings.
+- Batch Git snapshots and immutable policy provenance retain transaction safety.
+- Synthetic analysis/intake recipes and Linux/Windows capacity measurements.
+- Implements tracker #20 P1/P2 scope (#21–#28); P3 work remains separate.
+
 ## 0.6.1 — Bounded subprocesses and upgrade instructions
 
 - VI-011: child timeouts, closed stdin, noninteractive Git and opt-in command

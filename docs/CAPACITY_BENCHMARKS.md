@@ -1,0 +1,80 @@
+# Capacity measurement and supported envelope
+
+The target graph has 10,000 source slots, 5,000 entities and 20,000 claims. The
+source maximum is a measured item envelope, not unlimited retention or a promise
+that arbitrary-size payloads fit. No segmentation/archival mechanism is added.
+The graph itself and all referenced sources must fit host memory. The reference
+Git adapter additionally caps each raw child output at 64 MiB, so the complete
+committed tree must fit its raw batch envelope. Do not store unrelated large
+artifacts in a dedicated instance repository.
+
+Reproduce from the maintainer checkout or the staged release:
+
+```sh
+node tools/benchmark-capacity.mjs 500,2000,5000,10000 256
+node tools/benchmark-capacity.mjs 2000 2048
+```
+
+Each case creates synthetic external data and cleans it afterward. All cases use
+5,000 entities and 20,000 claims with exact source provenance. The CLI baseline
+contains N-1 processed observations; a real adapter candidate validates and commits
+the Nth observation. In-memory validation uses N and checks the previous graph.
+CLI validate/stats/context each execute twice in fresh Node processes. Labels cold
+and warm mean first/repeated call, not a flushed OS disk cache (fixture setup/Git
+has already touched files). Nominal body sizes are 256 or 2,048 characters; these
+are not large-diff or maximum-size-quotation stress fixtures.
+
+The script prints one JSON line per case: platform/Node, source and body counts,
+validation/retrieval times, CLI output bytes, candidate validation/commit times,
+working-tree validation time and parent peak RSS. An additional isolated CLI
+probe per operation (tools/measure-cli.mjs) records that child's own peak RSS.
+Parent peak is process-wide/cumulative; these measurements are NOT a simultaneous
+combined parent+validator peak, and do not instrument the candidate child. Byte/heap limits must be reviewed for a real deployment.
+No universal workstation completion-time guarantee is made.
+
+Local Linux pre-release measurements (Node 24.22.3, small notes) observed roughly
+1.2/1.5/2.3/3.7 seconds for full CLI validation at 500/2,000/5,000/10,000 source
+scenarios. Candidate validation/commit at 10,000 took about 5.1/5.9 seconds;
+parent peak was about 453 MiB. A later nominal-256 run observed 3.4/3.5 seconds
+first/repeated CLI validation and 5.2/6.2 seconds candidate validation/commit with
+parent peak about 510 MiB. The 2,000-source 2,048-character probe observed about
+1.8 seconds CLI validation and 2.9/3.1 seconds candidate validation/commit.
+These runs preceded the final warning-output summary and working-tree timing
+addition. Final platform evidence and the exact tested revision are recorded in
+the implementation PR; unrun host results are not implied by these local numbers.
+
+The capacity CI job runs Linux and Windows, separately from packaged correctness
+checks. Accept the chosen maximum only when all cases complete within existing
+60-second child deadlines and candidate validation succeeds on both platforms.
+Use per-platform output for final release evidence. The fixed 20-minute CI job
+budget is runner-specific, not a workstation performance claim.
+
+Git candidate snapshots use one ls-tree and one binary-length-framed cat-file
+batch per immutable tree. This replaces process-per-blob capture. Existing tests
+cover raw LF/CRLF bytes, staged work, changed sources, concurrent heads, failed
+candidates and post-CAS recovery. At most two snapshots are retained per adapter.
+Collection limits/near-limit warnings come from the graph schema, not a profile.
+Observe warnings at 80%; maximum+1 fails before completion publication.
+
+Synthetic fixtures set core.autocrlf=false (the dedicated line-ending conformance
+test explicitly enables it) and disable automatic background Git maintenance (gc.auto=0,
+maintenance.auto=false), signing and hooks to avoid inherited/background jobs
+contaminating timings or holding Windows cleanup files open. Cleanup uses bounded
+filesystem retries for transient locks. Production maintenance remains host-owned.
+The first hosted Windows run passed 500/2,000/5,000-source cases but failed deleting
+the 10,000-source fixture while an orphan Git process remained; no successful
+10,000-source Windows result is claimed from that run. See the final PR evidence.
+
+Follow-up diagnostics identified the large Windows fixture setup failure as
+ENOBUFS in git add: inherited autocrlf emitted thousands of per-file conversion
+warnings, filling the helper's bounded output buffer and leaving a Git process
+holding files during cleanup. Explicit fixture LF settings remove this diagnostic
+flood; production Git settings are not changed. The original cleanup-only failure
+must not be interpreted as evidence of a validator or capacity timeout.
+
+Fixture preparation indexes at most 256 explicit paths per Git add command, without
+raising the 60-second child timeout. This bulk setup is outside the timed normal
+adapter transaction (which claims at most 20 observations). A later Windows run
+exposed a setup Git add timeout at 5,000 files even after warning flood suppression;
+batching bounds that preparation step. Actual engine CLI/candidate measurements
+remain unchanged and must still pass their existing deadlines.

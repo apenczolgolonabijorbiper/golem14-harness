@@ -8,7 +8,7 @@ function fixture(){
   const body='Synthetic Alice visited Test City.',raw=`---\nid: ${sid}\nrecorded_at: ${at}\n---\n\n${body}\n`;
   const source={id:sid,path:`inbox/${sid}.md`,sha256:createHash('sha256').update(raw).digest('hex'),recorded_at:at,body};
   const sources={[sid]:source},entity=(id,type,label)=>({id,type,label,aliases:[],source_ids:[sid],created_at:created,uncertainty:[]});
-  const graph={schema_version:1,updated_at:created,sources:[{id:sid,path:source.path,sha256:source.sha256,recorded_at:at}],entities:[entity('ent-alice','person','Alice'),entity('ent-city','place','Test City')],claims:[{id:'clm-visit',subject_id:'ent-alice',speaker_id:'ent-alice',predicate:'visited',object:{entity_id:'ent-city'},classification:'user_declaration',sources:[{observation_id:sid,quote:body}],asserted_at:at,valid_time:{from:null,to:null,expression:null,precision:'unknown'},status:'active',supersedes:[],uncertainty:[],created_at:created}]};
+  const graph={schema_version:2,updated_at:created,sources:[{id:sid,path:source.path,sha256:source.sha256,recorded_at:at}],entities:[entity('ent-alice','person','Alice'),entity('ent-city','place','Test City')],claims:[{id:'clm-visit',subject_id:'ent-alice',attributed_to_id:'ent-alice',predicate:'visited',object:{entity_id:'ent-city'},classification:'source_assertion',sources:[{observation_id:sid,quote:body}],asserted_at:at,valid_time:{from:null,to:null,expression:null,precision:'unknown'},status:'active',supersedes:[],uncertainty:[],created_at:created}]};
   const ledger={schema_version:1,observations:[{id:sid,status:'processed',source_file:source.path,source_sha256:source.sha256}]},queue={schema_version:1,questions:[{id:'q1',text:'Where?',status:'open',source_observation_id:sid}]};
   return {graph,sources,ledger,queue,raw};
 }
@@ -17,7 +17,7 @@ test('schema and provenance reject corruption and dangling references',()=>{
   for(const mutate of [g=>g.entities.push(structuredClone(g.entities[0])),g=>g.claims[0].subject_id='ent-missing',g=>g.sources[0].sha256='0'.repeat(64),g=>g.claims[0].sources[0].quote='Not in source',g=>g.claims[0].valid_time.from='2026-01-01T12:00:00Z',g=>g.claims[0].asserted_at=created,g=>g.claims[0].status='superseded',g=>g.claims[0].unknown=true,g=>g.entities[0].created_at='2026-02-30T12:00:00Z']){
     const g=structuredClone(f.graph);mutate(g);assert.ok(validateMemory(g,f).length);
   }
-  assert.ok(schemaErrors({...f.graph,schema_version:2}).length);
+  assert.ok(schemaErrors({...f.graph,schema_version:3}).length);
   const bad=structuredClone(f);bad.ledger.observations[0].source_sha256='wrong';assert.ok(validateMemory(bad.graph,bad).length);
   const q=structuredClone(f);q.queue.questions[0].status='closed';assert.ok(validateMemory(q.graph,q).length);
 });

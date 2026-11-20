@@ -2,7 +2,7 @@
   "type": "object",
   "properties": {
     "schema_version": {
-      "const": 1
+      "const": 2
     },
     "updated_at": {
       "type": "string",
@@ -13,7 +13,7 @@
       "items": {
         "$ref": "#/$defs/source"
       },
-      "maxItems": 500
+      "maxItems": 10000
     },
     "entities": {
       "type": "array",
@@ -125,6 +125,14 @@
         "kind": {
           "type": "string",
           "pattern": "^[a-z][a-z0-9_-]{1,40}$"
+        },
+        "external_ids": {
+          "type": "array",
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/external_id"
+          }
         }
       },
       "required": [
@@ -256,11 +264,6 @@
           "type": "string",
           "pattern": "^[a-z][a-z0-9_-]{2,100}$"
         },
-        "speaker_id": {
-          "type": "string",
-          "pattern": "^[a-z][a-z0-9_-]{2,100}$",
-          "description": "Legacy alias of attributed_to_id; retained historical claims must keep their original field."
-        },
         "predicate": {
           "type": "string",
           "pattern": "^[a-z][a-z0-9_]{1,80}$"
@@ -273,9 +276,7 @@
           "enum": [
             "source_assertion",
             "hypothesis",
-            "corroborated",
-            "user_declaration",
-            "independently_confirmed"
+            "corroborated"
           ]
         },
         "sources": {
@@ -283,7 +284,8 @@
           "items": {
             "$ref": "#/$defs/reference"
           },
-          "minItems": 1
+          "minItems": 1,
+          "maxItems": 32
         },
         "asserted_at": {
           "type": "string",
@@ -324,6 +326,15 @@
           "type": "string",
           "pattern": "^[a-z][a-z0-9_-]{2,100}$",
           "description": "Entity to which the source assertion is attributed: a person, organization, system or account; not necessarily a human speaker."
+        },
+        "depends_on": {
+          "type": "array",
+          "maxItems": 128,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_-]{2,100}$"
+          }
         }
       },
       "required": [
@@ -338,21 +349,35 @@
         "status",
         "supersedes",
         "uncertainty",
-        "created_at"
+        "created_at",
+        "attributed_to_id"
       ],
-      "additionalProperties": false,
-      "anyOf": [
-        {
-          "required": [
-            "attributed_to_id"
-          ]
+      "additionalProperties": false
+    },
+    "external_id": {
+      "type": "object",
+      "properties": {
+        "scheme": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]{1,40}$"
         },
-        {
-          "required": [
-            "speaker_id"
-          ]
+        "namespace": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
         }
-      ]
+      },
+      "required": [
+        "scheme",
+        "namespace",
+        "value"
+      ],
+      "additionalProperties": false
     }
   }
 }
