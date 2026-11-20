@@ -25,3 +25,9 @@ installer regression scripts. Windows/macOS results are recorded in the PR.
 Regression checks exercise a deliberately stalled child, EOF/noninteractive Git,
 exact binary input, and the existing conformance, memory and installer suites.
 The 0.6.0 layout and claim compatibility rules are unchanged.
+
+VI-011 clarification after a complete workstation run: 0.6.0 passes all 17
+conformance tests in about 18 minutes, with overlapping workloads. The reported
+non-completion is withdrawn. Missing child timeouts remain confirmed; workstation
+performance improvement is not claimed. See ADAPTERS.md for measured durations
+and the distinction between child limits and hosted CI's job budget.

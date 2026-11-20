@@ -144,12 +144,12 @@ line-ending attributes. The release builder runs these from the staged package.
 Actual platform results are recorded in the implementation PR; no unrun Desktop,
 Windows, macOS or remote-host tests are implied by conformance.
 
-### Windows and stalled child diagnostics (0.6.1)
+### Windows duration and child diagnostics (0.6.1)
 
 In PowerShell, set `$env:GOLEM_TRACE_COMMANDS='1'` before running
 `node --test --test-reporter=tap adapters/conformance/adapter.test.mjs`.
-This prints each synchronous child command before starting it; the last line names
-an unresponsive child. Tracing is opt-in: command arguments and child diagnostics
+This prints each synchronous child command before starting it; recent lines show
+which commands are in flight. A command taking time is not proof of a hang. Tracing is opt-in: command arguments and child diagnostics
 can contain private data. Remove the setting after diagnosis.
 
 Fixtures select `py -3` on Windows; set GOLEM_PYTHON to one real executable path
@@ -163,7 +163,20 @@ timeouts alone cannot interrupt JavaScript blocked in spawnSync.
 
 A normal run emits a result for every test; an unavailable symlink privilege emits
 an explicit diagnostic and only that symlink assertion is omitted, while the
-remaining unsafe-path checks still run. The expected Windows completion budget
-is under ten minutes. Hosted Windows CI verifies the package, but does not prove
-that the original reporting workstation is fixed. Its exact stalled subprocess
-was not identified from the supplied report; collect the trace if it persists.
+remaining unsafe-path checks still run.
+
+Observed timings are environment-specific: hosted Windows CI completes the full
+packaged Node suite in roughly two to three minutes. The reporting Windows 10
+workstation completed all 17 conformance tests on 0.6.0 in 1,078 seconds (about
+18 minutes), with individual tests taking 13.6 to 95 seconds. That run overlapped
+another run for part of its duration, so it is not an isolated performance baseline.
+The earlier claim that the suite did not finish was withdrawn after this result.
+No particular stalled subprocess or cause of the earlier silence was established.
+
+Run one suite at a time, record wall time and per-test results, and use command
+tracing when diagnosing a slow run. A test contains many child invocations: the
+60/180-second child limits are not a total test or suite budget. The ten-minute
+hosted CI job limit is specific to those runners, not a workstation guarantee.
+The 0.6.1 patch adds bounded execution and visibility; it does not claim a measured
+speedup on the reporting workstation. Further optimization needs a non-overlapping
+baseline and command-level profiling without removing conformance checks.
