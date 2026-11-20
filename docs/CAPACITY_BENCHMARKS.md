@@ -71,3 +71,10 @@ warnings, filling the helper's bounded output buffer and leaving a Git process
 holding files during cleanup. Explicit fixture LF settings remove this diagnostic
 flood; production Git settings are not changed. The original cleanup-only failure
 must not be interpreted as evidence of a validator or capacity timeout.
+
+Fixture preparation indexes at most 256 explicit paths per Git add command, without
+raising the 60-second child timeout. This bulk setup is outside the timed normal
+adapter transaction (which claims at most 20 observations). A later Windows run
+exposed a setup Git add timeout at 5,000 files even after warning flood suppression;
+batching bounds that preparation step. Actual engine CLI/candidate measurements
+remain unchanged and must still pass their existing deadlines.

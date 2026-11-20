@@ -25,7 +25,14 @@ export async function benchmark(count,bodyCharacters=256){
     const v=timed(()=>validateMemory(full.graph,{...full,previous:full.graph}));out.in_memory_validate_ms=v.ms;out.in_memory_errors=v.value;
     out.in_memory_context_ms=timed(()=>retrieveContext(full.graph,{query:'Synthetic',limit:100})).ms;
     const f=fixture({after:fn=>cleanups.push(fn)});for(const [path,text]of base.notes)f.write(path,text);
-    f.write('memory/graph.json',base.graph);f.write('memory/processed.json',base.ledger);f.write('memory/runs/baseline.md','Synthetic baseline');f.save();
+    f.write('memory/graph.json',base.graph);f.write('memory/processed.json',base.ledger);f.write('memory/runs/baseline.md','Synthetic baseline');
+    // Fixture construction is not a normal <=20-source transaction. Keep even
+    // initial bulk indexing bounded on slower Windows disks, rather than raising
+    // the per-child timeout or letting cleanup hide the original setup failure.
+    const paths=[...base.notes.keys(),'memory/graph.json','memory/processed.json','memory/runs/baseline.md'];
+    out.setup_add_batches=Math.ceil(paths.length/256);
+    for(let start=0;start<paths.length;start+=256)command('git',['-C',f.root,'add','--pathspec-from-file=-','--pathspec-file-nul'],{input:paths.slice(start,start+256).join('\0')+'\0'});
+    f.git('commit','-qm','Synthetic capacity baseline');
     for(const operation of ['validate','stats','context'])for(const temperature of ['cold','warm']){
       const r=timed(()=>command(process.execPath,[join(harness,'processor/memory-tool.mjs'),operation,'--root',f.root,...(operation==='context'?['--query','Synthetic']:[])],{maxBuffer:32*1024*1024}));
       out[operation+'_'+temperature+'_ms']=r.ms;out[operation+'_output_bytes']=Buffer.byteLength(r.value);
