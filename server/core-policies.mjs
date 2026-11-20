@@ -58,11 +58,14 @@ export function temporalSelection(graph,options,vocabulary){
       const key=JSON.stringify([c.subject_id,c.predicate]);if(!groups.has(key))groups.set(key,[]);groups.get(key).push(c);
     }
     for(const [key,rows]of groups){
-      const effective=rows.filter(c=>c.valid_time.from&&c.valid_time.precision!=='unknown'&&Date.parse(c.valid_time.from)<=now&&(!c.valid_time.to||now<=Date.parse(c.valid_time.to)));
-      const uncertain=rows.filter(c=>!c.valid_time.from||c.valid_time.precision==='unknown');
-      const pool=effective.length?effective:uncertain;
-      const basis=effective.length?'valid_time.from':'asserted_at_heuristic';
-      const value=c=>Date.parse(basis==='valid_time.from'?c.valid_time.from:c.asserted_at);
+      const inRange=c=>(!c.valid_time.from||Date.parse(c.valid_time.from)<=now)&&(!c.valid_time.to||now<=Date.parse(c.valid_time.to));
+      const effective=rows.filter(c=>c.valid_time.from&&c.valid_time.precision==='exact'&&inRange(c));
+      const reported=rows.filter(c=>c.valid_time.from&&['partial','as_reported'].includes(c.valid_time.precision)&&inRange(c));
+      const unknown=rows.filter(c=>(!c.valid_time.from||c.valid_time.precision==='unknown')&&inRange(c));
+      const uncertain=rows.filter(c=>!c.valid_time.from||c.valid_time.precision!=='exact');
+      const pool=effective.length?effective:reported.length?reported:unknown;
+      const basis=effective.length?'valid_time.from':reported.length?'valid_time.from_uncertain':'asserted_at_heuristic';
+      const value=c=>Date.parse(basis==='asserted_at_heuristic'?c.asserted_at:c.valid_time.from);
       const latest=pool.length?Math.max(...pool.map(value)):null;
       const winners=pool.filter(c=>value(c)===latest).sort((a,b)=>a.id.localeCompare(b.id));
       for(const c of winners)keep.add(c.id);

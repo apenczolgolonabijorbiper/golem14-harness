@@ -33,7 +33,7 @@ The configuration/ledger/lease/queue wrappers remain version 1.
 - Tool output bounds include 1,000 warnings with total/truncation metadata,
   100 primary entities/source records and 64,000 total excerpt characters.
 
-Local tests cover target formats and integrity, including 64 Node tests, four
+Local tests cover target formats and integrity, including 65 Node tests, four
 Python unittest cases and Cursor/Codex installer suites. Exact hosted platform and
 benchmark outcomes belong to the implementation PR. Build/manifest/checksum are
 produced by the release builder; no manual manifest edits are needed.

@@ -51,8 +51,10 @@ two entities share the same scoped key. Distinct namespaces do not collide.
 
 Declare single_valued predicates in vocabulary v2. context --current true selects
 active claims per subject/predicate before output truncation and graph expansion.
-Known effective starts no later than evaluation time outrank uncertain recording-
-time snapshots. Expired intervals and future starts are not current. If no known
+Exact effective starts no later than evaluation time outrank partial/as-reported
+bounds and recording-time snapshots; alternatives remain explicit. Partial or
+as-reported bounds use valid_time.from_uncertain only when no exact start is
+available, with unresolved=true. Expired intervals and future starts are not current. If no known
 start exists, latest asserted_at is a labelled asserted_at_heuristic, not proof of
 current truth. At the latest time all tied candidates are returned, subject to the
 output bound. current_selection records selection basis, selected IDs, alternative

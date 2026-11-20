@@ -110,3 +110,10 @@ test('CLI wires scoped lookup and policy-driven temporal retrieval to persisted 
 test('bad profile version refuses acquisition without changing HEAD or lease',async t=>{
   const f=fixture(t,{profile:true});f.write('profiles/vocab.json',{schema_version:1});f.write('golem.config.json',{schema_version:1,profile:{path:'profiles/default.md',vocabulary:'profiles/vocab.json'}});f.save();f.observe();const head=f.git('rev-parse','HEAD');await assert.rejects(()=>createAdapter({instance:f.root}).claim(),/vocabulary version/);assert.equal(f.git('rev-parse','HEAD'),head);assert.equal(JSON.parse(f.read('memory/processing-lock.json')).status,'idle');
 });
+
+test('partial times are labelled uncertain and are not silently promoted over exact evidence',()=>{
+  const f=small(),a=f.graph.claims[0];a.valid_time={from:at,to:null,expression:null,precision:'partial'};
+  let result=retrieveContext(f.graph,{current:true,vocabulary:vocab});assert.equal(result.current_selection[0].basis,'valid_time.from_uncertain');assert.equal(result.current_selection[0].unresolved,true);
+  const exact={...structuredClone(a),id:'clm-exact',valid_time:{...a.valid_time,precision:'exact'}};a.valid_time.from='2026-02-01T00:00:00Z';f.graph.claims.push(exact);
+  result=retrieveContext(f.graph,{current:true,vocabulary:vocab});assert.equal(result.claims[0].id,exact.id);assert.ok(result.current_selection[0].alternatives.includes(a.id));assert.equal(result.current_selection[0].unresolved,true);
+});
