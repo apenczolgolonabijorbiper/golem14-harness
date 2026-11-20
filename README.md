@@ -9,8 +9,10 @@ leases are agent procedures, not autonomous services implemented by the CLI.
 
 This is not the Xemantic engine, a trained persona, an LLM server or a complete web
 application. There is no model API client, autonomous reasoning loop, scheduler,
-transactional storage adapter, STT/TTS, browser UI or hosting scaffold here.
-Those are integration responsibilities. No credentials or personal memory ship.
+STT/TTS, browser UI or hosting scaffold here.
+Those are integration responsibilities. An optional local Git storage adapter,
+backend scaffold and conformance suite are included; see [storage adapters](docs/ADAPTERS.md).
+No credentials or personal memory ship.
 
 See [the architecture mapping](docs/ARCHITECTURE_MAPPING.md) for the connection
 to Xemantic’s Golem XIV.
@@ -153,4 +155,13 @@ a ZIP and adjacent SHA-256 checksum. The packaged AGENTS.md is the downstream
 read-only contract. See [provenance](docs/PROVENANCE.md) for the baseline lineage.
 
 This release establishes the standalone source baseline. Selective transfer of
-processed memory and a reference transactional adapter are future work.
+processed memory remains future work.
+
+## Domain memory and processing extensions
+
+Explicit [application profiles](docs/APPLICATION_PROFILES.md) supply guidance without
+changing the engine, with batch-scoped delivery and run provenance in the reference
+adapter. Entity kinds refine the existing types; retrieval adds optional filters
+and bounded traversal. [Validation warnings](docs/MEMORY_MODEL.md#validation-warnings)
+are advisory and never weaken integrity checks. Defaults retain existing behavior
+without selected profiles or new retrieval options. See [upgrade notes](docs/UPGRADE_0_5.md).

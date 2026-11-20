@@ -121,6 +121,10 @@
             "minLength": 1,
             "maxLength": 4000
           }
+        },
+        "kind": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]{1,40}$"
         }
       },
       "required": [

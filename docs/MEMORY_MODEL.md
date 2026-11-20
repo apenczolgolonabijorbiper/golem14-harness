@@ -94,3 +94,79 @@ contains each question's ID and text.
 | `Claim status history reversed` | Preserve the status of every already superseded or retracted claim. |
 | `Source history changed` | Preserve every prior graph source record. |
 | `Readable queue missing question` | Include the question ID and text in the Markdown queue. |
+
+## Domain kinds and compatibility
+
+An entity may have an optional kind: a lowercase 2–41 character slug matching
+`^[a-z][a-z0-9_-]{1,40}$`. type remains the coarse closed enum. For example a
+persona can use type person/kind person, and an artifact can use type other/kind
+source-file. Include kind in lexical searches; shared kinds never establish identity.
+A missing kind can be set once. Once set it is protected by previous-graph history
+validation (the `Entity identity/history removed` diagnostic). Leave uncertain kinds
+unset; ordinary processing cannot correct an assigned kind. A future explicit
+migration policy is separate.
+
+New validators accept existing graphs unchanged. 0.4.1 validators reject graphs
+with kind because that old schema disallows extra fields. Do not roll back a writer
+or mix versions after using kind without a reviewed compatible recovery plan.
+
+## Filtered and multi-hop retrieval
+
+No new options retains the original lexical ranking, one-hop selection and full
+correction history, including the original output shape. The effective claim limit
+is at most 100; a positive integer --limit is required. Optional comma lists accept
+OR within a list and AND across dimensions:
+
+```sh
+node processor/memory-tool.mjs context --root ../private-instance --entity ent-example --predicate touches,references --kind source-file --hops 3 --status active
+```
+
+--predicate filters ranked and related claims. --status active hides superseded and
+retracted claims; default all retains them. --type uses the existing type enum;
+--kind uses domain kinds. Entity filters are presentation filters: claims qualify
+when any subject/object/speaker matches, filtered entities appear in entities,
+and supporting_entities closes all returned claim endpoints. Intermediate traversal
+is independent of type/kind, so files remain reachable through records.
+
+Without explicit --hops, filters apply before the legacy-style ranking/output bound.
+Direct ranked claims have hop 0 and related claims hop 1 (parent null). Explicit
+--hops 1..3 selects undirected breadth-first traversal over entity-valued claims;
+scalar claims are emitted at their subject. Speakers are retained for provenance
+but are not traversal edges. Seeds are explicit entity IDs, lexical entity matches
+and endpoints of claims matching query/source. With no query/entity/source all
+entities seed the traversal. Edges obey predicate/status filters. Each layer visits
+entity IDs then claim IDs in lexical order; a claim is emitted once at its shortest
+hop with the first deterministic parent. Claims remain unchanged: metadata lives
+in traversal keyed by claim ID. A four-edge chain requires four hops to reach its
+end; three hops do not return that final edge.
+
+hidden superseded/retracted/predicate counts describe graph-wide exclusions (status
+first); hidden.entity counts encountered candidates removed by entity presentation.
+Exclusions alone never mean truncated. truncation_reasons distinguishes claim_limit
+from expansion_budget. --expansion-budget bounds examined distinct claims, default
+10000, range 1..20000. Cycles do not revisit edges. Excerpts remain exact prefixes
+limited to 4000 characters; read full citations when needed. A no-match result does
+not prove absence. Grouping, semantic search and general query syntax are deferred.
+
+## Validation warnings
+
+The validateMemory error-array API remains unchanged. collectWarnings is separate
+and read-only. CLI validation adds warnings to a successful valid:true result;
+warnings alone exit 0, while integrity errors retain their existing nonzero exit
+and first-error header. Invalid profile configuration is a configuration error.
+Schema-invalid graphs are not passed to advisory checks.
+
+| Code | Interpretation |
+|---|---|
+| `unused_entity` | No claim references this entity as subject, object or speaker. |
+| `duplicate_corroboration` | An independently_confirmed claim cites at least two distinct observation IDs whose exact text bodies are all equal. Possible duplicated corroboration; not proof of dependence. Different bodies do not prove independence. |
+| `unknown_kind` | Populated entity kind is outside an explicitly configured vocabulary list. |
+| `unknown_predicate` | Claim predicate is outside an explicitly configured vocabulary list. |
+
+Warnings have code, object_id, message and documentation. Ordering is code then
+object ID, with one finding per code/object. Missing vocabulary lists impose no
+restriction; empty lists permit no values without a warning. Applications may add
+warnings with the same shape at their adapter boundary, but must preserve harness
+errors and namespace their codes (e.g. app.example). They do not rewrite evidence
+or automatically change classifications. Executable hooks, strict mode and hypothesis
+refutation checks are deferred.
