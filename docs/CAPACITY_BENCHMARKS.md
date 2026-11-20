@@ -56,10 +56,18 @@ candidates and post-CAS recovery. At most two snapshots are retained per adapter
 Collection limits/near-limit warnings come from the graph schema, not a profile.
 Observe warnings at 80%; maximum+1 fails before completion publication.
 
-Synthetic fixtures disable automatic background Git maintenance (gc.auto=0,
+Synthetic fixtures set core.autocrlf=false (the dedicated line-ending conformance
+test explicitly enables it) and disable automatic background Git maintenance (gc.auto=0,
 maintenance.auto=false), signing and hooks to avoid inherited/background jobs
 contaminating timings or holding Windows cleanup files open. Cleanup uses bounded
 filesystem retries for transient locks. Production maintenance remains host-owned.
 The first hosted Windows run passed 500/2,000/5,000-source cases but failed deleting
 the 10,000-source fixture while an orphan Git process remained; no successful
 10,000-source Windows result is claimed from that run. See the final PR evidence.
+
+Follow-up diagnostics identified the large Windows fixture setup failure as
+ENOBUFS in git add: inherited autocrlf emitted thousands of per-file conversion
+warnings, filling the helper's bounded output buffer and leaving a Git process
+holding files during cleanup. Explicit fixture LF settings remove this diagnostic
+flood; production Git settings are not changed. The original cleanup-only failure
+must not be interpreted as evidence of a validator or capacity timeout.
