@@ -12,7 +12,7 @@ history. Multiple instances can use the same engine version with independent dat
 | Extracted release directory | Installer source obtained from the release ZIP | RELEASE.json, integration/, processor/, schemas/ | Harness publisher |
 | --repo | Root of the application that will use Golem | Application code, AGENTS.md, docs/ | Application developer |
 | --repo/vendor/golem-harness | Installed engine, also called HARNESS_ROOT | Verified release files, processing protocol, validators | Harness publisher, replaced during a reviewed upgrade |
-| --instance-root | Data directory for one Golem instance, also called INSTANCE_ROOT | inbox/, evidence/, memory/, persona/, questions/ | The application and its authorized agent |
+| --instance-root | Data directory for one Golem instance, also called INSTANCE_ROOT | inbox/, evidence/, memory/, instance/, profiles/, questions/ | The application and its authorized agent |
 
 The installer copies the verified release to the fixed vendor/golem-harness
 location under --repo. You choose --instance-root independently. The installer
@@ -21,7 +21,7 @@ creates an empty data structure there. Installing alone leaves data uninitialize
 
 The instance directory contains the material that Golem remembers over time.
 For example, memory/graph.json holds source-grounded claims, inbox/ holds original
-observations, and persona/identity.md holds the instance's purpose and identity.
+observations, and instance/purpose.md holds the instance's purpose and scope.
 It contains no second engine installation. Engine updates replace installed
 release files while preserving the selected instance data and its history.
 

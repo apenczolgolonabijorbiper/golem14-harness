@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,symlinkSync} from 'node:fs';
 import {join} from 'node:path';
-import {fixture,command,harness} from './test-fixtures.mjs';
+import {fixture,command,harness,python} from './test-fixtures.mjs';
 import {loadProfile,sha256} from './application-profile.mjs';
 import {schemaErrors,validateMemory,retrieveContext,collectWarnings,warningCodes} from './memory-model.mjs';
 
@@ -12,23 +12,23 @@ function chain(){
   return {schema_version:1,updated_at:'2026-01-01T00:00:00Z',sources:[],entities,claims};
 }
 test('profile is explicitly selected, supports sudo Markdown, and hashes exact bytes',async t=>{
-  const f=fixture(t);f.write('persona/profile.md','Do not activate automatically.');assert.equal(await loadProfile(f.root),null);
-  f.write('persona/profile.sudo.md','Observe(evidence)\n');f.write('golem.config.json',{schema_version:1,profile:{path:'persona/profile.sudo.md'}});
+  const f=fixture(t);f.write('profiles/default.md','Do not activate automatically.');assert.equal(await loadProfile(f.root),null);
+  f.write('profiles/profile.sudo.md','Observe(evidence)\n');f.write('golem.config.json',{schema_version:1,profile:{path:'profiles/profile.sudo.md'}});
   const a=await loadProfile(f.root);assert.equal(a.guidance_version.profile_sha256,sha256('Observe(evidence)\n'));
-  f.write('persona/profile.sudo.md','Observe(evidence)\n\n');const b=await loadProfile(f.root);assert.notEqual(a.guidance_version.profile_sha256,b.guidance_version.profile_sha256);
+  f.write('profiles/profile.sudo.md','Observe(evidence)\n\n');const b=await loadProfile(f.root);assert.notEqual(a.guidance_version.profile_sha256,b.guidance_version.profile_sha256);
 });
 test('profile selects only approved sections, validates vocabulary and forbids unsafe paths',async t=>{
-  const f=fixture(t,{profile:true});f.write('persona/core.md','Core');f.write('persona/one.md','One');f.write('persona/two.md','Two');
-  const config={schema_version:1,profile:{path:'persona/core.md',sections:[{id:'one',path:'persona/one.md',kinds:['note']},{id:'two',path:'persona/two.md',kinds:['digest']}],vocabulary:'persona/vocabulary.json'}};
-  f.write('persona/vocabulary.json',{schema_version:1,kinds:[],predicates:['links']});f.write('golem.config.json',config);
+  const f=fixture(t,{profile:true});f.write('profiles/core.md','Core');f.write('profiles/one.md','One');f.write('profiles/two.md','Two');
+  const config={schema_version:1,profile:{path:'profiles/core.md',sections:[{id:'one',path:'profiles/one.md',kinds:['note']},{id:'two',path:'profiles/two.md',kinds:['digest']}],vocabulary:'profiles/vocabulary.json'}};
+  f.write('profiles/vocabulary.json',{schema_version:1,kinds:[],predicates:['links']});f.write('golem.config.json',config);
   const p=await loadProfile(f.root,{kinds:['note','../../malicious']});assert.equal(p.guidance,'Core\n\nOne');assert.deepEqual(p.vocabulary.kinds,[]);const mixed=await loadProfile(f.root,{kinds:['digest','note']});assert.equal(mixed.guidance,'Core\n\nOne\n\nTwo');assert.equal(mixed.guidance_version.delivered_sha256,sha256(mixed.guidance));
-  for(const path of ['inbox/input.md','vendor/engine.md','../outside.md','/tmp/file','persona/../core.md']){f.write('golem.config.json',{schema_version:1,profile:{path}});await assert.rejects(()=>loadProfile(f.root));}
-  f.write('golem.config.json',{schema_version:1,profile:{path:'persona/missing.md'}});await assert.rejects(()=>loadProfile(f.root));
-  symlinkSync(join(f.root,'persona/core.md'),join(f.root,'persona/link.md'));f.write('golem.config.json',{schema_version:1,profile:{path:'persona/link.md'}});await assert.rejects(()=>loadProfile(f.root),/Symlink/);
+  for(const path of ['inbox/input.md','vendor/engine.md','../outside.md','/tmp/file','profiles/../core.md']){f.write('golem.config.json',{schema_version:1,profile:{path}});await assert.rejects(()=>loadProfile(f.root));}
+  f.write('golem.config.json',{schema_version:1,profile:{path:'profiles/missing.md'}});await assert.rejects(()=>loadProfile(f.root));
+  try{symlinkSync(join(f.root,'profiles/core.md'),join(f.root,'profiles/link.md'));}catch(e){if(['EPERM','EACCES','ENOSYS'].includes(e.code)){t.diagnostic('OS does not grant symlink creation; other path checks ran');return;}throw e;}f.write('golem.config.json',{schema_version:1,profile:{path:'profiles/link.md'}});await assert.rejects(()=>loadProfile(f.root),/Symlink/);
 });
 test('initializer opt-in never resets or overwrites an existing instance',t=>{
-  const f=fixture(t,{profile:true});const before=f.read('persona/profile.md');
-  assert.throws(()=>command('python3',[join(harness,'processor/init-instance.py'),'--root',f.root,'--profile']),/never reset/);assert.equal(f.read('persona/profile.md'),before);
+  const f=fixture(t,{profile:true});const before=f.read('profiles/default.md');
+  assert.throws(()=>python([join(harness,'processor/init-instance.py'),'--root',f.root,'--profile']),/never reset/);assert.equal(f.read('profiles/default.md'),before);
 });
 test('kind can be added once and then is protected by previous graph validation',()=>{
   const graph={schema_version:1,updated_at:'2026-01-01T00:00:00Z',sources:[],entities:[{id:'ent-record',type:'other',label:'Record',aliases:[],source_ids:[],created_at:'2026-01-01T00:00:00Z',uncertainty:[]}],claims:[]};
@@ -75,9 +75,9 @@ test('retrieval reports actual output and expansion limits independently of filt
 });
 
 test('profile configuration rejects invalid vocabulary, duplicate selectors and all unreadable sections',async t=>{
-  const f=fixture(t,{profile:true});await assert.rejects(()=>loadProfile(harness),/outside the engine/);const config={schema_version:1,profile:{path:'persona/profile.md',vocabulary:'persona/vocab.json'}};
-  for(const vocabulary of [{schema_version:2},{schema_version:1,kinds:['record','record']},{schema_version:1,predicates:['bad-name']},{schema_version:1,unknown:[]}]){f.write('persona/vocab.json',vocabulary);f.write('golem.config.json',config);await assert.rejects(()=>loadProfile(f.root));}
-  delete config.profile.vocabulary;config.profile.sections=[{id:'missing',path:'persona/missing.md',kinds:['not-this-batch']}];f.write('golem.config.json',config);await assert.rejects(()=>loadProfile(f.root,{kinds:['note']}));
+  const f=fixture(t,{profile:true});await assert.rejects(()=>loadProfile(harness),/outside the engine/);const config={schema_version:1,profile:{path:'profiles/default.md',vocabulary:'profiles/vocab.json'}};
+  for(const vocabulary of [{schema_version:2},{schema_version:1,kinds:['record','record']},{schema_version:1,predicates:['bad-name']},{schema_version:1,unknown:[]}]){f.write('profiles/vocab.json',vocabulary);f.write('golem.config.json',config);await assert.rejects(()=>loadProfile(f.root));}
+  delete config.profile.vocabulary;config.profile.sections=[{id:'missing',path:'profiles/missing.md',kinds:['not-this-batch']}];f.write('golem.config.json',config);await assert.rejects(()=>loadProfile(f.root,{kinds:['note']}));
 });
 
 test('template fails closed until storage operations are implemented',async()=>{

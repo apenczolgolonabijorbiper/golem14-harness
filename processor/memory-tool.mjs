@@ -1,3 +1,4 @@
+import {resolveLayout} from '../server/instance-layout.mjs';
 import {readFile,readdir} from 'node:fs/promises';
 import {resolve,dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -12,10 +13,11 @@ export function parseSource(path,text){
   return {...fields,path,body:match[2],sha256:createHash('sha256').update(text,'utf8').digest('hex')};
 }
 export async function loadMemory(root){
+  const layout=await resolveLayout(root);
   const json=async path=>JSON.parse(utf8(await readInstanceFile(root,path)));
   const [graph,ledger,queue,names]=await Promise.all([json('memory/graph.json'),json('memory/processed.json'),json('questions/queue.json'),readdir(resolve(root,'inbox'))]);
   const sources={};for(const name of names.filter(n=>n.endsWith('.md'))){const path='inbox/'+name;const source=parseSource(path,utf8(await readInstanceFile(root,path)));sources[source.id]=source;}
-  return {graph,ledger,queue,sources};
+  return {graph,ledger,queue,sources,layout};
 }
 export async function run(args=process.argv.slice(2)){
   const command=args.shift(),options={};for(let i=0;i<args.length;i+=2){if(!args[i]?.startsWith('--')||args[i+1]===undefined)throw Error('Expected --option value');const key=args[i].slice(2);if(!['root','previous','query','entity','source','limit','predicate','type','kind','status','hops','expansion-budget'].includes(key)||Object.hasOwn(options,key))throw Error('Unknown or duplicate option: '+key);options[key]=args[i+1];}
@@ -27,7 +29,7 @@ export async function run(args=process.argv.slice(2)){
   const markdown=utf8(await readInstanceFile(root,'questions/queue.md'));
   for(const q of state.queue.questions)if(!markdown.includes(q.id)||!markdown.includes(q.text))errors.push('Readable queue missing question: '+q.id);
   if (errors.length) throw Error(`Memory validation failed: ${errors[0]}\n${errors.join('\n')}`);
-  if(command==='validate')return {valid:true,warnings:collectWarnings(state.graph,{...state,vocabulary:profile?.vocabulary}),entities:state.graph.entities.length,claims:state.graph.claims.length,sources:state.graph.sources.length};
+  if(command==='validate')return {valid:true,layout:state.layout,warnings:collectWarnings(state.graph,{...state,vocabulary:profile?.vocabulary}),entities:state.graph.entities.length,claims:state.graph.claims.length,sources:state.graph.sources.length};
   if(command==='stats')return memoryStats(state.graph,state.sources,state.ledger,state.queue);
   const context=retrieveContext(state.graph,{query:options.query,entity_id:options.entity,source_id:options.source,limit:options.limit,predicate:options.predicate,type:options.type,kind:options.kind,status:options.status,hops:options.hops,expansion_budget:options['expansion-budget']});
   context.source_excerpts=context.sources.map(s=>({...s,text:state.sources[s.id].body.slice(0,4000)}));return context;

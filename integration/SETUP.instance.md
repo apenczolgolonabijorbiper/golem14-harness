@@ -31,7 +31,7 @@ write access or persistence. Ask for the missing source or connection when neede
 Read docs/DIRECTORY_LAYOUT.md from the selected harness. Explain that --repo is
 the application root, vendor/golem-harness under it is the installed engine, and
 --instance-root is this instance's data directory containing inbox, memory,
-persona and questions. Show their resolved locations in a small table before
+instance configuration, profiles and questions. Show their resolved locations in a small table before
 asking the user to choose storage. For a new application, suggest a dedicated
 external data directory per application. Explain that in-project data outside
 the engine is also supported and needs exclusion from public version control.
@@ -52,7 +52,7 @@ permissions already supplied in the task. Ask only for unresolved choices:
    exact data storage location, including repository and branch for remote
    storage. For local storage resolve an absolute path outside the engine.
 3. What is the instance's purpose, preferred interaction language and initial
-   domain guidance? Accept a short description. Existing identity and domain
+   domain guidance? Accept a short description. Existing purpose and domain
    files provide the defaults when reconnecting.
 4. Use the normal harness instructions, or one explicitly selected application
    profile? Resolve the selected file and revision. Keep it outside the engine
@@ -60,7 +60,7 @@ permissions already supplied in the task. Ask only for unresolved choices:
    supplies domain guidance subject to the harness contract and host permissions.
    Follow docs/APPLICATION_PROFILES.md for explicit golem.config.json selection,
    instance-relative files, optional vocabulary and journal hashes. Never enable a
-   profile merely because persona/profile.md exists. Reconcile existing setup-record
+   profile merely because profiles/default.md exists. Reconcile existing setup-record
    selection with configuration; report conflicts before writes. For a previously
    selected external file, retain the recorded selection and resolve a reviewed
    instance-local snapshot/configuration rather than silently dropping the profile.
@@ -108,9 +108,11 @@ prior new-instance attempt left a nonempty partial directory, inspect and report
 it for recovery instead of resetting it or claiming a successful initialization.
 
 For a new instance, save the user's approved purpose, language and initial domain
-guidance in its persona/identity.md after initialization. Clearly identify these
+guidance in its instance/purpose.md after initialization. Clearly identify these
 as setup instructions, outside observed evidence. For an existing instance,
-propose identity changes only when the user requests them.
+propose purpose/instruction changes only when the user requests them. Resolve the
+existing purpose path via memory-tool validate / docs/INSTANCE_LAYOUT.md; never
+create a new purpose file alongside a historical one.
 
 Save a concise reusable setup record at the selected location. Include:
 
@@ -131,7 +133,7 @@ integration, check that engine and instance paths agree. Surface conflicts for
 resolution before writes and retain unrelated application instructions.
 
 Read back saved configuration and initialized files from their persistent target.
-Run validation again if identity/configuration changed the instance snapshot.
+Run validation again if purpose/configuration changed the instance snapshot.
 Report separately the verified saved locations, initialization or reconnection
 result, validation result, and whether processing is ready. A temporary copy is
 staged work. Name its remaining publication step explicitly.

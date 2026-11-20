@@ -40,7 +40,7 @@
   "additionalProperties": false,
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://golem.local/schemas/memory-graph.schema.json",
-  "title": "Private persona memory graph",
+  "title": "Source-grounded instance memory graph",
   "$defs": {
     "source": {
       "type": "object",
@@ -259,7 +259,7 @@
         "speaker_id": {
           "type": "string",
           "pattern": "^[a-z][a-z0-9_-]{2,100}$",
-          "description": "ID of an existing entity of any supported type. Records without a known human speaker can be attributed to a system or account represented as other."
+          "description": "Legacy alias of attributed_to_id; retained historical claims must keep their original field."
         },
         "predicate": {
           "type": "string",
@@ -271,8 +271,10 @@
         "classification": {
           "type": "string",
           "enum": [
-            "user_declaration",
+            "source_assertion",
             "hypothesis",
+            "corroborated",
+            "user_declaration",
             "independently_confirmed"
           ]
         },
@@ -317,12 +319,16 @@
         "created_at": {
           "type": "string",
           "format": "date-time"
+        },
+        "attributed_to_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]{2,100}$",
+          "description": "Entity to which the source assertion is attributed: a person, organization, system or account; not necessarily a human speaker."
         }
       },
       "required": [
         "id",
         "subject_id",
-        "speaker_id",
         "predicate",
         "object",
         "classification",
@@ -334,7 +340,19 @@
         "uncertainty",
         "created_at"
       ],
-      "additionalProperties": false
+      "additionalProperties": false,
+      "anyOf": [
+        {
+          "required": [
+            "attributed_to_id"
+          ]
+        },
+        {
+          "required": [
+            "speaker_id"
+          ]
+        }
+      ]
     }
   }
 }

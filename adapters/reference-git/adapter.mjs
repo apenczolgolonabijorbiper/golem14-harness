@@ -1,3 +1,4 @@
+import {resolveLayout} from '../../server/instance-layout.mjs';
 import {spawnSync} from 'node:child_process';
 import {createHash,randomUUID} from 'node:crypto';
 import {existsSync,readFileSync,writeFileSync,mkdirSync,rmSync,lstatSync,readdirSync,realpathSync,mkdtempSync} from 'node:fs';
@@ -8,7 +9,7 @@ import {loadProfile,instancePath,utf8,sha256,within} from '../../server/applicat
 
 const defaultHarness=resolve(dirname(fileURLToPath(import.meta.url)),'../..');
 const LEASE='memory/processing-lock.json',LEDGER='memory/processed.json';
-const mandatory=['memory/graph.json','memory/index.md','questions/queue.json','questions/queue.md','persona/hypotheses.json'];
+const mandatory=['memory/graph.json','memory/index.md','questions/queue.json','questions/queue.md'];
 const json=value=>Buffer.from(JSON.stringify(value,null,2)+'\n');
 const hash=bytes=>bytes===null?null:createHash('sha256').update(bytes).digest('hex');
 const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
@@ -173,7 +174,7 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
   function parseOutputs(value) {
     const paths=Array.isArray(value)?value:typeof value==='string'?value.split(','):[];
     const forbidden=[LEASE,LEDGER,'golem.config.json'];
-    for(const path of paths){instancePath(path);if(forbidden.includes(path)||path.startsWith('inbox/')||path.startsWith('vendor/')||path.startsWith('persona/')&&!mandatory.includes(path))throw new AdapterError('Output path is reserved: '+path);file(path);}
+    for(const path of paths){instancePath(path);if(forbidden.includes(path)||path.startsWith('inbox/')||path.startsWith('vendor/')||path.startsWith('profiles/')||path.startsWith('instance/')||path.startsWith('persona/')&&path!=='persona/hypotheses.json')throw new AdapterError('Output path is reserved: '+path);file(path);}
     return [...new Set(paths)];
   }
   function sourceCheck(s) {
@@ -186,11 +187,12 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
   }
   async function candidate(s,run,outputs) {
     own(s,run);assertLocalProtocol(s);
+    const layout=await resolveLayout(root);
     const paths=parseOutputs(outputs),journal=`memory/runs/${run}.md`,journalBytes=file(journal);
     sourceCheck(s);
     if(scan(s).malformed.length)throw new AdapterError('Processed source changed or missing; intervention required');
     const entries=new Map();
-    for(const path of [...mandatory,journal,...paths])entries.set(path,file(path));
+    for(const path of [...mandatory,layout.hypotheses_path,journal,...paths])entries.set(path,file(path));
     for(const source of s.lease.sources){entries.set(source.path,file(source.path));const evidence=`evidence/${source.id}.json`;const bytes=file(evidence,{optional:true});if(bytes)entries.set(evidence,bytes);}
     if(s.lease.guidance_version){
       const identity=sha256(json(s.lease.guidance_version));

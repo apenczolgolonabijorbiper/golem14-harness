@@ -1,0 +1,28 @@
+name: Validate harness platforms
+on:
+  pull_request:
+  push:
+    branches: [master]
+permissions:
+  contents: read
+jobs:
+  validate:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v7.1.0
+        with:
+          python-version: '3.12'
+      - name: Platform-default Node fixture launcher
+        run: node --test server/memory-core.test.mjs server/claim-validation.test.mjs server/domain-memory.test.mjs server/neutral-core.test.mjs adapters/conformance/adapter.test.mjs
+      - name: Packaged release and installer checks
+        run: python tools/build-release.py --output ../platform-release.zip
