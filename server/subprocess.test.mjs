@@ -6,7 +6,7 @@ import {command} from './test-fixtures.mjs';
 test('children time out with command and partial stderr instead of blocking',()=>{
   const script="process.stderr.write('synthetic stall');setInterval(()=>{},1000)";
   const start=Date.now();
-  assert.throws(()=>command(process.execPath,['-e',script],{timeout:1500}),e=>/timed out after 1500ms/.test(e.message)&&e.message.includes(process.execPath)&&e.message.includes('synthetic stall'));
+  assert.throws(()=>command(process.execPath,['-e',script],{timeout:1500}),e=>/timed out after 1500ms/.test(e.message)&&e.message.includes(JSON.stringify(process.execPath))&&e.message.endsWith('\nsynthetic stall'));
   assert.ok(Date.now()-start<10000);
 });
 test('children receive EOF, noninteractive Git environment and exact input bytes',()=>{
