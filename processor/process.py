@@ -1,4 +1,4 @@
-"""Deterministic source indexer. Does not infer personality."""
+"""Deterministic source indexer. Does not interpret observations or infer claims."""
 from pathlib import Path
 import hashlib, json, re
 import argparse

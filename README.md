@@ -1,4 +1,4 @@
-# Golem native cognitive harness — 0.5.0
+# Golem native cognitive harness — 0.6.0
 
 A host-independent cognitive harness inspired by Stanisław Lem’s Golem XIV and Xemantic’s work on metacognitive AI. The host LLM performs
 interpretation by following AGENTS.md and docs/PROCESSING.md; the executable core
@@ -12,7 +12,7 @@ application. There is no model API client, autonomous reasoning loop, scheduler,
 STT/TTS, browser UI or hosting scaffold here.
 Those are integration responsibilities. An optional local Git storage adapter,
 backend scaffold and conformance suite are included; see [storage adapters](docs/ADAPTERS.md).
-No credentials or personal memory ship.
+No credentials or instance data ship.
 
 See [the architecture mapping](docs/ARCHITECTURE_MAPPING.md) for the connection
 to Xemantic’s Golem XIV.
@@ -91,7 +91,11 @@ is no data migration or initializer step for an upgrade.
 
 Install Python 3.12+ and Node 22.12+ (tested here on Node 24). No npm or pip packages
 are required. Run from the extracted package directory; use `py` instead of
-`python3` on Windows where appropriate. Choose a NEW private instance directory:
+`python3` on Windows where appropriate. Node test fixtures use `GOLEM_PYTHON`
+when set (an executable path, including paths with spaces), otherwise `py -3` on
+Windows or `python3` elsewhere. The release builder passes its own Python executable
+to Node fixtures unless you explicitly set `GOLEM_PYTHON`. Errors name the command
+that failed. Choose a NEW private instance directory:
 
 ```sh
 python3 processor/init-instance.py --root ../my-instance
@@ -147,14 +151,15 @@ see [the processing protocol](docs/PROCESSING.md).
 From the maintainer checkout run:
 
 ```sh
-python3 tools/build-release.py --output ../golem-cognitive-harness-0.5.0.zip
+python3 tools/build-release.py --output ../golem-cognitive-harness-0.6.0.zip
 ```
 
 The builder runs the release tests, packages an explicit file list, and produces
 a ZIP and adjacent SHA-256 checksum. The packaged AGENTS.md is the downstream
 read-only contract. See [provenance](docs/PROVENANCE.md) for the baseline lineage.
 
-Version 0.5.0 adds application-agnostic adapters and domain-memory capabilities.
+Version 0.6.0 adds neutral instance layout and claim terminology with legacy
+compatibility, plus Windows launcher and CRLF installer fixes.
 See [release notes](docs/RELEASE_NOTES.md). Selective transfer of processed memory
 remains future work.
 
@@ -165,4 +170,8 @@ changing the engine, with batch-scoped delivery and run provenance in the refere
 adapter. Entity kinds refine the existing types; retrieval adds optional filters
 and bounded traversal. [Validation warnings](docs/MEMORY_MODEL.md#validation-warnings)
 are advisory and never weaken integrity checks. Defaults retain existing behavior
-without selected profiles or new retrieval options. See [upgrade notes](docs/UPGRADE_0_5.md).
+without selected profiles or new retrieval options. See [upgrade notes](docs/UPGRADE_0_6.md).
+
+See [instance layout and compatibility](docs/INSTANCE_LAYOUT.md) for neutral defaults,
+legacy paths and source attribution/classification names. Persona-oriented memory
+is one optional application focus, alongside other domain profiles.

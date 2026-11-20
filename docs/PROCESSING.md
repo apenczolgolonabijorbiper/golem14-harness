@@ -40,6 +40,11 @@ The CLI and initializer do not implement these storage transactions.
 
 ## Cognition and completion
 
+Resolve purpose/hypothesis paths as described in docs/INSTANCE_LAYOUT.md. Neutral
+and historical layouts are supported without mutation; duplicate role paths fail
+closed. Use attributed_to_id and source_assertion/hypothesis/corroborated for new
+claims. Preserve all original fields/classification spellings in retained claims.
+
 After the harness contract and before reasoning, load this instance's explicitly
 selected application profile on every cycle. Follow docs/APPLICATION_PROFILES.md.
 No selected profile preserves the normal flow; selected unreadable/invalid guidance

@@ -1,58 +1,48 @@
-# Golem XIV Harness 0.5.0
+# Golem XIV Harness 0.6.0
 
-This release delivers VP-001 through VP-006 as application-agnostic capabilities.
-The host agent still performs inference; the harness supplies deterministic memory
-operations, validation, instructions and an optional transactional Git reference.
+New instances now describe a memory's purpose and scope without requiring a persona.
+Persona-oriented memory remains an optional application profile. The core remains
+application-agnostic, with source-grounded entities, claims, corrections, hypotheses
+and host-owned inference.
 
-## Added
+## Neutral defaults with historical compatibility
 
-- Storage adapter contract v1, a fail-closed backend scaffold, a dependency-free
-  local Git reference and CLI conformance tests. Lease ownership is based on
-  committed state; completion validates and publishes the same tree using CAS.
-  Recovery handles interruption after publication while preserving local drafts.
-- Explicit instance profile configuration, Markdown/.sudo.md guidance, structured
-  vocabulary and an optional non-overwriting initializer profile stub.
-- Batch-scoped claim guidance with retained text, hashes, boundary and required
-  journal identity. Later profile edits do not silently replace claimed guidance.
-- Optional domain entity kinds, add-once history protection and lexical matching.
-- Predicate/type/kind/status retrieval filters, endpoint closure, deterministic
-  1–3-hop traversal, expansion budgets and separate exclusion/truncation reporting.
-- Stable advisory warning codes for unused entities, possible duplicated
-  corroboration and configured vocabulary mismatches. Integrity errors still fail.
+- New paths: instance/purpose.md, memory/hypotheses.json and, when selected,
+  profiles/default.md. Existing persona/identity.md and persona/hypotheses.json
+  remain supported with no runtime rename, duplicate or initialization step.
+- resolveLayout and memory-tool validate expose the selected purpose/hypotheses
+  paths. Duplicate role files fail closed for explicit resolution.
+- New claims use attributed_to_id and source_assertion/hypothesis/corroborated.
+  Existing speaker_id/user_declaration/independently_confirmed records remain
+  valid, including mixed old/new graphs. Retrieval, provenance and warnings
+  understand aliases; previous-graph validation protects retained spellings/fields.
+- Old readers cannot assume the neutral layout or accept the new claim vocabulary.
+  Keep historical forms if older tools must coexist until all readers are upgraded.
+  An optional --legacy-layout initializer flag applies only to NEW empty instances.
 
-## Compatibility and scope
+## Portability fixes
 
-Existing graphs work without rewriting. Unconfigured profiles and retrieval calls
-without the new options retain the existing flow. A kind can be assigned once and
-then cannot be changed/removed through ordinary writes. Old 0.4.1 validators reject
-graphs containing kind, so review rollback/mixed-version writers before adopting it.
-Invalid CLI options and non-positive/non-integer limits fail explicitly.
+- VI-008: the installer accepts line-ending-equivalent LF/CRLF managed blocks.
+  Current blocks stay byte-identical, legacy migration preserves newline style
+  and prefix/suffix bytes, and substantive edits still fail before writes.
+- VI-010: one Python launcher helper uses GOLEM_PYTHON executable path, otherwise
+  py -3 on Windows or python3 elsewhere. The release builder supplies its own
+  interpreter unless overridden. Paths with spaces do not use shell splitting;
+  failures identify the attempted executable and arguments.
+- A platform validation workflow exercises the default fixture launcher and full
+  packaged build on Linux, Windows and macOS. Actual outcomes are linked from #16.
 
-The reference adapter supports a dedicated local instance Git repository root on
-an attached branch. It is not a distributed remote lock; remote connector storage
-and instance subdirectories need another backend. Candidate validation is isolated,
-but in-place agent drafts remain visible to filesystem readers. Abrupt OS termination
-may require stale-lock inspection as documented in ADAPTERS.md.
+## Upgrade and validation
 
-Domain guidance stays in external selected profiles; no application data is shipped.
-No model API client, scheduler, UI, graph database, semantic search or training is
-introduced. Windows/macOS and live Desktop acceptance have not been verified for
-the new adapter. Executable validation hooks, strict mode and grouping remain deferred.
+Replace the verified installed engine and preserve external data. Do not initialize
+an existing instance or rewrite historical claims. See INSTANCE_LAYOUT.md and
+UPGRADE_0_6.md for layout resolution, explicit relocation and mixed-version limits.
+Graph/source limits and the local Git adapter's storage/concurrency scope are
+unchanged. No new scheduler, ingestion connector or inference service is added.
 
-## Upgrade
-
-Obtain the versioned ZIP and adjacent SHA-256 file from this release. Verify the
-checksum and RELEASE.json file manifest, replace the verified installed engine,
-and preserve the external instance. Validate the existing state before processing.
-Do not run the initializer against an existing instance. Read UPGRADE_0_5.md for
-profile selection, kind permanence, reader compatibility and recovery details.
-
-## Validation
-
-The release builder runs 38 Node tests, four Python unittest cases and the existing
-Cursor/Codex installer regression scripts. Coverage includes real CLI processing,
-concurrent claims, expiry, source mutations, CAS conflicts, post-publication recovery,
-scoped guidance, warnings, traversal and source bytes under line-ending attributes.
-Implementation validation also exercised an extracted/installed synthetic cycle.
-Tests use synthetic observations only. Publication and downloaded-asset verification
-are recorded separately in tracking issue #7.
+Local release checks pass 43 Node tests, four Python unittest cases and the
+Cursor/Codex installer regression scripts. New tests cover neutral and legacy
+instances, mixed claim names, conflicting layouts/attribution, exact history,
+launcher selection, LF/CRLF migration and no-op preservation. CI and downloaded
+release verification are recorded separately in #16; unrun host acceptance is
+not implied by unit/integration tests.

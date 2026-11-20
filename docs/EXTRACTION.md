@@ -1,5 +1,20 @@
 # Release history
 
+## 0.6.0 — Neutral instance core and portable verification
+
+- New instances use instance/purpose.md, memory/hypotheses.json and optional
+  profiles/default.md; historical persona paths remain readable without mutation.
+  Duplicate role files require explicit resolution.
+- attributed_to_id and source_assertion/hypothesis/corroborated provide neutral
+  claim vocabulary. Legacy fields/classifications remain valid; retained claims
+  cannot be renamed or rewritten. See INSTANCE_LAYOUT.md and UPGRADE_0_6.md.
+- VI-008: LF/CRLF generated installer blocks compare equivalently, with exact
+  preservation of unrelated bytes, current-block idempotency and real-edit refusal.
+- VI-010: Node fixtures share GOLEM_PYTHON / Windows py -3 / python3 launcher
+  selection, and failures name the attempted command.
+- Linux, Windows and macOS CI exercise the platform-default launcher and packaged
+  build; exact results are recorded in the implementation PR.
+
 ## 0.5.0 — Application-agnostic adapters and domain memory
 
 - A stable six-command storage adapter contract, backend scaffold, local Git

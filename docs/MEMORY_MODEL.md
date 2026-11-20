@@ -10,16 +10,16 @@ Each source stores observation ID, immutable path, exact UTF-8 SHA-256 and recor
 
 ## Claims, relations and corrections
 
-Every claim has a subject entity, speaker entity, predicate, scalar or entity object, classification, exact source quotes, assertion time, validity time, status, correction links, uncertainty and creation time. Assertion time is a source's recording time. Validity can be unknown, partial, exact or as reported; do not substitute recording time for an unstated event date. An age reported at a source timestamp is not a timeless age or permission to infer a birthday.
+Every claim has a subject entity, attribution entity, predicate, scalar or entity object, classification, exact source quotes, assertion time, validity time, status, correction links, uncertainty and creation time. Assertion time is a source's recording time. Validity can be unknown, partial, exact or as reported; do not substitute recording time for an unstated event date. An age reported at a source timestamp is not a timeless age or permission to infer a birthday.
 
-The `speaker_id` identifies the entity to which the statement or record is
+The `attributed_to_id` field (legacy alias `speaker_id`) identifies the entity to which the statement or record is
 attributed. It may reference any existing entity type. For a record with no known
 human author, use an attributable system or account entity of type `other`, or
 an organization when the evidence supports that attribution. Keep the observation
 and its exact quote as source evidence. Previously recorded entity types are
 protected by history validation.
 
-Use `user_declaration`, `hypothesis` or `independently_confirmed` deliberately. Structural validation cannot prove semantic truth or independence of evidence; agent review is still necessary. Hypotheses require uncertainty. Runtime labels, values, quotes and uncertainty can be in any user language; schema keys and predicates remain English.
+Use `source_assertion`, `hypothesis` or `corroborated` deliberately. Legacy `user_declaration` and `independently_confirmed` remain valid aliases; retain historical spellings. Structural validation cannot prove semantic truth or independence of evidence; agent review is still necessary. Hypotheses require uncertainty. Runtime labels, values, quotes and uncertainty can be in any user language; schema keys and predicates remain English.
 
 A relation is a claim with `object.entity_id`; a scalar claim uses `object.value`. Relation counts are therefore a subset of claim counts. Keep prior claims: when correcting a statement, create a new claim with `supersedes` referring to the old ID and set the old status to superseded (or retracted for a withdrawal). Do not rewrite the old subject, value, sources, timestamps or rationale. Previous-graph validation prevents deletion and mutation of retained claims, removal of entity identities/provenance, source rewriting, correction cycles and invalid replacement links. An explicit retraction can have no replacement; explain it in the cycle journal.
 
@@ -75,6 +75,7 @@ contains each question's ID and text.
 | `Unknown source question` | A source's question reference must resolve in the queue. |
 | `Entity source missing` | Every entity source ID must resolve to a graph source. |
 | `Entity created after graph update` | Entity creation must be at or before the graph update. |
+| `Conflicting claim attribution` | When both attributed_to_id and legacy speaker_id are present, they must identify the same entity. |
 | `Claim entity not found` | The named subject, speaker or object field must reference an existing entity. The message includes both IDs. |
 | `Claim source/quote mismatch` | Every cited observation must be a graph source and contain the exact quote. |
 | `Entity provenance does not include claim source` | The subject, speaker and entity-valued object must each include every cited observation ID in their own `source_ids`. |
@@ -159,7 +160,7 @@ Schema-invalid graphs are not passed to advisory checks.
 | Code | Interpretation |
 |---|---|
 | `unused_entity` | No claim references this entity as subject, object or speaker. |
-| `duplicate_corroboration` | An independently_confirmed claim cites at least two distinct observation IDs whose exact text bodies are all equal. Possible duplicated corroboration; not proof of dependence. Different bodies do not prove independence. |
+| `duplicate_corroboration` | A corroborated (or legacy independently_confirmed) claim cites at least two distinct observation IDs whose exact text bodies are all equal. Possible duplicated corroboration; not proof of dependence. Different bodies do not prove independence. |
 | `unknown_kind` | Populated entity kind is outside an explicitly configured vocabulary list. |
 | `unknown_predicate` | Claim predicate is outside an explicitly configured vocabulary list. |
 

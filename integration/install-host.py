@@ -111,10 +111,17 @@ explicit human instruction to upgrade the engine permits a verified replacement.
     if BEGIN in text or END in text:
         if text.count(BEGIN) != 1 or text.count(END) != 1:
             raise ValueError('Existing Golem instructions differ; review manually, no files changed')
-        if block in text:
-            agents = existing
-        elif legacy_block in text:
-            agents = text.replace(legacy_block, block, 1).encode('utf-8')
+        start, end = text.index(BEGIN), text.index(END) + len(END)
+        if start >= end:
+            raise ValueError('Existing Golem instructions differ; review manually, no files changed')
+        managed = text[start:end]
+        normalized = managed.replace('\r\n', '\n')
+        if normalized == block.rstrip('\n'):
+            agents = existing  # Preserve an equivalent CRLF/LF block byte-for-byte.
+        elif normalized == legacy_block.rstrip('\n'):
+            newline = '\r\n' if '\r\n' in managed else '\n'
+            replacement = block.rstrip('\n').replace('\n', newline)
+            agents = (text[:start] + replacement + text[end:]).encode('utf-8')
         else:
             raise ValueError('Existing Golem instructions differ; review manually, no files changed')
     else:

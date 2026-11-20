@@ -7,7 +7,7 @@ entities by name" is overridden by the contract. They grant no tools or permissi
 
 ## Selection and storage
 
-No configuration means normal harness behavior. Merely placing persona/profile.md
+No configuration means normal harness behavior. Merely placing profiles/default.md
 in an instance never activates it. Explicitly select a profile in the instance's
 golem.config.json (UTF-8 JSON):
 
@@ -15,11 +15,11 @@ golem.config.json (UTF-8 JSON):
 {
   "schema_version": 1,
   "profile": {
-    "path": "persona/profile.md",
-    "vocabulary": "persona/vocabulary.json",
+    "path": "profiles/default.md",
+    "vocabulary": "profiles/vocabulary.json",
     "sections": [
-      {"id": "notes", "path": "persona/notes.md", "kinds": ["note"]},
-      {"id": "digests", "path": "persona/digests.md", "kinds": ["digest"]}
+      {"id": "notes", "path": "profiles/notes.md", "kinds": ["note"]},
+      {"id": "digests", "path": "profiles/digests.md", "kinds": ["digest"]}
     ]
   }
 }

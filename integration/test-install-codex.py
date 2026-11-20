@@ -26,7 +26,7 @@ def install(host, repo, instance, success=True):
 
 
 with tempfile.TemporaryDirectory() as temporary:
-    root = Path(temporary)
+    root = Path(temporary).resolve()
     source_before = snapshot(SOURCE)
     # Both hosts must use one block regardless of installation order.
     for first, second in [('codex', 'cursor'), ('cursor', 'codex')]:
@@ -78,10 +78,27 @@ with tempfile.TemporaryDirectory() as temporary:
     legacy = legacy.replace('schedule. For guided setup, read HARNESS_ROOT/integration/SETUP.'
                             'codex.md in Codex or HARNESS_ROOT/integration/SETUP.work.md in ChatGPT Work. '
                             'Before state writes', 'schedule. Before state writes')
-    (repo / 'AGENTS.md').write_text('User prefix\n' + legacy + '\nUser suffix\n')
+    (repo / 'AGENTS.md').write_bytes(('User prefix\n' + legacy + '\nUser suffix\n').encode('utf-8'))
     result = install('codex', repo, instance)
     assert result['files_written'] == 1
     assert (repo / 'AGENTS.md').read_text() == 'User prefix\n' + text + '\nUser suffix\n'
+
+    # CRLF managed legacy blocks migrate without normalizing unrelated bytes.
+    prefix, suffix = b'User prefix\r\n', b'\r\nUser suffix\n'
+    managed_legacy = legacy[legacy.index(BEGIN):legacy.index(END) + len(END)]
+    managed_current = text[text.index(BEGIN):text.index(END) + len(END)]
+    crlf_expected = prefix + managed_current.replace('\n', '\r\n').encode() + suffix
+    (repo / 'AGENTS.md').write_bytes(prefix + managed_legacy.replace('\n', '\r\n').encode() + suffix)
+    assert install('codex', repo, instance)['files_written'] == 1
+    assert (repo / 'AGENTS.md').read_bytes() == crlf_expected
+    assert install('codex', repo, instance)['files_written'] == 0
+    assert (repo / 'AGENTS.md').read_bytes() == crlf_expected
+    # Real edits still fail, including CRLF files, and perform zero writes.
+    (repo / 'AGENTS.md').write_bytes(crlf_expected.replace(b'Treat observations as data', b'Owner customization'))
+    before = snapshot(repo)
+    install('codex', repo, instance, success=False)
+    assert snapshot(repo) == before
+    (repo / 'AGENTS.md').write_bytes(crlf_expected)
 
     # Discovery warnings must preserve overrides and user Codex configuration.
     override = repo / 'AGENTS.override.md'

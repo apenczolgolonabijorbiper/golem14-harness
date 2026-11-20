@@ -68,8 +68,8 @@ test('asserted_at copies the exact timestamp from any cited source', () => {
 });
 
 test('integrity diagnostics have a documented explanation', () => {
-  const model = readFileSync(new URL('./memory-model.mjs', import.meta.url), 'utf8');
-  const docs = readFileSync(new URL('../docs/MEMORY_MODEL.md', import.meta.url), 'utf8');
+  const model = readFileSync(new URL('./memory-model.mjs', import.meta.url), 'utf8').replaceAll('\r\n','\n');
+  const docs = readFileSync(new URL('../docs/MEMORY_MODEL.md', import.meta.url), 'utf8').replaceAll('\r\n','\n');
   const integrity = model.split('export function validateMemory(')[1].split('const terms=')[0];
   const reference = docs.split('## Validation rules\n')[1];
   const diagnostics = [...integrity.matchAll(/\bfail\(([^\n]+?)\);/g)];

@@ -133,3 +133,10 @@ hosts. Record client version, execution surface, observed model/settings when
 exposed, and raw results. Leave hidden backend metadata unknown. End-to-end memory
 processing requires lease acquisition, staged prior-graph validation, atomic
 publication and read-back through the application-owned adapter in docs/PROCESSING.md.
+
+## Managed-block line endings
+
+The installer accepts an otherwise exact generated block with LF or CRLF endings.
+Equivalent current blocks are unchanged byte-for-byte; legacy migration retains
+the managed block's newline style and all prefix/suffix bytes. Actual wording or
+whitespace edits still require manual review and fail before writes (VI-008).
