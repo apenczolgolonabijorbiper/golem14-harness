@@ -1,9 +1,8 @@
-# Domain-memory enhancement series (unreleased)
+# Upgrading to 0.5.0
 
 This series implements VP-001 through VP-006. It does not initialize, migrate or
-replace any existing instance automatically. The release decision/version/tag is
-separate from implementation review; VERSION remains the last released version
-until the maintainer prepares the next release (provisionally 0.5.0).
+replace any existing instance automatically. Install the verified 0.5.0 release and retain the existing external instance.
+The source implements the six work packages reviewed in PR #14.
 
 - Existing graphs validate without rewriting. Optional entity kind can be added
   once and then is immutable under previous-graph validation. Leave uncertain

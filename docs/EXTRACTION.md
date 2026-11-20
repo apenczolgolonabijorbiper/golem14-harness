@@ -1,5 +1,22 @@
 # Release history
 
+## 0.5.0 — Application-agnostic adapters and domain memory
+
+- A stable six-command storage adapter contract, backend scaffold, local Git
+  reference and conformance suite provide lease/CAS completion and recovery.
+- Explicit Markdown/.sudo.md profiles support scoped guidance and exact-byte
+  run provenance; the reference adapter checks journal guidance identity.
+- Optional entity kinds refine coarse types with add-once history protection.
+- Retrieval adds predicate/type/kind/status filters and bounded deterministic
+  traversal while retaining the original default selection and correction history.
+- Advisory validation warnings cover unused entities, possible duplicate-body
+  corroboration and configured vocabulary mismatches without weakening errors.
+- Existing graph data needs no initializer or automatic migration. Old 0.4.1
+  validators reject graphs containing kind; review rollback and mixed writers.
+- The Git reference requires a dedicated local instance repository on an attached
+  branch. Remote storage needs another backend; draft isolation is host-owned.
+- See RELEASE_NOTES.md and UPGRADE_0_5.md for usage, compatibility and limits.
+
 ## 0.4.1 — Node 24 action runtimes
 
 The release workflow now uses actions/checkout v7.0.1, actions/setup-node v7.1.0

@@ -41,4 +41,4 @@ jobs:
           fi
           gh release create "v$version" "$archive" "$archive.sha256" \
             --target "$GITHUB_SHA" --title "Golem XIV Harness $version" \
-            --notes-file docs/PROVENANCE.md
+            --notes-file docs/RELEASE_NOTES.md
