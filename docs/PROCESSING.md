@@ -125,3 +125,14 @@ storage backends remain host responsibilities. The reference validates an isolat
 completion candidate but agent drafts in its working tree remain visible to local
 readers. Use committed snapshots for consistent reads, or provide an isolated agent
 workspace through a suitable host backend.
+
+
+## 0.7.0 target contract
+
+Initialize a fresh canonical instance when old formats do not fit. Graph schema 2
+and strict hypotheses schema 1 are part of every candidate. Claims have canonical
+attribution/classification names, optional immutable depends_on and scoped external
+IDs on entities. Review capacity_near_limit, multiple_active_values,
+duplicate_external_id and dependency_changed; a warning never decides truth.
+Selected policy/configuration changes committed during a lease require release and
+reclaim. Refer to ANALYSIS_WORKFLOW.md for entity-first retrieval and review steps.

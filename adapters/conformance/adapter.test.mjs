@@ -37,12 +37,12 @@ test('CLI conformance: unsafe output paths are rejected without releasing the le
   for(const path of ['/tmp/unsafe','../outside','memory/../graph.json','.git/config','C:/unsafe','missing.md','escape.md','memory','memory/processed.json','profiles/new.md'])assert.throws(()=>invoke(f,'commit','--run',claim.run_id,'--outputs',path));assert.equal(invoke(f,'status').lease.status,'processing');
 });
 test('CLI conformance: selected guidance, scoped sections, journal enforcement and immutable version',t=>{
-  const f=fixture(t,{profile:true});if(!invoke(f,'status').capabilities?.includes('profile-guidance-v1')){t.skip('Adapter does not advertise profile-guidance-v1');return;}f.write('profiles/notes.md','Notes guidance');f.write('profiles/digests.md','Digest guidance');f.write('profiles/vocab.json',{schema_version:1,kinds:['record'],predicates:['describes']});
+  const f=fixture(t,{profile:true});if(!invoke(f,'status').capabilities?.includes('profile-guidance-v1')){t.skip('Adapter does not advertise profile-guidance-v1');return;}f.write('profiles/notes.md','Notes guidance');f.write('profiles/digests.md','Digest guidance');f.write('profiles/vocab.json',{schema_version:2,kinds:['record'],predicates:['describes']});
   f.write('golem.config.json',{schema_version:1,profile:{path:'profiles/default.md',vocabulary:'profiles/vocab.json',sections:[{id:'notes',path:'profiles/notes.md',kinds:['note']},{id:'digests',path:'profiles/digests.md',kinds:['digest']}]}});f.save();
   f.observe(1,{kind:'note'});let claim=invoke(f,'claim');assert.ok(claim.guidance.includes('Notes guidance'));assert.ok(!claim.guidance.includes('Digest guidance'));assert.ok(claim.guidance_boundary.includes('data'));f.analyze(claim);
-  const original=f.read('profiles/default.md');f.write('profiles/default.md',original+'\nUpdated');f.save();
+  const original=f.read('profiles/default.md');f.write('profiles/default.md',original+'\nUpdated');
   assert.equal(JSON.parse(f.read(claim.guidance_path)).guidance,claim.guidance);f.write(`memory/runs/${claim.run_id}.md`,'Missing identity');assert.throws(()=>invoke(f,'commit','--run',claim.run_id),/guidance_version/);f.write(`memory/runs/${claim.run_id}.md`,'guidance_version: '+claim.guidance_identity+'\n');invoke(f,'commit','--run',claim.run_id);
-  f.observe(2,{kind:'../../evil'});const next=invoke(f,'claim');assert.notEqual(next.guidance_version.profile_sha256,claim.guidance_version.profile_sha256);assert.equal(next.guidance_version.sections.length,0);assert.ok(next.guidance.includes('Updated'));
+  f.save();f.observe(2,{kind:'../../evil'});const next=invoke(f,'claim');assert.notEqual(next.guidance_version.profile_sha256,claim.guidance_version.profile_sha256);assert.equal(next.guidance_version.sections.length,0);assert.ok(next.guidance.includes('Updated'));
 });
 
 // Factory-only fault injection exercises storage mechanics beyond the CLI contract.
@@ -69,7 +69,7 @@ if(!process.env.GOLEM_ADAPTER){
 }
 
 test('CLI conformance: warning-only completion is valid and integrity errors retain their first diagnostic',t=>{
-  const f=fixture(t,{profile:true});f.write('profiles/vocab.json',{schema_version:1,kinds:[],predicates:[]});f.write('golem.config.json',{schema_version:1,profile:{path:'profiles/default.md',vocabulary:'profiles/vocab.json'}});f.save();f.observe();const claim=invoke(f,'claim');f.analyze(claim);
+  const f=fixture(t,{profile:true});f.write('profiles/vocab.json',{schema_version:2,kinds:[],predicates:[]});f.write('golem.config.json',{schema_version:1,profile:{path:'profiles/default.md',vocabulary:'profiles/vocab.json'}});f.save();f.observe();const claim=invoke(f,'claim');f.analyze(claim);
   const dry=invoke(f,'validate','--run',claim.run_id);assert.equal(dry.output.valid,true);assert.deepEqual(dry.output.warnings.map(w=>w.code),['unknown_kind','unknown_predicate']);const result=invoke(f,'commit','--run',claim.run_id);assert.equal(result.warnings.length,2);assert.equal(invoke(f,'validate').output.warnings.length,2);
   const graph=JSON.parse(f.read('memory/graph.json'));graph.claims[0].sources[0].quote='Not in source';f.write('memory/graph.json',graph);const r=boundedSpawn(process.execPath,[join(harness,'processor/memory-tool.mjs'),'validate','--root',f.root],{encoding:'utf8'});assert.equal(r.status,1);assert.match(r.stderr,/^Memory validation failed: Claim source\/quote mismatch:/);
 });

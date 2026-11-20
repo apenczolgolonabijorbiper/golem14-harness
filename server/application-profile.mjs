@@ -1,3 +1,4 @@
+import {validateVocabulary} from './core-policies.mjs';
 import {statSync} from 'node:fs';
 import {readFile, lstat, realpath} from 'node:fs/promises';
 import {resolve, relative, isAbsolute, dirname, sep} from 'node:path';
@@ -84,8 +85,7 @@ export async function loadProfile(root, {read = path => readInstanceFile(root,pa
   if (profile.vocabulary !== undefined) {
     const bytes = await read(guidancePath(profile.vocabulary));
     vocabularyHash = sha256(bytes); vocabulary = JSON.parse(utf8(bytes));
-    keys(vocabulary,['schema_version','kinds','predicates'],'profile vocabulary');
-    if (vocabulary.schema_version !== 1) throw Error('Invalid vocabulary version');
+    validateVocabulary(vocabulary);
     for (const name of ['kinds','predicates']) if (vocabulary[name] !== undefined) {
       const list = vocabulary[name], pattern = name === 'kinds' ? /^[a-z][a-z0-9_-]{1,40}$/ : /^[a-z][a-z0-9_]{1,80}$/;
       if (!Array.isArray(list) || list.some(x=>typeof x!=='string'||!pattern.test(x)) || new Set(list).size!==list.length) throw Error('Invalid vocabulary '+name);

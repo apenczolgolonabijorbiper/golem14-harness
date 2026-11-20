@@ -75,9 +75,9 @@ validation internals. Report missing capabilities for upstream maintenance.
 
 Resolve the layout using docs/INSTANCE_LAYOUT.md (also reported by memory-tool
 validate). New instances use instance/purpose.md and memory/hypotheses.json.
-Existing persona/identity.md and persona/hypotheses.json remain supported.
-If both paths for either role exist, stop for explicit resolution; never choose
-one silently, initialize an existing instance or rewrite retained claims.
+Graph v2 and hypotheses v1 are required. Historical layouts/claim aliases are not
+supported. Incompatible previous instances may be scrapped and recreated after
+an explicit setup instruction; do not auto-delete or convert user data.
 
 Read README.md, docs/PROCESSING.md, the resolved instance purpose file, memory/index.md,
 memory/graph.json, memory/processed.json and both question queues before analysis.
@@ -98,8 +98,7 @@ other conversations. Preserve original UTF-8 source bytes and identifiers.
 
 Use source_assertion, hypothesis and corroborated for new claims. Attribute
 records using attributed_to_id to the responsible person, organization, account or
-system. Existing user_declaration/independently_confirmed classifications and
-speaker_id fields remain valid and must not be rewritten in retained history.
+system. Use only the documented target graph fields and classifications.
 Every claim must have exact quotes and source provenance. Do not infer unsupported
 sensitive personal attributes or diagnoses. Domain hypotheses require explicit
 evidence and uncertainty. Record uncertainty and contradictions. Names alone do not justify
@@ -114,7 +113,9 @@ recording times; validity times must reflect evidence, not guesses.
 Saving a response is distinct from analyzing it. Close questions only when a
 reviewed answer resolves them; retain question IDs and historical wording.
 Update both queues together. Keep explicit hypotheses with support, refutation,
-confidence, model and updated_at in the resolved hypotheses file; leave empty if none.
+confidence and updated_at in the versioned hypotheses file; optional model records
+the host-reported value. Keep an empty versioned collection when there are none.
+Review dependency_changed and other warnings each cycle. See docs/ANALYSIS_WORKFLOW.md.
 
 Follow docs/PROCESSING.md for readiness, leases and atomic completion. Stage the
 processed ledger rows inside the isolated candidate before validating the complete

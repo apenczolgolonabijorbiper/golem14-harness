@@ -1,4 +1,4 @@
-# Golem native cognitive harness — 0.6.0
+# Golem native cognitive harness — 0.7.0
 
 A host-independent cognitive harness inspired by Stanisław Lem’s Golem XIV and Xemantic’s work on metacognitive AI. The host LLM performs
 interpretation by following AGENTS.md and docs/PROCESSING.md; the executable core
@@ -140,7 +140,7 @@ node processor/memory-tool.mjs validate --root STAGED_INSTANCE --previous PRIOR_
 
 The first command returns no claims until analysis has written them. Retrieval is
 lexical, not embeddings; follow citations when excerpts/results are truncated.
-Limits: 500 graph sources, 5,000 entities, 20,000 claims, 100 retrieved claims,
+Limits: 10,000 graph sources, 5,000 entities, 20,000 claims, 100 retrieved claims,
 4,000 excerpt characters per source. Structural checks cannot establish truth.
 
 For resend handling and restoring inbox observations into a fresh instance,
@@ -151,15 +151,15 @@ see [the processing protocol](docs/PROCESSING.md).
 From the maintainer checkout run:
 
 ```sh
-python3 tools/build-release.py --output ../golem-cognitive-harness-0.6.0.zip
+python3 tools/build-release.py --output ../golem-cognitive-harness-0.7.0.zip
 ```
 
 The builder runs the release tests, packages an explicit file list, and produces
 a ZIP and adjacent SHA-256 checksum. The packaged AGENTS.md is the downstream
 read-only contract. See [provenance](docs/PROVENANCE.md) for the baseline lineage.
 
-Version 0.6.0 adds neutral instance layout and claim terminology with legacy
-compatibility, plus Windows launcher and CRLF installer fixes.
+Version 0.7.0 adds strict hypothesis records, policy-aware retrieval, scoped
+identifiers, dependencies and measured source capacity. Target formats only.
 See [release notes](docs/RELEASE_NOTES.md). Selective transfer of processed memory
 remains future work.
 
@@ -169,9 +169,23 @@ Explicit [application profiles](docs/APPLICATION_PROFILES.md) supply guidance wi
 changing the engine, with batch-scoped delivery and run provenance in the reference
 adapter. Entity kinds refine the existing types; retrieval adds optional filters
 and bounded traversal. [Validation warnings](docs/MEMORY_MODEL.md#validation-warnings)
-are advisory and never weaken integrity checks. Defaults retain existing behavior
-without selected profiles or new retrieval options. See [upgrade notes](docs/UPGRADE_0_6.md).
+are advisory and never weaken integrity checks. No selected profile means no domain policy. Incompatible previous instances may
+be recreated; see the target-format notes below.
 
-See [instance layout and compatibility](docs/INSTANCE_LAYOUT.md) for neutral defaults,
-legacy paths and source attribution/classification names. Persona-oriented memory
+See [target instance layout](docs/INSTANCE_LAYOUT.md) for canonical paths
+and source attribution/classification names. Persona-oriented memory
 is one optional application focus, alongside other domain profiles.
+
+
+## 0.7.0 target formats and policies
+
+Use a fresh instance: graph schema 2, hypotheses schema 1, and vocabulary schema 2
+when a vocabulary is selected (configuration/ledger/lease/queue remain version 1).
+No backward compatibility or migration is promised. The canonical paths and claim
+fields are in docs/INSTANCE_LAYOUT.md. See docs/ANALYSIS_WORKFLOW.md for a synthetic
+producer/profile/retrieval recipe, docs/INTAKE_PROVENANCE.md for intake measurements,
+and docs/CAPACITY_BENCHMARKS.md for the measured resource envelope.
+
+New tools include strict hypotheses validation, direct dependency review warnings,
+scoped identifiers, capacity usage and conflict-aware --current/--valid-at retrieval.
+They preserve evidence and prompt review; they do not infer truth or merge records.

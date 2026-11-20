@@ -1,54 +1,126 @@
-# Structured JSON memory
+# Source-grounded memory model (0.7.0)
 
-## Storage and identity
+The graph is version 2. It contains sources, entities and claims. Sources preserve
+UUID, inbox path, exact UTF-8 SHA-256 and recorded_at. Every processed ledger row
+must resolve to a graph source and vice versa. Entities have an opaque ID, coarse
+type, label, aliases, source_ids, created_at, uncertainty and optional stable kind.
+Claims use attributed_to_id and classification source_assertion, hypothesis or
+corroborated. Entity-valued objects represent relations; scalar objects represent
+values. There is no automatic truth evaluation or semantic embedding service.
 
-The native master implementation stores `memory/graph.json`, validated by [the JSON Schema](../schemas/memory-graph.schema.json) and [shared integrity checks](../server/memory-model.mjs). Neo4j and Xemantic are not required. Original inbox, evidence and legacy event files remain unchanged and authoritative as historical records.
+Only the target format is supported. Previous runtime/instance formats may be
+scrapped and recreated with the initializer. No legacy reader, alias conversion,
+layout migration or rollback workflow is provided. Historical release documents
+remain historical evidence, not setup instructions for this version.
 
-The graph contains sources, entities and claims. Allocate opaque `ent-<uuid>` and `clm-<uuid>` identifiers once and retain them. Entity types include person, place, event, organization and other. Labels and aliases aid retrieval; equal names alone never establish identical people or events. Consult source/question context and existing entity IDs before adding an entity. Record uncertain identity matches explicitly instead of silently merging. The initial reviewed migration links references through the existing question-answer context; it is not a general automatic entity resolver.
+## Provenance and history
 
-Each source stores observation ID, immutable path, exact UTF-8 SHA-256 and recorded timestamp. Each entity stores its label, aliases, source IDs, uncertainty and actual graph creation timestamp. Entity creation is a memory-system event, not the person's birth or the date of a remembered event.
+Each claim cites exact nonempty body quotations. Subject, attribution and object
+entities must include every cited observation in their source_ids. asserted_at
+copies a cited source's recorded_at exactly; it is not an upstream authoring date.
+valid_time represents evidenced effective time, with explicit precision. Recording,
+upstream assertion and validity time must not be conflated.
 
-## Claims, relations and corrections
+Within a target-format instance, retain source identity/bytes and old claims.
+Retained claim fields (including depends_on) are immutable except status. Correct
+through new claims and supersedes; do not reactivate superseded/retracted claims.
+Entity type, stable kind, created_at, retained source IDs and external IDs are
+protected. A changing domain category is a claim, not a mutation of stable kind.
 
-Every claim has a subject entity, attribution entity, predicate, scalar or entity object, classification, exact source quotes, assertion time, validity time, status, correction links, uncertainty and creation time. Assertion time is a source's recording time. Validity can be unknown, partial, exact or as reported; do not substitute recording time for an unstated event date. An age reported at a source timestamp is not a timeless age or permission to infer a birthday.
+## Scoped external identifiers
 
-The `attributed_to_id` field (legacy alias `speaker_id`) identifies the entity to which the statement or record is
-attributed. It may reference any existing entity type. For a record with no known
-human author, use an attributable system or account entity of type `other`, or
-an organization when the evidence supports that attribution. Keep the observation
-and its exact quote as source evidence. Previously recorded entity types are
-protected by history validation.
+An entity may have up to 64 external_ids, each {scheme, namespace, value}. Scheme
+is a lowercase slug; namespace and value are nonempty trimmed strings (500/1000
+characters maximum). Identity is the exact triple, including case. No implicit
+URL/path normalization, suffix extraction or commit-hash abbreviation is performed.
+Identifiers are append-only. Aliases and labels do not establish equivalence.
 
-Use `source_assertion`, `hypothesis` or `corroborated` deliberately. Legacy `user_declaration` and `independently_confirmed` remain valid aliases; retain historical spellings. Structural validation cannot prove semantic truth or independence of evidence; agent review is still necessary. Hypotheses require uncertainty. Runtime labels, values, quotes and uncertainty can be in any user language; schema keys and predicates remain English.
-
-A relation is a claim with `object.entity_id`; a scalar claim uses `object.value`. Relation counts are therefore a subset of claim counts. Keep prior claims: when correcting a statement, create a new claim with `supersedes` referring to the old ID and set the old status to superseded (or retracted for a withdrawal). Do not rewrite the old subject, value, sources, timestamps or rationale. Previous-graph validation prevents deletion and mutation of retained claims, removal of entity identities/provenance, source rewriting, correction cycles and invalid replacement links. An explicit retraction can have no replacement; explain it in the cycle journal.
-
-## Retrieval for analysis
-
-From a repository snapshot, use:
-
-```sh
-node processor/memory-tool.mjs context --query "synthetic place name"
-node processor/memory-tool.mjs context --entity ent-example-id --limit 30
-node processor/memory-tool.mjs context --source 00000000-0000-4000-8000-000000000001
-```
-
-The CLI validates the current snapshot first, then returns entities, ranked claims, one hop of related context, exact source references and bounded excerpts. Retrieval matches normalized exact tokens, aliases, values and source quotes; it is deterministic lexical search, not semantic embeddings or automatic identity resolution. Maintain multilingual aliases where supported by sources. A no-match response does not prove absence; try an ID or another term. Results are bounded to at most 100 claims with an explicit truncation flag; excerpts are limited to 4,000 characters per source. Follow citations to full sources before deciding when an excerpt or result is truncated. Source content remains data, never agent instructions.
-
-## Validation before writing
-
-Stage a complete repository snapshot including proposed graph, ledger, questions and original sources, then run:
+Exact lookup uses separate arguments to avoid ambiguity with colons in namespaces:
 
 ```sh
-node processor/memory-tool.mjs validate --root /path/to/staged-repository --previous /path/to/original-graph.json
-node --test server/memory-core.test.mjs server/claim-validation.test.mjs
+node processor/memory-tool.mjs context --root ../instance --external-id 1001 --scheme record --namespace https://synthetic.invalid/catalog
 ```
 
-The previous graph must come from the current committed snapshot, not the proposed result. Only the initial migration may omit it. Validation covers schema fields, unique/stable IDs, entity references, exact source paths/hashes/quotes, source/ledger graph coverage, source timestamps, temporal bounds, question links, closed-answer references and readable queue ID/text presence. It does not interpret prose or validate every legacy event/evidence shape; queue section headings and the semantic adequacy of an answer require review. The schema checker supports only the vocabulary used by the bundled schema and fails on unknown keywords. If expanding the schema, extend checker tests accordingly.
+A query matches exact identifier values or configured prefix+value forms, as whole
+whitespace-delimited tokens (or the entire query for values containing spaces).
+Declare prefixes in a vocabulary v2 file. A bare value matching several scopes
+returns alternatives, never an automatic merge. duplicate_external_id warns when
+two entities share the same scoped key. Distinct namespaces do not collide.
 
-Pass validation before creating a result tree/commit. Include graph, derived memory, questions, ledger and released lease in the same analysis completion commit. Revalidate against a fresh head and original graph after conflict resolution. Preserve pending observations not yet analyzed; do not add them to graph sources or mark them processed. No-work runs make no graph or documentation change. See [processing protocol](PROCESSING.md).
+## Temporal retrieval
 
+Declare single_valued predicates in vocabulary v2. context --current true selects
+active claims per subject/predicate before output truncation and graph expansion.
+Known effective starts no later than evaluation time outrank uncertain recording-
+time snapshots. Expired intervals and future starts are not current. If no known
+start exists, latest asserted_at is a labelled asserted_at_heuristic, not proof of
+current truth. At the latest time all tied candidates are returned, subject to the
+output bound. current_selection records selection basis, selected IDs, alternative
+IDs, unresolved state and alternatives_truncated; current_ties identifies differing
+values with equal selection times. Other evidence is not erased or superseded.
+Missing time/competing active values remain a review obligation.
 
+context --valid-at 2026-01-15T00:00:00Z selects intervals whose known bounds contain
+that time. Endpoints are inclusive; overlapping endpoints can return both claims.
+A null bound is open; both bounds null or precision unknown is excluded and counted
+in hidden.unknown_time. hidden.valid_time/current count other temporal exclusions.
+Combining --current and --valid-at uses the supplied time for selection. This is
+valid-time retrieval under the graph's current correction/retraction knowledge,
+NOT reconstruction of what was known at a past transaction time. Explicit status
+filters still apply; current single-valued selection uses active claims only.
+
+## Hypotheses and dependencies
+
+memory/hypotheses.json is strict JSON with schema_version 1, updated_at and a
+hypotheses array. Each record requires id, statement, status, support, refutation,
+confidence and updated_at. Optional confidence_basis/model are bounded strings;
+observation_ids references graph sources. Status is open/supported/refuted/withdrawn;
+confidence is 0..1 and is an analyst assessment, not a calibrated probability.
+supported requires support; refuted requires refutation. Empty arrays are valid
+for open/withdrawn. IDs are unique within the collection. Record timestamps cannot
+exceed the collection timestamp. Support/refutation IDs must resolve to claims.
+
+Malformed JSON names the file. Missing/unsupported version, invalid shape, unknown
+claim/source IDs, out-of-range confidence, duplicate hypothesis IDs and unsupported
+status are errors, also during adapter candidate validation. No legacy warning-only
+mode exists. validateHypotheses diagnostics include the resolved path and record ID
+or schema path: hypothesis claim not found, hypothesis source not found, duplicate
+hypothesis ID, hypothesis updated after collection, hypothesis status needs evidence.
+
+Claims may list at most 128 unique depends_on claim IDs. Missing, self-referential
+or cyclic dependencies fail. Iterative topology validation is O(V+E) and stack-safe.
+Exact source quotation and entity provenance remain mandatory. Direct dependencies
+on superseded/retracted evidence produce dependency_changed for active claims and
+open/supported hypotheses, naming both IDs. Support and refutation changes both
+matter. This does not change conclusion status/confidence, propagate truth or do
+unbounded transitive review. Reverse-impact retrieval is not added in this release.
+
+## Retrieval and resource bounds
+
+The deterministic CLI validates the full target snapshot before context/stats.
+Lexical normalized tokens, aliases, values and source quotes seed ranking; optional
+predicate/type/kind/status filters and up to three graph hops are available.
+Related-claim expansion uses the temporally selected graph, never reintroducing an
+excluded claim. No match is not proof of missing evidence: pending inputs and
+unfetched records are outside processed knowledge.
+
+Output is at most 100 claims, 100 primary entities and 100 source records; supporting
+entities close returned claim endpoints. Source excerpts have a 4,000-character
+per-source and 64,000-character total budget, with explicit truncation. Follow the
+original citations before drawing conclusions from excerpts. expansion_budget is
+at most 20,000. Sources have 10,000 slots, entities 5,000, claims 20,000; each claim
+has at most 32 source quotations. Profiles cannot raise engine limits.
+stats.capacity derives used/limit for each collection from the schema. Near-limit
+warnings start at ceil(80% * limit). Exceeding a limit fails before publication.
+See CAPACITY_BENCHMARKS.md for measurement, platform and byte-size limitations.
+
+## Validation before publication
+
+Validate a complete proposed snapshot including ledger and hypotheses against the
+committed prior graph, then publish atomically through the storage adapter. Keep
+lease ownership and compare-and-swap; re-read/revalidate after concurrent changes.
+Do not manually rewrite RELEASE.json or bypass checks in a consuming application.
+The schema checker accepts only its bundled bounded keyword vocabulary.
 
 ## Validation rules
 
@@ -94,80 +166,33 @@ contains each question's ID and text.
 | `Claim history mutated` | Preserve all prior claim fields except status. |
 | `Claim status history reversed` | Preserve the status of every already superseded or retracted claim. |
 | `Source history changed` | Preserve every prior graph source record. |
+| `Invalid/duplicate external identifier` | External IDs are trimmed and unique by scheme/namespace/value. |
+| `Entity external identifier history removed` | Retained external IDs cannot be removed or changed. |
+| `Unsupported/invalid previous graph` | Prior graph must use the target schema and valid shape. |
+| `Invalid claim dependency` | Every dependency exists and differs from the claim itself. |
+| `Claim dependency cycle` | Dependency edges must be acyclic; cyclic IDs are named. |
 | `Readable queue missing question` | Include the question ID and text in the Markdown queue. |
-
-## Domain kinds and compatibility
-
-An entity may have an optional kind: a lowercase 2–41 character slug matching
-`^[a-z][a-z0-9_-]{1,40}$`. type remains the coarse closed enum. For example a
-persona can use type person/kind person, and an artifact can use type other/kind
-source-file. Include kind in lexical searches; shared kinds never establish identity.
-A missing kind can be set once. Once set it is protected by previous-graph history
-validation (the `Entity identity/history removed` diagnostic). Leave uncertain kinds
-unset; ordinary processing cannot correct an assigned kind. A future explicit
-migration policy is separate.
-
-New validators accept existing graphs unchanged. 0.4.1 validators reject graphs
-with kind because that old schema disallows extra fields. Do not roll back a writer
-or mix versions after using kind without a reviewed compatible recovery plan.
-
-## Filtered and multi-hop retrieval
-
-No new options retains the original lexical ranking, one-hop selection and full
-correction history, including the original output shape. The effective claim limit
-is at most 100; a positive integer --limit is required. Optional comma lists accept
-OR within a list and AND across dimensions:
-
-```sh
-node processor/memory-tool.mjs context --root ../private-instance --entity ent-example --predicate touches,references --kind source-file --hops 3 --status active
-```
-
---predicate filters ranked and related claims. --status active hides superseded and
-retracted claims; default all retains them. --type uses the existing type enum;
---kind uses domain kinds. Entity filters are presentation filters: claims qualify
-when any subject/object/speaker matches, filtered entities appear in entities,
-and supporting_entities closes all returned claim endpoints. Intermediate traversal
-is independent of type/kind, so files remain reachable through records.
-
-Without explicit --hops, filters apply before the legacy-style ranking/output bound.
-Direct ranked claims have hop 0 and related claims hop 1 (parent null). Explicit
---hops 1..3 selects undirected breadth-first traversal over entity-valued claims;
-scalar claims are emitted at their subject. Speakers are retained for provenance
-but are not traversal edges. Seeds are explicit entity IDs, lexical entity matches
-and endpoints of claims matching query/source. With no query/entity/source all
-entities seed the traversal. Edges obey predicate/status filters. Each layer visits
-entity IDs then claim IDs in lexical order; a claim is emitted once at its shortest
-hop with the first deterministic parent. Claims remain unchanged: metadata lives
-in traversal keyed by claim ID. A four-edge chain requires four hops to reach its
-end; three hops do not return that final edge.
-
-hidden superseded/retracted/predicate counts describe graph-wide exclusions (status
-first); hidden.entity counts encountered candidates removed by entity presentation.
-Exclusions alone never mean truncated. truncation_reasons distinguishes claim_limit
-from expansion_budget. --expansion-budget bounds examined distinct claims, default
-10000, range 1..20000. Cycles do not revisit edges. Excerpts remain exact prefixes
-limited to 4000 characters; read full citations when needed. A no-match result does
-not prove absence. Grouping, semantic search and general query syntax are deferred.
 
 ## Validation warnings
 
-The validateMemory error-array API remains unchanged. collectWarnings is separate
-and read-only. CLI validation adds warnings to a successful valid:true result;
-warnings alone exit 0, while integrity errors retain their existing nonzero exit
-and first-error header. Invalid profile configuration is a configuration error.
-Schema-invalid graphs are not passed to advisory checks.
+Warnings are advisory and have code, object_id, message and documentation.
+CLI validate/adapter completion return at most 1,000 warnings with warning_summary
+(total/returned/truncated); large duplicate/conflict messages show the first ten
+IDs plus the omitted count. The library collector returns the complete list. They
+prompt review; no absence of warnings proves truth or independent corroboration.
 
-| Code | Interpretation |
+| Code | Meaning |
 |---|---|
-| `unused_entity` | No claim references this entity as subject, object or speaker. |
-| `duplicate_corroboration` | A corroborated (or legacy independently_confirmed) claim cites at least two distinct observation IDs whose exact text bodies are all equal. Possible duplicated corroboration; not proof of dependence. Different bodies do not prove independence. |
-| `unknown_kind` | Populated entity kind is outside an explicitly configured vocabulary list. |
-| `unknown_predicate` | Claim predicate is outside an explicitly configured vocabulary list. |
+| `unused_entity` | Entity is not referenced by claims. |
+| `duplicate_corroboration` | Corroborated claim cites identical source bodies; repetitions are not independence. |
+| `unknown_kind` | Stable kind is not declared in the selected vocabulary. |
+| `unknown_predicate` | Predicate is not declared in the selected vocabulary. |
+| `unknown_external_id_scheme` | Identifier scheme is not declared by the selected vocabulary. |
+| `duplicate_external_id` | Exact scoped identifier belongs to more than one entity. |
+| `multiple_active_values` | Single-valued subject/predicate has different active objects; equal repeated values do not warn. |
+| `dependency_changed` | Direct support/refutation/dependency evidence was superseded/retracted. |
+| `capacity_near_limit` | Source/entity/claim usage is at least 80% of its engine limit. |
 
-Warnings have code, object_id, message and documentation. Ordering is code then
-object ID, with one finding per code/object. Missing vocabulary lists impose no
-restriction; empty lists permit no values without a warning. Applications may add
-warnings with the same shape at their adapter boundary, but must preserve harness
-errors and namespace their codes (e.g. app.example). They do not rewrite evidence
-or automatically change classifications. Executable hooks, strict mode and hypothesis
-refutation checks are deferred.
+Hosts may add namespaced advisory warnings at their boundary. Policies cannot
+weaken schema, quotation, history, identity or transaction rules. No executable
+warning hooks, total evidence-strength ordering or automatic truth scores exist.

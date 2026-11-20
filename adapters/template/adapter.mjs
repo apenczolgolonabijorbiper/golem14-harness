@@ -1,3 +1,4 @@
+import {requireCapabilities} from '../../server/core-policies.mjs';
 // Implement storage-specific operations outside the installed engine.
 // See docs/ADAPTERS.md. Every missing backend operation fails closed.
 export function createAdapter(backend) {
@@ -7,7 +8,7 @@ export function createAdapter(backend) {
   };
   return {
     status: options => call('status',options),
-    claim: options => call('claim',options),
+    claim: options => options?.required_capabilities?Promise.resolve(call('status')).then(status=>{requireCapabilities(status,options.required_capabilities);return call('claim',options);}):call('claim',options),
     renew: options => call('renew',options),
     validate: options => call('validate',options),
     commit: options => call('commit',options),

@@ -36,3 +36,25 @@ jobs:
         env:
           GOLEM_TRACE_COMMANDS: '1'
         run: python tools/build-release.py --output ../platform-release.zip
+
+  capacity:
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v7.1.0
+        with:
+          python-version: '3.12'
+      - name: Synthetic capacity measurements
+        run: node tools/benchmark-capacity.mjs 500,2000,5000,10000 256
+      - name: Larger note measurement
+        run: node tools/benchmark-capacity.mjs 2000 2048

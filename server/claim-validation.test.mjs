@@ -17,14 +17,14 @@ function fixture() {
     created_at, uncertainty: [],
   }));
   const claim = {
-    id: 'clm-record', subject_id: 'ent-subject', speaker_id: 'ent-speaker',
+    id: 'clm-record', subject_id: 'ent-subject', attributed_to_id: 'ent-speaker',
     predicate: 'references', object: {entity_id: 'ent-object'},
-    classification: 'user_declaration', status: 'active', supersedes: [], uncertainty: [],
+    classification: 'source_assertion', status: 'active', supersedes: [], uncertainty: [],
     sources: ids.map(observation_id => ({observation_id, quote: 'Synthetic record'})),
     asserted_at: timestamps[0], valid_time: {from: null, to: null, expression: null, precision: 'unknown'},
     created_at,
   };
-  const graph = {schema_version: 1, updated_at: created_at, sources: observations, entities, claims: [claim]};
+  const graph = {schema_version: 2, updated_at: created_at, sources: observations, entities, claims: [claim]};
   const sources = Object.fromEntries(observations.map(source => [source.id, {...source, body: 'Synthetic record'}]));
   const ledger = {schema_version: 1, observations: observations.map(({id, path, sha256}) => ({
     id, source_file: path, source_sha256: sha256, status: 'processed',
@@ -41,7 +41,7 @@ test('any existing entity type can be a speaker', () => {
 });
 
 test('missing claim references identify their fields without cascading provenance errors', () => {
-  for (const field of ['subject_id', 'speaker_id', 'object.entity_id']) {
+  for (const field of ['subject_id', 'attributed_to_id', 'object.entity_id']) {
     const state = fixture();
     if (field === 'object.entity_id') state.claim.object.entity_id = 'ent-missing';
     else state.claim[field] = 'ent-missing';

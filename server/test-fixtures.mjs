@@ -21,10 +21,10 @@ export function python(args,options={}) {
   return command(executable,[...prefix,...args],options);
 }
 
-export function fixture(t,{profile=false,legacy=false}={}) {
+export function fixture(t,{profile=false}={}) {
   const base=mkdtempSync(join(tmpdir(),'golem-test-')),root=join(base,'instance');
   t.after(()=>rmSync(base,{recursive:true,force:true}));
-  python([join(harness,'processor/init-instance.py'),'--root',root,...(profile?['--profile']:[]),...(legacy?['--legacy-layout']:[])]);
+  python([join(harness,'processor/init-instance.py'),'--root',root,...(profile?['--profile']:[])]);
   const read=path=>readFileSync(join(root,path),'utf8');
   const write=(path,value)=>{mkdirSync(dirname(join(root,path)),{recursive:true});writeFileSync(join(root,path),typeof value==='string'||Buffer.isBuffer(value)?value:JSON.stringify(value,null,2)+'\n');};
   const git=(...args)=>command('git',['-C',root,...args]);
@@ -42,7 +42,7 @@ export function fixture(t,{profile=false,legacy=false}={}) {
       const source=parseSource(s.path,read(s.path));graph.sources.push({id:s.id,path:s.path,sha256:s.sha256,recorded_at:source.recorded_at});
       const id='ent-'+s.id;
       graph.entities.push({id,type:'other',kind:'record',label:'Synthetic record',aliases:[],source_ids:[s.id],uncertainty:[],created_at:graph.updated_at});
-      graph.claims.push({id:'clm-'+s.id,subject_id:id,...(legacy?{speaker_id:id}:{attributed_to_id:id}),predicate:'describes',object:{value:'Synthetic'},classification:legacy?'user_declaration':'source_assertion',sources:[{observation_id:s.id,quote:bad?'Missing quotation':source.body.trim()}],asserted_at:source.recorded_at,valid_time:{from:null,to:null,expression:null,precision:'unknown'},status:'active',supersedes:[],uncertainty:[],created_at:graph.updated_at});
+      graph.claims.push({id:'clm-'+s.id,subject_id:id,attributed_to_id:id,predicate:'describes',object:{value:'Synthetic'},classification:'source_assertion',sources:[{observation_id:s.id,quote:bad?'Missing quotation':source.body.trim()}],asserted_at:source.recorded_at,valid_time:{from:null,to:null,expression:null,precision:'unknown'},status:'active',supersedes:[],uncertainty:[],created_at:graph.updated_at});
     }
     write('memory/graph.json',graph);
     write(`memory/runs/${claim.run_id}.md`,'# Synthetic semantic review\n\nSources reviewed; declaration only.\n'+(claim.guidance_identity?'guidance_version: '+claim.guidance_identity+'\n':''));

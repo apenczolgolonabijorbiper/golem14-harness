@@ -1,3 +1,4 @@
+import {externalKey,identifierQueryMatch,dependencyErrors,policyWarnings,temporalSelection} from './core-policies.mjs';
 import graphSchema from '../schemas/memory-graph.schema.json' with {type:'json'};
 
 // Deliberately bounded JSON Schema vocabulary; unknown keywords fail closed.
@@ -31,11 +32,12 @@ export function schemaErrors(value,schema=graphSchema){
   check(value,schema,'graph',errors);return errors;
 }
 
-export const attributionId = claim => claim.attributed_to_id ?? claim.speaker_id;
-export const classificationName = value => ({user_declaration:'source_assertion',independently_confirmed:'corroborated'}[value] ?? value);
+export const attributionId = claim => claim.attributed_to_id;
+export const classificationName = value => value;
 
 export function validateMemory(graph,{sources={},ledger,queue,previous}={}){
   const errors=schemaErrors(graph);if(errors.length)return errors;
+  if(previous&&schemaErrors(previous).length)return ['Unsupported/invalid previous graph'];
   const fail=message=>errors.push(message);
   function index(rows,name){const map=new Map();for(const row of rows){if(map.has(row.id))fail(name+': duplicate ID '+row.id);map.set(row.id,row);}return map;}
   const es=index(graph.entities,'entities'),cs=index(graph.claims,'claims'),ss=index(graph.sources,'sources');
@@ -48,12 +50,14 @@ export function validateMemory(graph,{sources={},ledger,queue,previous}={}){
   for(const row of Array.isArray(ledger?.observations)?ledger.observations:[]){if(processed.has(row.id)||row.status!=='processed'||!sources[row.id]||row.source_file!==sources[row.id]?.path||row.source_sha256!==sources[row.id]?.sha256)fail('Ledger source mismatch: '+row.id);processed.set(row.id,row);if(!ss.has(row.id))fail('Processed source missing from graph: '+row.id);}
   for(const s of graph.sources){const actual=sources[s.id];if(!actual||actual.path!==s.path||actual.sha256!==s.sha256||actual.recorded_at!==s.recorded_at)fail('Graph source mismatch: '+s.id);if(!processed.has(s.id))fail('Graph source is not processed: '+s.id);}
   for(const [id,s]of Object.entries(sources)){if(s.id!==id||s.path!==`inbox/${id}.md`||!s.body?.trim()||!Number.isFinite(Date.parse(s.recorded_at)))fail('Invalid source: '+id);if(s.question_id&&!qi.has(s.question_id))fail('Unknown source question: '+id);}
-  for(const e of graph.entities){for(const id of e.source_ids)if(!ss.has(id))fail('Entity source missing: '+e.id);if(Date.parse(e.created_at)>Date.parse(graph.updated_at))fail('Entity created after graph update: '+e.id);}
+  errors.push(...dependencyErrors(graph.claims));
+  for(const e of graph.entities){
+    const keys=new Set();for(const id of e.external_ids??[]){const key=externalKey(id);if(keys.has(key)||id.namespace.trim()!==id.namespace||id.value.trim()!==id.value)fail('Invalid/duplicate external identifier: '+e.id);keys.add(key);}
+    for(const id of e.source_ids)if(!ss.has(id))fail('Entity source missing: '+e.id);if(Date.parse(e.created_at)>Date.parse(graph.updated_at))fail('Entity created after graph update: '+e.id);}
   for(const c of graph.claims){
-    if(c.attributed_to_id!==undefined&&c.speaker_id!==undefined&&c.attributed_to_id!==c.speaker_id)fail('Conflicting claim attribution: '+c.id);
     const references = [
       ['subject_id', c.subject_id],
-      [c.attributed_to_id!==undefined?'attributed_to_id':'speaker_id', attributionId(c)],
+      ['attributed_to_id', attributionId(c)],
       ['object.entity_id', c.object.entity_id],
     ];
     const referencedEntities = new Set();
@@ -79,11 +83,10 @@ export function validateMemory(graph,{sources={},ledger,queue,previous}={}){
     for(const id of c.supersedes){const old=cs.get(id);if(!old||id===c.id||old.subject_id!==c.subject_id||old.predicate!==c.predicate||!['superseded','retracted'].includes(old.status))fail('Invalid correction: '+c.id);}
     if(c.status==='superseded'&&!graph.claims.some(x=>x.supersedes.includes(c.id)))fail('Missing replacement claim: '+c.id);
   }
-  function visit(id,path=new Set()){if(path.has(id)){fail('Correction cycle: '+id);return;}const next=new Set(path).add(id);for(const older of cs.get(id)?.supersedes||[])visit(older,next);}
-  for(const c of graph.claims)visit(c.id);
+  for(const error of dependencyErrors(graph.claims.map(c=>({...c,depends_on:c.supersedes}))))fail(error.replace('Claim dependency cycle:','Correction cycle:'));
   if(previous){
     if(Date.parse(graph.updated_at)<Date.parse(previous.updated_at))fail('Graph update timestamp went backwards');
-    for(const e of previous.entities||[]){const now=es.get(e.id);if(!now||now.type!==e.type||(e.kind!==undefined&&now.kind!==e.kind)||now.created_at!==e.created_at||e.source_ids.some(id=>!now.source_ids.includes(id)))fail('Entity identity/history removed: '+e.id);}
+    for(const e of previous.entities||[]){const now=es.get(e.id);for(const id of e.external_ids??[])if(!now?.external_ids?.some(x=>externalKey(x)===externalKey(id)))fail('Entity external identifier history removed: '+e.id);if(!now||now.type!==e.type||(e.kind!==undefined&&now.kind!==e.kind)||now.created_at!==e.created_at||e.source_ids.some(id=>!now.source_ids.includes(id)))fail('Entity identity/history removed: '+e.id);}
     for(const c of previous.claims||[]){const now=cs.get(c.id);if(!now){fail('Claim history removed: '+c.id);continue;}if(Object.keys(now).length!==Object.keys(c).length)fail('Claim history mutated: '+c.id);for(const k of Object.keys(c).filter(k=>k!=='status'))if(JSON.stringify(c[k])!==JSON.stringify(now[k]))fail('Claim history mutated: '+c.id);if(c.status!=='active'&&now.status!==c.status)fail('Claim status history reversed: '+c.id);}
     for(const s of previous.sources||[])if(JSON.stringify(ss.get(s.id))!==JSON.stringify(s))fail('Source history changed: '+s.id);
   }
@@ -91,11 +94,12 @@ export function validateMemory(graph,{sources={},ledger,queue,previous}={}){
 }
 
 const terms=text=>String(text).normalize('NFKD').replace(/\p{M}/gu,'').toLowerCase().replaceAll('ł','l').match(/[\p{L}\p{N}_-]+/gu)||[];
-function legacyContext(graph,{query='',entity_id='',source_id='',limit=30}={}){
-  const tokens=[...new Set(terms(query))],scores=new Map(),entityIds=new Set(entity_id?[entity_id]:[]);
+function lexicalContext(graph,options={}){
+  const {query='',entity_id='',source_id='',limit=30,vocabulary}=options;
+  const tokens=[...new Set(terms(query))],scores=new Map(),entityIds=new Set([...(options.seed_ids??[]),...(entity_id?[entity_id]:[])]);
   const score=text=>tokens.reduce((n,t)=>n+(terms(text).some(word=>word===t)?1:0),0);
-  for(const e of graph.entities){const n=score([e.label,...e.aliases,e.id,e.kind??''].join(' '));if(n)entityIds.add(e.id);}
-  for(const c of graph.claims){let n=score([c.predicate,c.object.value??'',...c.sources.map(s=>s.quote)].join(' '));if(!tokens.length&&!entity_id&&!source_id)n=1;if(entityIds.has(c.subject_id)||entityIds.has(c.object.entity_id))n+=4;if(source_id&&c.sources.some(s=>s.observation_id===source_id))n+=8;if(n)scores.set(c.id,n);}
+  for(const e of graph.entities){const n=score([e.label,...e.aliases,e.id,e.kind??''].join(' '));if(n||identifierQueryMatch(e,query,vocabulary))entityIds.add(e.id);}
+  for(const c of graph.claims){let n=score([c.predicate,c.object.value??'',...c.sources.map(s=>s.quote)].join(' '));if(!tokens.length&&!entity_id&&!source_id&&options.seed_ids===undefined)n=1;if(entityIds.has(c.subject_id)||entityIds.has(c.object.entity_id))n+=4;if(source_id&&c.sources.some(s=>s.observation_id===source_id))n+=8;if(n)scores.set(c.id,n);}
   const bounded=Math.min(100,Math.max(1,Number(limit)||30));
   const ranked=graph.claims.filter(c=>scores.has(c.id)).sort((a,b)=>scores.get(b.id)-scores.get(a.id)||a.id.localeCompare(b.id));
   const selected=ranked.slice(0,bounded),ids=new Set(selected.flatMap(c=>[c.subject_id,attributionId(c),c.object.entity_id].filter(Boolean)));
@@ -112,11 +116,13 @@ export function memoryStats(graph,sources,ledger,queue){
   for(const s of all)add(s.recorded_at.slice(0,10),'observations');for(const e of graph.entities)add(e.created_at.slice(0,10),'entities');for(const c of graph.claims){add(c.created_at.slice(0,10),'claims');if(c.object.entity_id)add(c.created_at.slice(0,10),'relations');}
   const totals={observations:all.length,processed:processed.size,pending:all.length-processed.size,entities:graph.entities.length,claims:graph.claims.length,relations:graph.claims.filter(c=>c.object.entity_id).length,active_claims:graph.claims.filter(c=>c.status==='active').length,open_questions:queue.questions.filter(q=>q.status==='open').length};
   const cumulative={observations:0,entities:0,claims:0,relations:0};const timeline=[...days.values()].sort((a,b)=>a.day.localeCompare(b.day)).map(day=>{for(const k of Object.keys(cumulative))cumulative[k]+=day[k];return {...day,cumulative:{...cumulative}};});
-  return {totals,timeline,graph_updated_at:graph.updated_at,definitions:{relations:'Claims whose object references an entity; a subset of claims, including retained correction history.',timeline:'UTC recording date for observations; actual graph creation date for entities/claims. Migration does not invent earlier graph growth.'}};
+  return {capacity:capacity(graph),totals,timeline,graph_updated_at:graph.updated_at,definitions:{relations:'Claims whose object references an entity; a subset of claims, including retained correction history.',timeline:'UTC recording date for observations; actual graph creation date for entities/claims. Migration does not invent earlier graph growth.'}};
 }
 
-export const warningCodes = ['unused_entity','duplicate_corroboration','unknown_kind','unknown_predicate'];
-export function collectWarnings(graph,{sources={},vocabulary}={}) {
+export const warningCodes = ['unused_entity','duplicate_corroboration','unknown_kind','unknown_predicate','unknown_external_id_scheme','capacity_near_limit','duplicate_external_id','multiple_active_values','dependency_changed'];
+export const graphLimits=Object.fromEntries(['sources','entities','claims'].map(key=>[key,graphSchema.properties[key].maxItems]));
+export const capacity=graph=>Object.fromEntries(Object.entries(graphLimits).map(([key,limit])=>[key,{used:graph[key].length,limit}]));
+export function collectWarnings(graph,{sources={},vocabulary,hypotheses}={}) {
   if (schemaErrors(graph).length) return [];
   const warnings=[], used=new Set(graph.claims.flatMap(c=>[c.subject_id,attributionId(c),c.object.entity_id].filter(Boolean)));
   const add=(code,object_id,message)=>warnings.push({code,object_id,message,documentation:'docs/MEMORY_MODEL.md#validation-warnings'});
@@ -129,7 +135,9 @@ export function collectWarnings(graph,{sources={},vocabulary}={}) {
     const ids=[...new Set(c.sources.map(s=>s.observation_id))],bodies=ids.map(id=>sources[id]?.body);
     if(classificationName(c.classification)==='corroborated'&&ids.length>=2&&bodies.every(b=>typeof b==='string')&&new Set(bodies).size===1)add('duplicate_corroboration',c.id,'Possible duplicated corroboration (identical source bodies): '+c.id);
   }
-  return warnings.sort((a,b)=>a.code.localeCompare(b.code)||a.object_id.localeCompare(b.object_id));
+  warnings.push(...policyWarnings(graph,{vocabulary,hypotheses}));
+  for(const [name,{used,limit}]of Object.entries(capacity(graph)))if(used>=Math.ceil(limit*.8))add('capacity_near_limit',name,`${name} capacity: ${used}/${limit}`);
+  return warnings.sort((a,b)=>a.code.localeCompare(b.code)||a.object_id.localeCompare(b.object_id)||a.message.localeCompare(b.message));
 }
 
 function filterList(value,name,pattern) {
@@ -139,11 +147,11 @@ function filterList(value,name,pattern) {
   return list;
 }
 
-export function retrieveContext(graph,options={}) {
+function baseContext(graph,options={}) {
   const {query='',entity_id='',source_id='',limit=30}=options;
   if(!Number.isInteger(Number(limit))||Number(limit)<1)throw Error('Invalid limit: expected a positive integer');
   const extended=['predicate','type','kind','status','hops','expansion_budget'].some(k=>options[k]!==undefined);
-  if(!extended)return legacyContext(graph,options);
+  if(!extended)return lexicalContext(graph,options);
   const predicates=filterList(options.predicate,'predicate',/^[a-z][a-z0-9_]{1,80}$/);
   const types=filterList(options.type,'type',/^(person|place|event|organization|other)$/);
   const kinds=filterList(options.kind,'kind',/^[a-z][a-z0-9_-]{1,40}$/);
@@ -160,14 +168,14 @@ export function retrieveContext(graph,options={}) {
     if(status==='active'&&c.status!=='active')hidden[c.status]++;
     else if(predicates&&!predicates.includes(c.predicate))hidden.predicate++;
   }
-  const bounded=Math.min(100,Number(limit)),metadata={},seeds=new Set();
+  const bounded=Math.min(100,Number(limit)),metadata={},seeds=new Set(options.seed_ids??[]);
   let candidates=[],exhausted=false;
   if(options.hops===undefined) {
     // Same ranking and related selection as the legacy path, but exclusions precede the bound.
     const tokens=[...new Set(terms(query))],score=text=>tokens.reduce((n,t)=>n+(terms(text).includes(t)?1:0),0),scores=new Map();
     if(entity_id)seeds.add(entity_id);
-    for(const e of graph.entities)if(score([e.label,...e.aliases,e.id,e.kind??''].join(' ')))seeds.add(e.id);
-    for(const c of eligible){let n=score([c.predicate,c.object.value??'',...c.sources.map(s=>s.quote)].join(' '));if(!tokens.length&&!entity_id&&!source_id)n=1;if(seeds.has(c.subject_id)||seeds.has(c.object.entity_id))n+=4;if(source_id&&c.sources.some(s=>s.observation_id===source_id))n+=8;if(n)scores.set(c.id,n);}
+    for(const e of graph.entities)if(score([e.label,...e.aliases,e.id,e.kind??''].join(' '))||identifierQueryMatch(e,query,options.vocabulary))seeds.add(e.id);
+    for(const c of eligible){let n=score([c.predicate,c.object.value??'',...c.sources.map(s=>s.quote)].join(' '));if(!tokens.length&&!entity_id&&!source_id&&options.seed_ids===undefined)n=1;if(seeds.has(c.subject_id)||seeds.has(c.object.entity_id))n+=4;if(source_id&&c.sources.some(s=>s.observation_id===source_id))n+=8;if(n)scores.set(c.id,n);}
     const ranked=eligible.filter(c=>scores.has(c.id)).sort((a,b)=>scores.get(b.id)-scores.get(a.id)||a.id.localeCompare(b.id));
     hidden.entity=ranked.filter(c=>!presentation(c)).length;
     const selected=ranked.filter(presentation).slice(0,bounded),ids=new Set(selected.flatMap(c=>[c.subject_id,attributionId(c),c.object.entity_id].filter(Boolean)));
@@ -178,9 +186,9 @@ export function retrieveContext(graph,options={}) {
   }else{
     const tokens=[...new Set(terms(query))],matches=text=>tokens.some(t=>terms(text).includes(t));
     if(entity_id)seeds.add(entity_id);
-    for(const e of graph.entities)if(matches([e.label,...e.aliases,e.id,e.kind??''].join(' ')))seeds.add(e.id);
+    for(const e of graph.entities)if(matches([e.label,...e.aliases,e.id,e.kind??''].join(' '))||identifierQueryMatch(e,query,options.vocabulary))seeds.add(e.id);
     for(const c of eligible)if((source_id&&c.sources.some(s=>s.observation_id===source_id))||matches([c.predicate,c.object.value??'',...c.sources.map(s=>s.quote)].join(' ')))for(const id of [c.subject_id,c.object.entity_id].filter(Boolean))seeds.add(id);
-    if(!query&&!entity_id&&!source_id)for(const e of graph.entities)seeds.add(e.id);
+    if(!query&&!entity_id&&!source_id&&options.seed_ids===undefined)for(const e of graph.entities)seeds.add(e.id);
     const adjacency=new Map();for(const c of eligible)for(const id of new Set([c.subject_id,c.object.entity_id].filter(Boolean))){if(!adjacency.has(id))adjacency.set(id,[]);adjacency.get(id).push(c);}
     for(const rows of adjacency.values())rows.sort((a,b)=>a.id.localeCompare(b.id));
     let frontier=[...seeds].sort(),visited=new Set(frontier),seen=new Set(),examined=0;
@@ -201,4 +209,30 @@ export function retrieveContext(graph,options={}) {
   const supporting_entities=graph.entities.filter(e=>!shown.has(e.id)&&claims.some(c=>[c.subject_id,attributionId(c),c.object.entity_id].includes(e.id)));
   const sourceIds=new Set(claims.flatMap(c=>c.sources.map(s=>s.observation_id)));if(source_id)sourceIds.add(source_id);
   return {entities,supporting_entities,claims,sources:graph.sources.filter(s=>sourceIds.has(s.id)),truncated:candidates.length>bounded||exhausted,truncation_reasons:[...(candidates.length>bounded?['claim_limit']:[]),...(exhausted?['expansion_budget']:[])],filters:{predicate:predicates,type:types,kind:kinds,status,hops},hidden,traversal:Object.fromEntries(claims.map(c=>[c.id,metadata[c.id]])),limits:{claims:bounded,expansion_budget:budget},method:options.hops===undefined?'lexical_filtered_plus_one_graph_hop':'lexical_seeds_breadth_first_undirected'};
+}
+
+
+export function retrieveContext(graph,options={}) {
+  let selected=graph,metadata=[],hidden={};
+  if(options.current!==undefined||options.valid_at!==undefined){const result=temporalSelection(graph,options,options.vocabulary);selected=result.graph;metadata=result.metadata;hidden=result.hidden;}
+  const lookup=[options.external_id,options.scheme,options.namespace];
+  if(lookup.some(x=>x!==undefined)){
+    if(lookup.some(x=>typeof x!=='string'||!x.trim()))throw Error('External lookup requires --external-id, --scheme and --namespace');
+    const key=externalKey({scheme:options.scheme,namespace:options.namespace,value:options.external_id});
+    options={...options,query:'',seed_ids:graph.entities.filter(e=>(e.external_ids??[]).some(id=>externalKey(id)===key)).map(e=>e.id)};
+  }
+  const result=baseContext(selected,options);
+  const cap=100,entityCount=result.entities.length,sourceCount=result.sources.length;
+  result.entities=result.entities.slice(0,cap);result.sources=result.sources.slice(0,cap);
+  if(entityCount>cap||sourceCount>cap){result.truncated=true;result.truncation_reasons=[...(result.truncation_reasons??[]),...(entityCount>cap?['entity_limit']:[]),...(sourceCount>cap?['source_limit']:[])];}
+  result.limits={...result.limits,entities:cap,sources:cap};
+  if(options.current!==undefined||options.valid_at!==undefined){
+    result.hidden={...(result.hidden??{}),...hidden};
+    const shown=new Set(result.claims.map(c=>c.id));
+    const relevant=metadata.filter(m=>m.selected.some(id=>shown.has(id)));
+    result.current_selection=relevant.slice(0,cap).map(m=>({...m,selected:m.selected.slice(0,cap),alternatives:m.alternatives.slice(0,cap),alternatives_truncated:m.alternatives.length>cap}));
+    result.current_ties=result.current_selection.filter(m=>m.tied);
+    result.temporal={valid_at:options.valid_at??null,current:options.current===true||options.current==='true',knowledge:'current correction/retraction knowledge; not a past transaction snapshot'};
+  }
+  return result;
 }

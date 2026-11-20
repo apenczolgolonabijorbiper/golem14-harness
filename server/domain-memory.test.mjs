@@ -8,8 +8,8 @@ import {schemaErrors,validateMemory,retrieveContext,collectWarnings,warningCodes
 
 function chain(){
   const entities=Array.from({length:5},(_,i)=>({id:'ent-'+i,type:'other',kind:i===2?'file':'record',label:'Node '+i,aliases:[],source_ids:[],created_at:'2026-01-01T00:00:00Z',uncertainty:[]}));
-  const claims=Array.from({length:4},(_,i)=>({id:'clm-'+i,subject_id:'ent-'+i,speaker_id:'ent-0',predicate:'links',object:{entity_id:'ent-'+(i+1)},classification:'user_declaration',sources:[],status:'active',supersedes:[],uncertainty:[],asserted_at:'2026-01-01T00:00:00Z',created_at:'2026-01-01T00:00:00Z',valid_time:{from:null,to:null,expression:null,precision:'unknown'}}));
-  return {schema_version:1,updated_at:'2026-01-01T00:00:00Z',sources:[],entities,claims};
+  const claims=Array.from({length:4},(_,i)=>({id:'clm-'+i,subject_id:'ent-'+i,attributed_to_id:'ent-0',predicate:'links',object:{entity_id:'ent-'+(i+1)},classification:'source_assertion',sources:[],status:'active',supersedes:[],uncertainty:[],asserted_at:'2026-01-01T00:00:00Z',created_at:'2026-01-01T00:00:00Z',valid_time:{from:null,to:null,expression:null,precision:'unknown'}}));
+  return {schema_version:2,updated_at:'2026-01-01T00:00:00Z',sources:[],entities,claims};
 }
 test('profile is explicitly selected, supports sudo Markdown, and hashes exact bytes',async t=>{
   const f=fixture(t);f.write('profiles/default.md','Do not activate automatically.');assert.equal(await loadProfile(f.root),null);
@@ -20,7 +20,7 @@ test('profile is explicitly selected, supports sudo Markdown, and hashes exact b
 test('profile selects only approved sections, validates vocabulary and forbids unsafe paths',async t=>{
   const f=fixture(t,{profile:true});f.write('profiles/core.md','Core');f.write('profiles/one.md','One');f.write('profiles/two.md','Two');
   const config={schema_version:1,profile:{path:'profiles/core.md',sections:[{id:'one',path:'profiles/one.md',kinds:['note']},{id:'two',path:'profiles/two.md',kinds:['digest']}],vocabulary:'profiles/vocabulary.json'}};
-  f.write('profiles/vocabulary.json',{schema_version:1,kinds:[],predicates:['links']});f.write('golem.config.json',config);
+  f.write('profiles/vocabulary.json',{schema_version:2,kinds:[],predicates:['links']});f.write('golem.config.json',config);
   const p=await loadProfile(f.root,{kinds:['note','../../malicious']});assert.equal(p.guidance,'Core\n\nOne');assert.deepEqual(p.vocabulary.kinds,[]);const mixed=await loadProfile(f.root,{kinds:['digest','note']});assert.equal(mixed.guidance,'Core\n\nOne\n\nTwo');assert.equal(mixed.guidance_version.delivered_sha256,sha256(mixed.guidance));
   for(const path of ['inbox/input.md','vendor/engine.md','../outside.md','/tmp/file','profiles/../core.md']){f.write('golem.config.json',{schema_version:1,profile:{path}});await assert.rejects(()=>loadProfile(f.root));}
   f.write('golem.config.json',{schema_version:1,profile:{path:'profiles/missing.md'}});await assert.rejects(()=>loadProfile(f.root));
@@ -31,7 +31,7 @@ test('initializer opt-in never resets or overwrites an existing instance',t=>{
   assert.throws(()=>python([join(harness,'processor/init-instance.py'),'--root',f.root,'--profile']),/never reset/);assert.equal(f.read('profiles/default.md'),before);
 });
 test('kind can be added once and then is protected by previous graph validation',()=>{
-  const graph={schema_version:1,updated_at:'2026-01-01T00:00:00Z',sources:[],entities:[{id:'ent-record',type:'other',label:'Record',aliases:[],source_ids:[],created_at:'2026-01-01T00:00:00Z',uncertainty:[]}],claims:[]};
+  const graph={schema_version:2,updated_at:'2026-01-01T00:00:00Z',sources:[],entities:[{id:'ent-record',type:'other',label:'Record',aliases:[],source_ids:[],created_at:'2026-01-01T00:00:00Z',uncertainty:[]}],claims:[]};
   // Supply source provenance for a schema-valid identity-only fixture.
   const sid='00000000-0000-4000-8000-000000000001',source={id:sid,path:`inbox/${sid}.md`,sha256:'a'.repeat(64),recorded_at:graph.updated_at};
   graph.sources.push(source);graph.entities[0].source_ids=[sid];const state={sources:{[sid]:{...source,body:'Synthetic'}},ledger:{schema_version:1,observations:[{id:sid,status:'processed',source_file:source.path,source_sha256:source.sha256}]},queue:{schema_version:1,questions:[]}};
@@ -57,8 +57,8 @@ test('warnings are deterministic, advisory, documented and account for speaker r
   const graph=chain(); // Warnings only operate on structurally valid graphs.
   const sid='00000000-0000-4000-8000-000000000001',second='00000000-0000-4000-8000-000000000002';
   for(const e of graph.entities)e.source_ids=[sid];for(const c of graph.claims)c.sources=[{observation_id:sid,quote:'Synthetic'}];
-  graph.claims[0].classification='independently_confirmed';graph.claims[0].sources.push({observation_id:second,quote:'Synthetic'});
-  graph.entities.push({...graph.entities[0],id:'ent-speaker',label:'Speaker'});graph.claims[0].speaker_id='ent-speaker';
+  graph.claims[0].classification='corroborated';graph.claims[0].sources.push({observation_id:second,quote:'Synthetic'});
+  graph.entities.push({...graph.entities[0],id:'ent-speaker',label:'Speaker'});graph.claims[0].attributed_to_id='ent-speaker';
   graph.entities.push({...graph.entities[0],id:'ent-unused'});
   const context={sources:{[sid]:{body:'Synthetic'},[second]:{body:'Synthetic'}},vocabulary:{kinds:[],predicates:[]}};
   const warnings=collectWarnings(graph,context);assert.ok(warnings.some(w=>w.code==='duplicate_corroboration'));assert.ok(warnings.some(w=>w.code==='unused_entity'&&w.object_id==='ent-unused'));assert.ok(!warnings.some(w=>w.code==='unused_entity'&&w.object_id==='ent-speaker'));assert.ok(warnings.some(w=>w.code==='unknown_kind'));assert.ok(warnings.some(w=>w.code==='unknown_predicate'));assert.deepEqual(warnings,collectWarnings(graph,context));
@@ -76,7 +76,7 @@ test('retrieval reports actual output and expansion limits independently of filt
 
 test('profile configuration rejects invalid vocabulary, duplicate selectors and all unreadable sections',async t=>{
   const f=fixture(t,{profile:true});await assert.rejects(()=>loadProfile(harness),/outside the engine/);const config={schema_version:1,profile:{path:'profiles/default.md',vocabulary:'profiles/vocab.json'}};
-  for(const vocabulary of [{schema_version:2},{schema_version:1,kinds:['record','record']},{schema_version:1,predicates:['bad-name']},{schema_version:1,unknown:[]}]){f.write('profiles/vocab.json',vocabulary);f.write('golem.config.json',config);await assert.rejects(()=>loadProfile(f.root));}
+  for(const vocabulary of [{schema_version:3},{schema_version:2,kinds:['record','record']},{schema_version:2,predicates:['bad-name']},{schema_version:1,unknown:[]}]){f.write('profiles/vocab.json',vocabulary);f.write('golem.config.json',config);await assert.rejects(()=>loadProfile(f.root));}
   delete config.profile.vocabulary;config.profile.sections=[{id:'missing',path:'profiles/missing.md',kinds:['not-this-batch']}];f.write('golem.config.json',config);await assert.rejects(()=>loadProfile(f.root,{kinds:['note']}));
 });
 
@@ -90,7 +90,7 @@ test('compound filters and query/source seeds have deterministic endpoint closur
   const query=retrieveContext(graph,{...options,query:'quotation'});assert.deepEqual(query.entities.map(e=>e.id),['ent-2']);assert.ok(query.claims.some(c=>c.id==='clm-1'));
   const source=retrieveContext(graph,{...options,source_id:sid});assert.ok(source.claims.some(c=>c.id==='clm-1'));assert.equal(source.sources[0].id,sid);
   assert.equal(retrieveContext(graph,{...options,type:'place',query:'quotation'}).entities.length,0);
-  for(const c of query.claims)for(const id of [c.subject_id,c.speaker_id,c.object.entity_id])assert.ok([...query.entities,...query.supporting_entities].some(e=>e.id===id));
+  for(const c of query.claims)for(const id of [c.subject_id,c.attributed_to_id,c.object.entity_id])assert.ok([...query.entities,...query.supporting_entities].some(e=>e.id===id));
 });
 
 test('breadth-first traversal handles equal-length branches and cycles with stable parents',()=>{

@@ -167,3 +167,19 @@ remaining unsafe-path checks still run. The expected Windows completion budget
 is under ten minutes. Hosted Windows CI verifies the package, but does not prove
 that the original reporting workstation is fixed. Its exact stalled subprocess
 was not identified from the supplied report; collect the trace if it persists.
+
+
+## 0.7.0 policy and batch-read contract
+
+The reference status advertises core-policies-v2. Candidate validation includes
+strict hypotheses, dependencies and profile policy warnings. Committed policy
+changes during a lease refuse completion; release/reclaim for new immutable
+policy guidance. The graph is target version 2; no old-format instance support is
+required. Host adapters must not claim the capability without these checks.
+
+Raw candidate capture uses ls-tree plus cat-file --batch with binary byte-length
+framing, never checkout filters or a Git process for every blob. At most two
+immutable snapshots are cached per adapter; each child has a 64 MiB output cap.
+The complete committed tree must fit that byte envelope; collection item limits
+alone do not promise support for arbitrary-size notes/artifacts. Timeout and CAS
+recovery rules still apply. CAPACITY_BENCHMARKS.md records actual measured sizes.
