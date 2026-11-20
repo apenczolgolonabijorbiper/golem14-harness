@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {syntheticState} from '../tools/benchmark-capacity.mjs';
 import {validateMemory,schemaErrors,collectWarnings,retrieveContext,memoryStats,graphLimits} from './memory-model.mjs';
 import {validateHypotheses} from './hypotheses.mjs';
-import {validateVocabulary,dependencyErrors,temporalSelection} from './core-policies.mjs';
+import {validateVocabulary,dependencyErrors,temporalSelection,requireCapabilities} from './core-policies.mjs';
 import {fixture} from './test-fixtures.mjs';
 import {run} from '../processor/memory-tool.mjs';
 import {loadProfile} from './application-profile.mjs';
@@ -94,6 +94,7 @@ test('policy-aware scaffold rejects missing capabilities before backend claim',a
   const {createAdapter}=await import('../adapters/template/adapter.mjs');let claimed=false;
   const a=createAdapter({status:()=>({capabilities:['candidate-validation-v1']}),claim:()=>{claimed=true;}});
   await assert.rejects(()=>a.claim({required_capabilities:['core-policies-v2']}),/missing required capability/);assert.equal(claimed,false);
+  assert.throws(()=>requireCapabilities({capabilities:'core-policies-v2 candidate-validation-v1'}),/invalid capability list/);
 });
 
 test('capacity failure does not publish a graph or processed ledger',async t=>{

@@ -18,6 +18,7 @@ export function syntheticState(count,{entities=5000,claims=20000,bodyCharacters=
 }
 function timed(fn){const at=performance.now(),value=fn();return {ms:Math.round(performance.now()-at),value};}
 export async function benchmark(count,bodyCharacters=256){
+  if(!Number.isInteger(bodyCharacters)||bodyCharacters<18||bodyCharacters>8192)throw Error('Invalid benchmark body size');
   const full=syntheticState(count,{bodyCharacters}),base=syntheticState(count-1,{bodyCharacters}),cleanups=[];
   const out={sources:count,body_characters:bodyCharacters,baseline_sources:count-1,entities:5000,claims:20000,node:process.version,platform:process.platform};
   try{
@@ -29,14 +30,18 @@ export async function benchmark(count,bodyCharacters=256){
       const r=timed(()=>command(process.execPath,[join(harness,'processor/memory-tool.mjs'),operation,'--root',f.root,...(operation==='context'?['--query','Synthetic']:[])],{maxBuffer:32*1024*1024}));
       out[operation+'_'+temperature+'_ms']=r.ms;out[operation+'_output_bytes']=Buffer.byteLength(r.value);
     }
+    for(const operation of ['validate','stats','context']){
+      const metrics=JSON.parse(command(process.execPath,[join(harness,'tools/measure-cli.mjs'),operation,'--root',f.root,...(operation==='context'?['--query','Synthetic']:[])],{maxBuffer:1024*1024}));
+      out[operation+'_child_peak_rss_mib']=metrics.peak_rss_mib;
+    }
     const source=f.observe(count,{body:'Synthetic record.'});full.graph.sources[full.graph.sources.length-1]={id:source.id,path:source.path,sha256:source.sha256,recorded_at:source.recorded_at};full.graph.updated_at=new Date().toISOString();
     const adapter=createAdapter({instance:f.root}),claim=await adapter.claim();f.write('memory/graph.json',full.graph);f.write(`memory/runs/${claim.run_id}.md`,'Synthetic benchmark review');
     let at=performance.now();await adapter.validate({run:claim.run_id});out.candidate_validate_ms=Math.round(performance.now()-at);
     at=performance.now();await adapter.commit({run:claim.run_id});out.candidate_commit_ms=Math.round(performance.now()-at);
     at=performance.now();await adapter.validate();out.working_tree_validate_ms=Math.round(performance.now()-at);
-    out.parent_peak_rss_mib=Math.round(process.resourceUsage().maxRSS/1024);out.child_peak_memory='not exposed by portable Node spawn; parent peak only';
+    out.parent_peak_rss_mib=Math.round(process.resourceUsage().maxRSS/1024);out.memory_note='isolated CLI child peaks plus cumulative parent peak; not simultaneous combined peak or candidate-child instrumentation';
     return out;
-  }finally{for(const clean of cleanups.reverse())clean();}
+  }catch(error){process.stderr.write('Benchmark operation failed: '+error.stack+'\n');throw error;}finally{for(const clean of cleanups.reverse())clean();}
 }
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
   const counts=(process.argv[2]??'500,2000,5000,10000').split(',').map(Number);

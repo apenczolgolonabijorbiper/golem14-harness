@@ -106,7 +106,9 @@ unfetched records are outside processed knowledge.
 
 Output is at most 100 claims, 100 primary entities and 100 source records; supporting
 entities close returned claim endpoints. Source excerpts have a 4,000-character
-per-source and 64,000-character total budget, with explicit truncation. Follow the
+per-source and 64,000-character total budget, with explicit truncation. These
+excerpt limits do not truncate exact quotations embedded in the returned claims;
+use a smaller claim limit when quotations themselves are large. Follow the
 original citations before drawing conclusions from excerpts. expansion_budget is
 at most 20,000. Sources have 10,000 slots, entities 5,000, claims 20,000; each claim
 has at most 32 source quotations. Profiles cannot raise engine limits.

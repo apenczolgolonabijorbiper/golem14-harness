@@ -23,12 +23,12 @@ export function python(args,options={}) {
 
 export function fixture(t,{profile=false}={}) {
   const base=mkdtempSync(join(tmpdir(),'golem-test-')),root=join(base,'instance');
-  t.after(()=>rmSync(base,{recursive:true,force:true}));
+  t.after(()=>rmSync(base,{recursive:true,force:true,maxRetries:10,retryDelay:100}));
   python([join(harness,'processor/init-instance.py'),'--root',root,...(profile?['--profile']:[])]);
   const read=path=>readFileSync(join(root,path),'utf8');
   const write=(path,value)=>{mkdirSync(dirname(join(root,path)),{recursive:true});writeFileSync(join(root,path),typeof value==='string'||Buffer.isBuffer(value)?value:JSON.stringify(value,null,2)+'\n');};
   const git=(...args)=>command('git',['-C',root,...args]);
-  git('init','-q');git('config','commit.gpgsign','false');git('config','core.hooksPath',join(base,'no-hooks'));git('config','user.name','Synthetic');git('config','user.email','synthetic@localhost');
+  git('init','-q');git('config','commit.gpgsign','false');git('config','gc.auto','0');git('config','maintenance.auto','false');git('config','core.hooksPath',join(base,'no-hooks'));git('config','user.name','Synthetic');git('config','user.email','synthetic@localhost');
   const save=()=>{git('add','.');git('commit','-qm','Synthetic snapshot');};save();
   const observe=(n=1,{age=120000,kind='observation',body='Synthetic record.'}={})=>{
     const id=`00000000-0000-4000-8000-${String(n).padStart(12,'0')}`,path=`inbox/${id}.md`;

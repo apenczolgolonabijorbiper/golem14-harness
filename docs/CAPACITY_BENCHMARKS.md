@@ -26,9 +26,10 @@ are not large-diff or maximum-size-quotation stress fixtures.
 
 The script prints one JSON line per case: platform/Node, source and body counts,
 validation/retrieval times, CLI output bytes, candidate validation/commit times,
-working-tree validation time and parent peak RSS. Node does not expose portable
-child peak RSS here; parent peak is process-wide/cumulative and is NOT combined
-parent+validator memory. Byte/heap limits must be reviewed for a real deployment.
+working-tree validation time and parent peak RSS. An additional isolated CLI
+probe per operation (tools/measure-cli.mjs) records that child's own peak RSS.
+Parent peak is process-wide/cumulative; these measurements are NOT a simultaneous
+combined parent+validator peak, and do not instrument the candidate child. Byte/heap limits must be reviewed for a real deployment.
 No universal workstation completion-time guarantee is made.
 
 Local Linux pre-release measurements (Node 24.22.3, small notes) observed roughly
@@ -54,3 +55,11 @@ cover raw LF/CRLF bytes, staged work, changed sources, concurrent heads, failed
 candidates and post-CAS recovery. At most two snapshots are retained per adapter.
 Collection limits/near-limit warnings come from the graph schema, not a profile.
 Observe warnings at 80%; maximum+1 fails before completion publication.
+
+Synthetic fixtures disable automatic background Git maintenance (gc.auto=0,
+maintenance.auto=false), signing and hooks to avoid inherited/background jobs
+contaminating timings or holding Windows cleanup files open. Cleanup uses bounded
+filesystem retries for transient locks. Production maintenance remains host-owned.
+The first hosted Windows run passed 500/2,000/5,000-source cases but failed deleting
+the 10,000-source fixture while an orphan Git process remained; no successful
+10,000-source Windows result is claimed from that run. See the final PR evidence.

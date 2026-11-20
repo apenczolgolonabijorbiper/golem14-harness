@@ -76,7 +76,8 @@ export function temporalSelection(graph,options,vocabulary){
 
 export function requireCapabilities(status,required=['candidate-validation-v1','core-policies-v2']){
   if(!Array.isArray(required)||required.some(x=>typeof x!=='string'))throw Error('Invalid required capabilities');
-  const missing=required.filter(c=>!status?.capabilities?.includes(c));
+  if(!Array.isArray(status?.capabilities)||status.capabilities.some(c=>typeof c!=='string'))throw Error('Adapter missing required capability: invalid capability list');
+  const missing=required.filter(c=>!status.capabilities.includes(c));
   if(missing.length)throw Error('Adapter missing required capability: '+missing.join(', '));
   return status;
 }

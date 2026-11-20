@@ -24,7 +24,7 @@ FILES = (
     'processor/test-observation-portability.py', 'processor/test-validation.py',
     'schemas/memory-graph.schema.json', 'schemas/hypotheses.schema.json',
     'server/core-policies.mjs', 'server/hypotheses.mjs', 'server/core-priorities.test.mjs',
-    'tools/benchmark-capacity.mjs', 'tools/intake-example.mjs', 'server/intake.test.mjs',
+    'tools/benchmark-capacity.mjs', 'tools/measure-cli.mjs', 'tools/intake-example.mjs', 'server/intake.test.mjs',
     'docs/ANALYSIS_WORKFLOW.md', 'docs/INTAKE_PROVENANCE.md', 'docs/CAPACITY_BENCHMARKS.md',
     'server/claim-validation.test.mjs', 'server/memory-core.test.mjs',
     'server/memory-model.mjs', 'server/application-profile.mjs', 'server/instance-layout.mjs',
