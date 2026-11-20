@@ -10,7 +10,7 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 FILES = (
-    'README.md', 'VERSION', 'LICENSE',
+    'README.md', 'VERSION', 'LICENSE', 'docs/RELEASE_NOTES.md',
     'docs/EXTRACTION.md', 'docs/MEMORY_MODEL.md', 'docs/PROCESSING.md',
     'docs/PROVENANCE.md', 'docs/ARCHITECTURE_MAPPING.md',
     'docs/CHATGPT_WORK.md', 'docs/CODEX.md', 'docs/DIRECTORY_LAYOUT.md',
