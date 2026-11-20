@@ -4,7 +4,7 @@ import json
 from datetime import datetime, timezone
 from pathlib import Path
 
-def initialize(root):
+def initialize(root, profile=False):
     root = Path(root).absolute()
     if root.is_symlink() or (root.exists() and any(root.iterdir())):
         raise ValueError('Destination must be absent or empty; existing instances are never reset')
@@ -22,6 +22,9 @@ def initialize(root):
         'memory/index.md': '# Memory\n\nNo analyzed observations.\n',
         'questions/queue.md': '# Questions\n\nNo questions.\n',
     }
+    if profile:
+        files['persona/profile.md'] = '# Purpose\n\nDescribe the memory purpose.\n\n## Entity kinds\n\n## Predicates\n\n## Evidence rules\n\n## Review focus\n'
+        files['golem.config.json'] = {'schema_version': 1, 'profile': {'path': 'persona/profile.md'}}
     for name, value in files.items():
         with (root / name).open('x', encoding='utf-8', newline='\n') as stream:
             stream.write(value if isinstance(value, str) else json.dumps(value, ensure_ascii=False, indent=2) + '\n')
@@ -30,8 +33,9 @@ def initialize(root):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root', required=True)
+    parser.add_argument('--profile', action='store_true', help='Create and explicitly select a Markdown profile template')
     args = parser.parse_args()
     try:
-        print(initialize(args.root))
+        print(initialize(args.root, args.profile))
     except (ValueError, OSError) as error:
         parser.exit(1, str(error) + '\n')

@@ -79,7 +79,7 @@ export function validateMemory(graph,{sources={},ledger,queue,previous}={}){
   for(const c of graph.claims)visit(c.id);
   if(previous){
     if(Date.parse(graph.updated_at)<Date.parse(previous.updated_at))fail('Graph update timestamp went backwards');
-    for(const e of previous.entities||[]){const now=es.get(e.id);if(!now||now.type!==e.type||now.created_at!==e.created_at||e.source_ids.some(id=>!now.source_ids.includes(id)))fail('Entity identity/history removed: '+e.id);}
+    for(const e of previous.entities||[]){const now=es.get(e.id);if(!now||now.type!==e.type||(e.kind!==undefined&&now.kind!==e.kind)||now.created_at!==e.created_at||e.source_ids.some(id=>!now.source_ids.includes(id)))fail('Entity identity/history removed: '+e.id);}
     for(const c of previous.claims||[]){const now=cs.get(c.id);if(!now){fail('Claim history removed: '+c.id);continue;}for(const k of Object.keys(c).filter(k=>k!=='status'))if(JSON.stringify(c[k])!==JSON.stringify(now[k]))fail('Claim history mutated: '+c.id);if(c.status!=='active'&&now.status!==c.status)fail('Claim status history reversed: '+c.id);}
     for(const s of previous.sources||[])if(JSON.stringify(ss.get(s.id))!==JSON.stringify(s))fail('Source history changed: '+s.id);
   }
@@ -87,10 +87,10 @@ export function validateMemory(graph,{sources={},ledger,queue,previous}={}){
 }
 
 const terms=text=>String(text).normalize('NFKD').replace(/\p{M}/gu,'').toLowerCase().replaceAll('ł','l').match(/[\p{L}\p{N}_-]+/gu)||[];
-export function retrieveContext(graph,{query='',entity_id='',source_id='',limit=30}={}){
+function legacyContext(graph,{query='',entity_id='',source_id='',limit=30}={}){
   const tokens=[...new Set(terms(query))],scores=new Map(),entityIds=new Set(entity_id?[entity_id]:[]);
   const score=text=>tokens.reduce((n,t)=>n+(terms(text).some(word=>word===t)?1:0),0);
-  for(const e of graph.entities){const n=score([e.label,...e.aliases,e.id].join(' '));if(n)entityIds.add(e.id);}
+  for(const e of graph.entities){const n=score([e.label,...e.aliases,e.id,e.kind??''].join(' '));if(n)entityIds.add(e.id);}
   for(const c of graph.claims){let n=score([c.predicate,c.object.value??'',...c.sources.map(s=>s.quote)].join(' '));if(!tokens.length&&!entity_id&&!source_id)n=1;if(entityIds.has(c.subject_id)||entityIds.has(c.object.entity_id))n+=4;if(source_id&&c.sources.some(s=>s.observation_id===source_id))n+=8;if(n)scores.set(c.id,n);}
   const bounded=Math.min(100,Math.max(1,Number(limit)||30));
   const ranked=graph.claims.filter(c=>scores.has(c.id)).sort((a,b)=>scores.get(b.id)-scores.get(a.id)||a.id.localeCompare(b.id));
@@ -109,4 +109,92 @@ export function memoryStats(graph,sources,ledger,queue){
   const totals={observations:all.length,processed:processed.size,pending:all.length-processed.size,entities:graph.entities.length,claims:graph.claims.length,relations:graph.claims.filter(c=>c.object.entity_id).length,active_claims:graph.claims.filter(c=>c.status==='active').length,open_questions:queue.questions.filter(q=>q.status==='open').length};
   const cumulative={observations:0,entities:0,claims:0,relations:0};const timeline=[...days.values()].sort((a,b)=>a.day.localeCompare(b.day)).map(day=>{for(const k of Object.keys(cumulative))cumulative[k]+=day[k];return {...day,cumulative:{...cumulative}};});
   return {totals,timeline,graph_updated_at:graph.updated_at,definitions:{relations:'Claims whose object references an entity; a subset of claims, including retained correction history.',timeline:'UTC recording date for observations; actual graph creation date for entities/claims. Migration does not invent earlier graph growth.'}};
+}
+
+export const warningCodes = ['unused_entity','duplicate_corroboration','unknown_kind','unknown_predicate'];
+export function collectWarnings(graph,{sources={},vocabulary}={}) {
+  if (schemaErrors(graph).length) return [];
+  const warnings=[], used=new Set(graph.claims.flatMap(c=>[c.subject_id,c.speaker_id,c.object.entity_id].filter(Boolean)));
+  const add=(code,object_id,message)=>warnings.push({code,object_id,message,documentation:'docs/MEMORY_MODEL.md#validation-warnings'});
+  for(const e of graph.entities) {
+    if(!used.has(e.id)) add('unused_entity',e.id,'Entity is not referenced by any claim: '+e.id);
+    if(e.kind&&vocabulary?.kinds&&!vocabulary.kinds.includes(e.kind))add('unknown_kind',e.id,'Kind is outside the configured vocabulary: '+e.id);
+  }
+  for(const c of graph.claims) {
+    if(vocabulary?.predicates&&!vocabulary.predicates.includes(c.predicate))add('unknown_predicate',c.id,'Predicate is outside the configured vocabulary: '+c.id);
+    const ids=[...new Set(c.sources.map(s=>s.observation_id))],bodies=ids.map(id=>sources[id]?.body);
+    if(c.classification==='independently_confirmed'&&ids.length>=2&&bodies.every(b=>typeof b==='string')&&new Set(bodies).size===1)add('duplicate_corroboration',c.id,'Possible duplicated corroboration (identical source bodies): '+c.id);
+  }
+  return warnings.sort((a,b)=>a.code.localeCompare(b.code)||a.object_id.localeCompare(b.object_id));
+}
+
+function filterList(value,name,pattern) {
+  if(value===undefined) return null;
+  const list=Array.isArray(value)?value:String(value).split(',');
+  if(!list.length||list.some(v=>typeof v!=='string'||!pattern.test(v))||new Set(list).size!==list.length)throw Error('Invalid '+name+' filter');
+  return list;
+}
+
+export function retrieveContext(graph,options={}) {
+  const {query='',entity_id='',source_id='',limit=30}=options;
+  if(!Number.isInteger(Number(limit))||Number(limit)<1)throw Error('Invalid limit: expected a positive integer');
+  const extended=['predicate','type','kind','status','hops','expansion_budget'].some(k=>options[k]!==undefined);
+  if(!extended)return legacyContext(graph,options);
+  const predicates=filterList(options.predicate,'predicate',/^[a-z][a-z0-9_]{1,80}$/);
+  const types=filterList(options.type,'type',/^(person|place|event|organization|other)$/);
+  const kinds=filterList(options.kind,'kind',/^[a-z][a-z0-9_-]{1,40}$/);
+  const status=options.status??'all',hops=Number(options.hops??1),budget=Number(options.expansion_budget??10000);
+  if(!['all','active'].includes(status))throw Error('Invalid status: expected active or all');
+  if(!Number.isInteger(hops)||hops<1||hops>3)throw Error('Invalid hops: supported range is 1..3');
+  if(!Number.isInteger(budget)||budget<1||budget>20000)throw Error('Invalid expansion budget: supported range is 1..20000');
+  const allowed=c=>(!predicates||predicates.includes(c.predicate))&&(status==='all'||c.status==='active');
+  const eligible=graph.claims.filter(allowed),entityMatches=e=>(!types||types.includes(e.type))&&(!kinds||kinds.includes(e.kind));
+  const matchingIds=new Set(graph.entities.filter(entityMatches).map(e=>e.id));
+  const presentation=c=>(!types&&!kinds)||matchingIds.has(c.subject_id)||matchingIds.has(c.object.entity_id)||matchingIds.has(c.speaker_id);
+  const hidden={superseded:0,retracted:0,predicate:0,entity:0};
+  for(const c of graph.claims) {
+    if(status==='active'&&c.status!=='active')hidden[c.status]++;
+    else if(predicates&&!predicates.includes(c.predicate))hidden.predicate++;
+  }
+  const bounded=Math.min(100,Number(limit)),metadata={},seeds=new Set();
+  let candidates=[],exhausted=false;
+  if(options.hops===undefined) {
+    // Same ranking and related selection as the legacy path, but exclusions precede the bound.
+    const tokens=[...new Set(terms(query))],score=text=>tokens.reduce((n,t)=>n+(terms(text).includes(t)?1:0),0),scores=new Map();
+    if(entity_id)seeds.add(entity_id);
+    for(const e of graph.entities)if(score([e.label,...e.aliases,e.id,e.kind??''].join(' ')))seeds.add(e.id);
+    for(const c of eligible){let n=score([c.predicate,c.object.value??'',...c.sources.map(s=>s.quote)].join(' '));if(!tokens.length&&!entity_id&&!source_id)n=1;if(seeds.has(c.subject_id)||seeds.has(c.object.entity_id))n+=4;if(source_id&&c.sources.some(s=>s.observation_id===source_id))n+=8;if(n)scores.set(c.id,n);}
+    const ranked=eligible.filter(c=>scores.has(c.id)).sort((a,b)=>scores.get(b.id)-scores.get(a.id)||a.id.localeCompare(b.id));
+    hidden.entity=ranked.filter(c=>!presentation(c)).length;
+    const selected=ranked.filter(presentation).slice(0,bounded),ids=new Set(selected.flatMap(c=>[c.subject_id,c.speaker_id,c.object.entity_id].filter(Boolean)));
+    const related=eligible.filter(c=>!scores.has(c.id)&&(ids.has(c.subject_id)||ids.has(c.object.entity_id)||selected.some(x=>x.supersedes.includes(c.id)||c.supersedes.includes(x.id))));
+    hidden.entity+=related.filter(c=>!presentation(c)).length;
+    candidates=[...ranked.filter(presentation),...related.filter(presentation)];
+    for(const c of candidates)metadata[c.id]={hop:scores.has(c.id)?0:1,parent_entity_id:null};
+  }else{
+    const tokens=[...new Set(terms(query))],matches=text=>tokens.some(t=>terms(text).includes(t));
+    if(entity_id)seeds.add(entity_id);
+    for(const e of graph.entities)if(matches([e.label,...e.aliases,e.id,e.kind??''].join(' ')))seeds.add(e.id);
+    for(const c of eligible)if((source_id&&c.sources.some(s=>s.observation_id===source_id))||matches([c.predicate,c.object.value??'',...c.sources.map(s=>s.quote)].join(' ')))for(const id of [c.subject_id,c.object.entity_id].filter(Boolean))seeds.add(id);
+    if(!query&&!entity_id&&!source_id)for(const e of graph.entities)seeds.add(e.id);
+    const adjacency=new Map();for(const c of eligible)for(const id of new Set([c.subject_id,c.object.entity_id].filter(Boolean))){if(!adjacency.has(id))adjacency.set(id,[]);adjacency.get(id).push(c);}
+    for(const rows of adjacency.values())rows.sort((a,b)=>a.id.localeCompare(b.id));
+    let frontier=[...seeds].sort(),visited=new Set(frontier),seen=new Set(),examined=0;
+    outer:for(let hop=1;hop<=hops&&frontier.length;hop++){
+      const next=new Set();
+      for(const id of frontier)for(const c of adjacency.get(id)||[]){
+        if(seen.has(c.id))continue;
+        if(examined>=budget){exhausted=true;break outer;}examined++;seen.add(c.id);
+        metadata[c.id]={hop,parent_entity_id:id};candidates.push(c);
+        for(const target of [c.subject_id,c.object.entity_id].filter(Boolean))if(!visited.has(target))next.add(target);
+      }
+      frontier=[...next].sort();for(const id of frontier)visited.add(id);
+    }
+    hidden.entity=candidates.filter(c=>!presentation(c)).length;candidates=candidates.filter(presentation);
+  }
+  const claims=candidates.slice(0,bounded),allIds=new Set([...seeds,...claims.flatMap(c=>[c.subject_id,c.speaker_id,c.object.entity_id].filter(Boolean))]);
+  const entities=graph.entities.filter(e=>allIds.has(e.id)&&entityMatches(e)),shown=new Set(entities.map(e=>e.id));
+  const supporting_entities=graph.entities.filter(e=>!shown.has(e.id)&&claims.some(c=>[c.subject_id,c.speaker_id,c.object.entity_id].includes(e.id)));
+  const sourceIds=new Set(claims.flatMap(c=>c.sources.map(s=>s.observation_id)));if(source_id)sourceIds.add(source_id);
+  return {entities,supporting_entities,claims,sources:graph.sources.filter(s=>sourceIds.has(s.id)),truncated:candidates.length>bounded||exhausted,truncation_reasons:[...(candidates.length>bounded?['claim_limit']:[]),...(exhausted?['expansion_budget']:[])],filters:{predicate:predicates,type:types,kind:kinds,status,hops},hidden,traversal:Object.fromEntries(claims.map(c=>[c.id,metadata[c.id]])),limits:{claims:bounded,expansion_budget:budget},method:options.hops===undefined?'lexical_filtered_plus_one_graph_hop':'lexical_seeds_breadth_first_undirected'};
 }

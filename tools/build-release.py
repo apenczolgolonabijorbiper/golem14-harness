@@ -23,7 +23,11 @@ FILES = (
     'processor/test-observation-portability.py', 'processor/test-validation.py',
     'schemas/memory-graph.schema.json',
     'server/claim-validation.test.mjs', 'server/memory-core.test.mjs',
-    'server/memory-model.mjs',
+    'server/memory-model.mjs', 'server/application-profile.mjs',
+    'server/domain-memory.test.mjs', 'server/test-fixtures.mjs',
+    'adapters/reference-git/adapter.mjs', 'adapters/template/adapter.mjs',
+    'adapters/conformance/adapter.test.mjs',
+    'docs/ADAPTERS.md', 'docs/APPLICATION_PROFILES.md', 'docs/UPGRADE_0_5.md',
 )
 
 
@@ -51,7 +55,8 @@ def build(output):
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(data)
         subprocess.run(['node', '--test', 'server/memory-core.test.mjs',
-                        'server/claim-validation.test.mjs'], cwd=stage, check=True)
+                        'server/claim-validation.test.mjs', 'server/domain-memory.test.mjs',
+                        'adapters/conformance/adapter.test.mjs'], cwd=stage, check=True)
         for script in ['processor/test-validation.py', 'processor/test-observation-portability.py',
                        'integration/test-install-cursor.py', 'integration/test-install-codex.py']:
             subprocess.run([sys.executable, script], cwd=stage, check=True)

@@ -58,6 +58,12 @@ permissions already supplied in the task. Ask only for unresolved choices:
    profile? Resolve the selected file and revision. Keep it outside the engine
    and inbox. Read it before state writes and report unreadable files. The profile
    supplies domain guidance subject to the harness contract and host permissions.
+   Follow docs/APPLICATION_PROFILES.md for explicit golem.config.json selection,
+   instance-relative files, optional vocabulary and journal hashes. Never enable a
+   profile merely because persona/profile.md exists. Reconcile existing setup-record
+   selection with configuration; report conflicts before writes. For a previously
+   selected external file, retain the recorded selection and resolve a reviewed
+   instance-local snapshot/configuration rather than silently dropping the profile.
 5. Start with manual processing, or connect an existing scheduled workflow?
    Propose manual processing for a new setup. Resolve the identity of an existing
    schedule if selected. Creating a schedule requires the user's requested timing
@@ -112,7 +118,8 @@ Save a concise reusable setup record at the selected location. Include:
 - Harness location and version, and external private instance location.
 - Purpose/language and paths to domain guidance or the selected profile, if any.
 - The selected host as the inference host, manual or scheduled invocation,
-  adapter reference and verified capabilities, and unresolved setup or processing requirements.
+  adapter reference and verified capabilities (see docs/ADAPTERS.md for the optional
+  local Git reference and its repository-root limits), and unresolved setup or processing requirements.
 - Explicit instructions to read the engine contract and processing protocol,
   preserve the read-only engine boundary, and use only this instance's sources.
 - A fresh-session instruction to load this record, re-resolve the current target
