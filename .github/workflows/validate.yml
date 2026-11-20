@@ -22,7 +22,10 @@ jobs:
       - uses: actions/setup-python@v7.1.0
         with:
           python-version: '3.12'
-      - name: Platform-default Node fixture launcher
-        run: node --test server/memory-core.test.mjs server/claim-validation.test.mjs server/domain-memory.test.mjs server/neutral-core.test.mjs adapters/conformance/adapter.test.mjs
+      - name: Platform-default fixture initialization
+        run: >-
+          node --input-type=module -e "import {fixture} from './server/test-fixtures.mjs';
+          const cleanups=[]; try { console.log(fixture({after:fn=>cleanups.push(fn)},{profile:true}).root); }
+          finally { for(const fn of cleanups.reverse()) fn(); }"
       - name: Packaged release and installer checks
         run: python tools/build-release.py --output ../platform-release.zip

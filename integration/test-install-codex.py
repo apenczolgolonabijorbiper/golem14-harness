@@ -26,7 +26,7 @@ def install(host, repo, instance, success=True):
 
 
 with tempfile.TemporaryDirectory() as temporary:
-    root = Path(temporary)
+    root = Path(temporary).resolve()
     source_before = snapshot(SOURCE)
     # Both hosts must use one block regardless of installation order.
     for first, second in [('codex', 'cursor'), ('cursor', 'codex')]:

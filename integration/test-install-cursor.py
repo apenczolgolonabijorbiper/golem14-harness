@@ -12,7 +12,7 @@ def hashes(root):
             for p in root.rglob('*') if p.is_file()}
 
 with tempfile.TemporaryDirectory() as temporary:
-    root = Path(temporary)
+    root = Path(temporary).resolve()
     repo, instance = root / 'app', root / 'private'
     repo.mkdir()
     (repo / 'AGENTS.md').write_bytes(b'# Existing application rules\r\nKeep this text.\r\n')
