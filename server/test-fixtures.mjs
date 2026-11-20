@@ -2,12 +2,12 @@ import {mkdtempSync,readFileSync,writeFileSync,mkdirSync,rmSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join,resolve,dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {spawnSync} from 'node:child_process';
+import {boundedSpawn} from './subprocess.mjs';
 import {parseSource} from '../processor/memory-tool.mjs';
 
 export const harness=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 export function command(executable,args,options={}) {
-  const r=spawnSync(executable,args,{encoding:'utf8',...options});
+  const r=boundedSpawn(executable,args,{encoding:'utf8',...options});
   if(r.status!==0)throw Error('Command failed: '+JSON.stringify([executable,...args])+': '+(r.stderr||r.stdout||r.error));
   return r.stdout.trim();
 }
@@ -28,7 +28,7 @@ export function fixture(t,{profile=false,legacy=false}={}) {
   const read=path=>readFileSync(join(root,path),'utf8');
   const write=(path,value)=>{mkdirSync(dirname(join(root,path)),{recursive:true});writeFileSync(join(root,path),typeof value==='string'||Buffer.isBuffer(value)?value:JSON.stringify(value,null,2)+'\n');};
   const git=(...args)=>command('git',['-C',root,...args]);
-  git('init','-q');git('config','user.name','Synthetic');git('config','user.email','synthetic@localhost');
+  git('init','-q');git('config','commit.gpgsign','false');git('config','core.hooksPath',join(base,'no-hooks'));git('config','user.name','Synthetic');git('config','user.email','synthetic@localhost');
   const save=()=>{git('add','.');git('commit','-qm','Synthetic snapshot');};save();
   const observe=(n=1,{age=120000,kind='observation',body='Synthetic record.'}={})=>{
     const id=`00000000-0000-4000-8000-${String(n).padStart(12,'0')}`,path=`inbox/${id}.md`;

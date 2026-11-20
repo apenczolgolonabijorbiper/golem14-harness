@@ -1,5 +1,5 @@
 import {resolveLayout} from '../../server/instance-layout.mjs';
-import {spawnSync} from 'node:child_process';
+import {boundedSpawn} from '../../server/subprocess.mjs';
 import {createHash,randomUUID} from 'node:crypto';
 import {existsSync,readFileSync,writeFileSync,mkdirSync,rmSync,lstatSync,readdirSync,realpathSync,mkdtempSync,statSync} from 'node:fs';
 import {resolve,dirname,join} from 'node:path';
@@ -22,7 +22,7 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
   if(within(engine,root)||within(root,engine)||physicallyWithin(engine,root)||physicallyWithin(root,engine))throw new AdapterError('Instance must be outside the installed engine');
   const exec=(args,{input,env={},encoding=null}={})=>{
     const inherited={...process.env};for(const name of ['GIT_INDEX_FILE','GIT_DIR','GIT_WORK_TREE','GIT_COMMON_DIR','GIT_OBJECT_DIRECTORY','GIT_ALTERNATE_OBJECT_DIRECTORIES'])delete inherited[name];
-    const r=spawnSync(git,['-C',root,...args],{input,encoding,env:{...inherited,GIT_OPTIONAL_LOCKS:'0',...env},maxBuffer:64*1024*1024});
+    const r=boundedSpawn(git,['-C',root,...args],{input,encoding,env:{...inherited,GIT_OPTIONAL_LOCKS:'0',...env},maxBuffer:64*1024*1024});
     if(r.error||r.status!==0)throw new AdapterError('Git operation refused: '+args[0]);
     return encoding?r.stdout:r.stdout;
   };
@@ -215,7 +215,7 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
       // Runtime-required empty directories are not represented in Git trees.
       mkdirSync(join(stage,'inbox'),{recursive:true});
       const previous=join(built.temporary,'previous.json');writeFileSync(previous,blob(s.head,'memory/graph.json'));
-      const r=spawnSync(node,[join(engine,'processor/memory-tool.mjs'),'validate','--root',stage,'--previous',previous],{encoding:'utf8',maxBuffer:8*1024*1024});
+      const r=boundedSpawn(node,[join(engine,'processor/memory-tool.mjs'),'validate','--root',stage,'--previous',previous],{encoding:'utf8',maxBuffer:8*1024*1024});
       if(r.error||r.status!==0){const first=(r.stderr??'').split('\n')[0];throw new AdapterError('Candidate validation failed: '+(first.startsWith('Memory validation failed: ')?first.slice(26,526):'invalid snapshot; inspect with memory-tool validate'));}
       const validation=JSON.parse(r.stdout);
       return {...built,entries,validation,files:[...entries.keys()],left_uncommitted:dirty().filter(p=>!entries.has(p))};
@@ -246,7 +246,7 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
     async renew({run}={}){return locked(async()=>{const s=state();assertLocalProtocol(s);own(s,run);const lease={...s.lease,expires_at:new Date(now()+900000).toISOString()};const next=publish(s,new Map([[LEASE,json(lease)]]),[LEASE],`renew ${run}`);return {head:next,expires_at:lease.expires_at};});},
     async 'release-error'({run}={}){return locked(async()=>{const s=state();assertLocalProtocol(s);const next=errorLease(s,run);return {status:'error',head:next};});},
     async validate({run,outputs}={}){
-      if(!run){const s=state(),tmp=mkdtempSync(join(gitdir,'golem-validate-'));try{const previous=join(tmp,'previous.json');writeFileSync(previous,blob(s.head,'memory/graph.json'));const r=spawnSync(node,[join(engine,'processor/memory-tool.mjs'),'validate','--root',root,'--previous',previous],{encoding:'utf8'});if(r.status!==0)throw new AdapterError('Working-tree validation failed');return {ok:true,mode:'working-tree',head:s.head,output:JSON.parse(r.stdout)};}finally{rmSync(tmp,{recursive:true,force:true});}}
+      if(!run){const s=state(),tmp=mkdtempSync(join(gitdir,'golem-validate-'));try{const previous=join(tmp,'previous.json');writeFileSync(previous,blob(s.head,'memory/graph.json'));const r=boundedSpawn(node,[join(engine,'processor/memory-tool.mjs'),'validate','--root',root,'--previous',previous],{encoding:'utf8'});if(r.status!==0)throw new AdapterError('Working-tree validation failed');return {ok:true,mode:'working-tree',head:s.head,output:JSON.parse(r.stdout)};}finally{rmSync(tmp,{recursive:true,force:true});}}
       const s=state();const built=await candidate(s,run,outputs);try{return {ok:true,mode:'candidate',head:s.head,output:built.validation,files:built.files,left_uncommitted:built.left_uncommitted};}finally{rmSync(built.temporary,{recursive:true,force:true});}
     },
     async commit({run,outputs}={}){return locked(async()=>{

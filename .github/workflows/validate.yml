@@ -7,10 +7,15 @@ permissions:
   contents: read
 jobs:
   validate:
+    timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
+        python: ['3.12']
+        include:
+          - os: windows-latest
+            python: '3.14'
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v7.0.1
@@ -21,11 +26,13 @@ jobs:
           node-version: '24'
       - uses: actions/setup-python@v7.1.0
         with:
-          python-version: '3.12'
+          python-version: ${{ matrix.python }}
       - name: Platform-default fixture initialization
         run: >-
           node --input-type=module -e "import {fixture} from './server/test-fixtures.mjs';
           const cleanups=[]; try { console.log(fixture({after:fn=>cleanups.push(fn)},{profile:true}).root); }
           finally { for(const fn of cleanups.reverse()) fn(); }"
       - name: Packaged release and installer checks
+        env:
+          GOLEM_TRACE_COMMANDS: '1'
         run: python tools/build-release.py --output ../platform-release.zip

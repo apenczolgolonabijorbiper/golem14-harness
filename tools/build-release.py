@@ -25,7 +25,7 @@ FILES = (
     'schemas/memory-graph.schema.json',
     'server/claim-validation.test.mjs', 'server/memory-core.test.mjs',
     'server/memory-model.mjs', 'server/application-profile.mjs', 'server/instance-layout.mjs',
-    'server/neutral-core.test.mjs',
+    'server/neutral-core.test.mjs', 'server/subprocess.mjs', 'server/subprocess.test.mjs',
     'server/domain-memory.test.mjs', 'server/test-fixtures.mjs',
     'adapters/reference-git/adapter.mjs', 'adapters/template/adapter.mjs',
     'adapters/conformance/adapter.test.mjs',
@@ -58,7 +58,7 @@ def build(output):
             path.write_bytes(data)
         subprocess.run(['node', '--test', 'server/memory-core.test.mjs',
                         'server/claim-validation.test.mjs', 'server/domain-memory.test.mjs',
-                        'adapters/conformance/adapter.test.mjs', 'server/neutral-core.test.mjs'],
+                        'adapters/conformance/adapter.test.mjs', 'server/neutral-core.test.mjs', 'server/subprocess.test.mjs'],
                        cwd=stage, check=True, env={**os.environ, 'GOLEM_PYTHON': os.environ.get('GOLEM_PYTHON', sys.executable)})
         for script in ['processor/test-validation.py', 'processor/test-observation-portability.py',
                        'integration/test-install-cursor.py', 'integration/test-install-codex.py']:

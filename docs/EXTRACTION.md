@@ -1,5 +1,26 @@
 # Release history
 
+## 0.6.1 — Bounded subprocesses and upgrade instructions
+
+- VI-011: child timeouts, closed stdin, noninteractive Git and opt-in command
+  tracing prevent silent indefinite waits; fixture hooks/signing are isolated.
+- Windows CI also exercises Python 3.14; symlink privilege diagnostics remain
+  explicit. See ADAPTERS.md for limits, tracing and workstation acceptance.
+- VI-009: upgrades require whole-directory engine replacement, explicitly removing
+  stale release-tools/ while preserving external instance data.
+- VI-007 remains a processed-memory transfer proposal; existing observation-only
+  portability regression checks preserve identity and require re-analysis.
+
+## 0.6.1 — Bounded subprocesses and explicit upgrade replacement
+
+- VI-011: bounded, noninteractive fixture, conformance and adapter children;
+  opt-in command tracing and timeout diagnostics with partial stderr.
+- VI-009: upgrade instructions explicitly remove stale engine internals, including
+  release-tools/, by complete directory replacement while preserving external data.
+- VI-010: document the limited symlink-privilege diagnostic; other checks still run.
+- VI-007: processed-memory transfer remains a separate feature request. The
+  supported observation-only transfer deliberately requires destination re-analysis.
+
 ## 0.6.0 — Neutral instance core and portable verification
 
 - New instances use instance/purpose.md, memory/hypotheses.json and optional

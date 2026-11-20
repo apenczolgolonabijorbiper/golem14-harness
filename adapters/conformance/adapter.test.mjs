@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {spawnSync,spawn} from 'node:child_process';
+import {spawn} from 'node:child_process';
+import {boundedSpawn} from '../../server/subprocess.mjs';
 import {join} from 'node:path';
 import {symlinkSync} from 'node:fs';
 import {fixture,harness} from '../../server/test-fixtures.mjs';
@@ -8,7 +9,7 @@ import {createAdapter} from '../reference-git/adapter.mjs';
 
 // Any compatible local CLI can run the black-box tests via a JSON command array.
 const cli=process.env.GOLEM_ADAPTER?JSON.parse(process.env.GOLEM_ADAPTER):[process.execPath,join(harness,'adapters/reference-git/adapter.mjs')];
-function invoke(f,command,...args){const r=spawnSync(cli[0],[...cli.slice(1),command,'--instance',f.root,...(process.env.GOLEM_ADAPTER?[]:['--harness',harness]),...args],{encoding:'utf8'});if(r.status!==0)throw Error(r.stderr);return JSON.parse(r.stdout);}
+function invoke(f,command,...args){const r=boundedSpawn(cli[0],[...cli.slice(1),command,'--instance',f.root,...(process.env.GOLEM_ADAPTER?[]:['--harness',harness]),...args],{encoding:'utf8',timeout:180000});if(r.status!==0)throw Error(r.stderr);return JSON.parse(r.stdout);}
 
 test('CLI conformance: no work, age gating, claim/owner checks, renew and error release',t=>{
   const f=fixture(t),before=f.git('rev-parse','HEAD');assert.equal(invoke(f,'claim').status,'no-work');assert.equal(f.git('rev-parse','HEAD'),before);
@@ -60,7 +61,7 @@ if(!process.env.GOLEM_ADAPTER){
   const fresh=createAdapter({instance:f.root});assert.equal((await fresh.claim()).status,'no-work');assert.equal(f.git('rev-parse','HEAD'),committed);assert.equal((await fresh.status()).recovery_required,false);assert.equal(f.read('scratch.md'),'Preserve');assert.equal(JSON.parse(f.read('memory/processed.json')).observations.length,1);
  });
  test('reference: autocrlf and attributes cannot transform candidate source bytes',async t=>{
-  const f=fixture(t);f.write('.gitattributes','*.md text eol=crlf\n');f.save();f.git('config','core.autocrlf','true');const source=f.observe();const raw=f.read(source.path);const adapter=createAdapter({instance:f.root});const claim=await adapter.claim();f.analyze(claim);await adapter.commit({run:claim.run_id});const stored=spawnSync('git',['-C',f.root,'show',`HEAD:${source.path}`]).stdout;assert.deepEqual(stored,Buffer.from(raw));assert.equal((await adapter.status()).processed,1);
+  const f=fixture(t);f.write('.gitattributes','*.md text eol=crlf\n');f.save();f.git('config','core.autocrlf','true');const source=f.observe();const raw=f.read(source.path);const adapter=createAdapter({instance:f.root});const claim=await adapter.claim();f.analyze(claim);await adapter.commit({run:claim.run_id});const stored=boundedSpawn('git',['-C',f.root,'show',`HEAD:${source.path}`]).stdout;assert.deepEqual(stored,Buffer.from(raw));assert.equal((await adapter.status()).processed,1);
  });
  test('reference: staged candidate changes and stale protocol files are refused',async t=>{
   const f=fixture(t);f.observe();const adapter=createAdapter({instance:f.root});const claim=await adapter.claim();f.analyze(claim);f.git('add','memory/graph.json');await assert.rejects(()=>adapter.commit({run:claim.run_id}),/staged/);f.git('reset','-q','HEAD','--','memory/graph.json');f.write('memory/processing-lock.json',{schema_version:1,status:'idle',observation_ids:[]});await assert.rejects(()=>adapter.renew({run:claim.run_id}),/Stale/);assert.equal((await adapter.status()).lease.run_id,claim.run_id);
@@ -70,7 +71,7 @@ if(!process.env.GOLEM_ADAPTER){
 test('CLI conformance: warning-only completion is valid and integrity errors retain their first diagnostic',t=>{
   const f=fixture(t,{profile:true});f.write('profiles/vocab.json',{schema_version:1,kinds:[],predicates:[]});f.write('golem.config.json',{schema_version:1,profile:{path:'profiles/default.md',vocabulary:'profiles/vocab.json'}});f.save();f.observe();const claim=invoke(f,'claim');f.analyze(claim);
   const dry=invoke(f,'validate','--run',claim.run_id);assert.equal(dry.output.valid,true);assert.deepEqual(dry.output.warnings.map(w=>w.code),['unknown_kind','unknown_predicate']);const result=invoke(f,'commit','--run',claim.run_id);assert.equal(result.warnings.length,2);assert.equal(invoke(f,'validate').output.warnings.length,2);
-  const graph=JSON.parse(f.read('memory/graph.json'));graph.claims[0].sources[0].quote='Not in source';f.write('memory/graph.json',graph);const r=spawnSync(process.execPath,[join(harness,'processor/memory-tool.mjs'),'validate','--root',f.root],{encoding:'utf8'});assert.equal(r.status,1);assert.match(r.stderr,/^Memory validation failed: Claim source\/quote mismatch:/);
+  const graph=JSON.parse(f.read('memory/graph.json'));graph.claims[0].sources[0].quote='Not in source';f.write('memory/graph.json',graph);const r=boundedSpawn(process.execPath,[join(harness,'processor/memory-tool.mjs'),'validate','--root',f.root],{encoding:'utf8'});assert.equal(r.status,1);assert.match(r.stderr,/^Memory validation failed: Claim source\/quote mismatch:/);
 });
 
 test('CLI conformance: malformed sources and unavailable configured profiles write no lease',t=>{
@@ -93,6 +94,6 @@ test('CLI conformance: expired lease is reclaimed and changed processed bytes ar
 
 test('CLI conformance: concurrent claims cannot both acquire ownership',async t=>{
   const f=fixture(t);f.observe();
-  const call=()=>new Promise((done,reject)=>{const child=spawn(cli[0],[...cli.slice(1),'claim','--instance',f.root,...(process.env.GOLEM_ADAPTER?[]:['--harness',harness])]);let stdout='',stderr='';child.stdout.on('data',b=>stdout+=b);child.stderr.on('data',b=>stderr+=b);child.on('error',reject);child.on('close',code=>done({code,stdout,stderr}));});
+  const call=()=>new Promise((done,reject)=>{const child=spawn(cli[0],[...cli.slice(1),'claim','--instance',f.root,...(process.env.GOLEM_ADAPTER?[]:['--harness',harness])],{stdio:['ignore','pipe','pipe'],env:{...process.env,GIT_TERMINAL_PROMPT:'0',GCM_INTERACTIVE:'Never'},timeout:180000});let stdout='',stderr='';child.stdout.on('data',b=>stdout+=b);child.stderr.on('data',b=>stderr+=b);child.on('error',reject);child.on('close',(code,signal)=>signal?reject(Error('Adapter claim child stopped ('+signal+'): '+JSON.stringify(cli)+'\n'+stderr.slice(0,2000))):done({code,stdout,stderr}));});
   const results=await Promise.all([call(),call()]);assert.equal(results.filter(r=>r.code===0).length,1);const winner=JSON.parse(results.find(r=>r.code===0).stdout);assert.equal(invoke(f,'status').lease.run_id,winner.run_id);
 });
