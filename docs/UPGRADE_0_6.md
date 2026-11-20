@@ -23,3 +23,7 @@ LF, CRLF, migration, idempotency and refusal of real CRLF edits on every platfor
 The local Git adapter limitations, graph size limits and host-owned inference/
 ingestion responsibilities from 0.5.0 remain. Platform CI runs Linux, Windows and
 macOS validation; actual results are recorded in the PR/release evidence.
+
+Windows CI also exposed a textual repository-root comparison failure. The reference
+adapter now compares resolved directory identity (device/inode), accepting equivalent
+Windows path spellings while still refusing a data subdirectory of another Git root.

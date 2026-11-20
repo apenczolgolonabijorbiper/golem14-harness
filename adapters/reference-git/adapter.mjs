@@ -1,7 +1,7 @@
 import {resolveLayout} from '../../server/instance-layout.mjs';
 import {spawnSync} from 'node:child_process';
 import {createHash,randomUUID} from 'node:crypto';
-import {existsSync,readFileSync,writeFileSync,mkdirSync,rmSync,lstatSync,readdirSync,realpathSync,mkdtempSync} from 'node:fs';
+import {existsSync,readFileSync,writeFileSync,mkdirSync,rmSync,lstatSync,readdirSync,realpathSync,mkdtempSync,statSync} from 'node:fs';
 import {resolve,dirname,join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {parseSource} from '../../processor/memory-tool.mjs';
@@ -27,7 +27,8 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
     return encoding?r.stdout:r.stdout;
   };
   const gitText=args=>exec(args,{encoding:'utf8'}).trim();
-  if(realpathSync(gitText(['rev-parse','--show-toplevel']))!==root)throw new AdapterError('Instance must be the dedicated Git repository root');
+  const actualRoot=statSync(root,{bigint:true}),gitRoot=statSync(realpathSync(gitText(['rev-parse','--show-toplevel'])),{bigint:true});
+  if(actualRoot.dev!==gitRoot.dev||actualRoot.ino!==gitRoot.ino)throw new AdapterError('Instance must be the dedicated Git repository root');
   const ref=gitText(['symbolic-ref','HEAD']),gitdir=resolve(root,gitText(['rev-parse','--git-dir']));
   const marker=join(gitdir,'golem-adapter-pending.json'),mutex=join(gitdir,'golem-adapter-operation.lock');
   const head=()=>{if(gitText(['symbolic-ref','HEAD'])!==ref)throw new AdapterError('Active branch changed; reopen the adapter on the intended instance branch');return gitText(['rev-parse',ref]);};
@@ -166,10 +167,11 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
       finishPending();return next;
     }finally{if(built)rmSync(built.temporary,{recursive:true,force:true});}
   }
+  function readAt(commit) {
+    return async path=>{const data=blob(commit,path,true);if(data===null){const error=Error('Committed instance file missing: '+path);error.code='ENOENT';throw error;}return data;};
+  }
   async function profileAt(commit,kinds) {
-    const read=async path=>{const data=blob(commit,path,true);if(data===null){const e=Error('Selected profile file missing: '+path);e.code='ENOENT';throw e;}return data;};
-    // Selected missing files are configuration failures; only a missing config disables profiles.
-    return loadProfile(root,{read,kinds});
+    return loadProfile(root,{read:readAt(commit),kinds});
   }
   function parseOutputs(value) {
     const paths=Array.isArray(value)?value:typeof value==='string'?value.split(','):[];
@@ -223,7 +225,10 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
     async status(){const s=state();return {contract_version:1,capabilities:['candidate-validation-v1','profile-guidance-v1'],head:s.head,lease:{...s.lease,held:s.held},...scan(s),recovery_required:existsSync(marker)||[LEASE,LEDGER].some(path=>hash(file(path,{optional:true}))!==hash(blob(s.head,path)))};},
     async claim({max=20}={}){return locked(async()=>{
       if(!Number.isInteger(Number(max))||Number(max)<1||Number(max)>20)throw new AdapterError('max must be an integer in 1..20');
-      const s=state();assertLocalProtocol(s);if(s.held)throw new AdapterError('An unexpired processing lease is held');
+      const s=state();assertLocalProtocol(s);
+      const layout=await resolveLayout(root),committedLayout=await resolveLayout(root,{read:readAt(s.head)});
+      if(JSON.stringify(layout)!==JSON.stringify(committedLayout))throw new AdapterError('Commit instance layout changes before claiming');
+      if(s.held)throw new AdapterError('An unexpired processing lease is held');
       const inventory=scan(s);if(inventory.malformed.length)throw new AdapterError('Malformed or changed source requires intervention');
       const sources=inventory.ready.slice(0,Number(max));
       const profile=await profileAt(s.head,[...new Set(sources.map(s=>s.kind).filter(Boolean))]);

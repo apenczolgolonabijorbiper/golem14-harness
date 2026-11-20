@@ -27,6 +27,7 @@ test('legacy instances process without rewriting original claims, purpose or hyp
 
 test('duplicate layout files fail closed; explicit committed relocation preserves graph/history',async t=>{
   const f=fixture(t,{legacy:true});const original=f.read('memory/graph.json');f.write('instance/purpose.md',f.read('persona/identity.md'));await assert.rejects(()=>resolveLayout(f.root),/Conflicting instance purpose/);
+  f.observe();const head=f.git('rev-parse','HEAD');await assert.rejects(()=>createAdapter({instance:f.root}).claim(),/Conflicting instance purpose/);assert.equal(f.git('rev-parse','HEAD'),head);
   // Explicit operator migration, never an implicit runtime move.
   unlinkSync(join(f.root,'instance/purpose.md'));
   renameSync(join(f.root,'persona/identity.md'),join(f.root,'instance/purpose.md'));
