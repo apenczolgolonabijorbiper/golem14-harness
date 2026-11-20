@@ -1,6 +1,22 @@
 # Upgrading to 0.6.0
 
-Replace the verified installed engine and preserve the external instance. Do not
+Replace the verified installed engine and preserve the external instance. An
+upgrade is a complete directory replacement, not an extraction over the old tree:
+
+1. Stop active harness processing. Back up the engine and external instance.
+2. Verify the new ZIP checksum and extract it into a fresh temporary directory.
+3. Move the entire old vendor/golem-harness directory outside the vendor path,
+   then place the extracted golem-harness directory at that exact path.
+4. Remove obsolete engine-only files from the installed path, including historical
+   release-tools/. Do not copy old engine internals into the new tree. Keep any
+   local application work for manual review outside the engine.
+5. Run the host installer with its existing repository/instance settings and run
+   memory-tool validate against the existing external instance. Verify RELEASE.json
+   file hashes and refuse unexpected installed engine files. Keep the backup until
+   the application smoke check succeeds; restore it if installation fails.
+
+The replacement concerns only the engine directory. Preserve the consuming repo,
+its host instructions, configuration and external instance data. Do not
 initialize, rename files or rewrite graph/history as part of installation.
 
 0.6.0 reads historical purpose/hypothesis paths and claim names. New instances use
