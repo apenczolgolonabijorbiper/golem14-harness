@@ -183,3 +183,18 @@ immutable snapshots are cached per adapter; each child has a 64 MiB output cap.
 The complete committed tree must fit that byte envelope; collection item limits
 alone do not promise support for arbitrary-size notes/artifacts. Timeout and CAS
 recovery rules still apply. CAPACITY_BENCHMARKS.md records actual measured sizes.
+
+## Completed candidates and source reservations (0.8.0)
+
+The standalone [candidate merge helper](CANDIDATE_MERGE.md) combines same-base
+completed snapshots and reports structural conflicts and summary regeneration.
+It does not extend this adapter's commit scope or six-command contract. The
+reference adapter continues to publish only its own claimed source completions;
+external completion publication requires a host backend with fresh lease,
+ledger/source and CAS checks. No merge capability is advertised by this release.
+
+Hosts may reserve sources for bounded-time external processing and select the
+oldest eligible unreserved inputs. Reservations are host-owned hints; the current
+reference claim CLI has no exclusion option. See the merge guide for ownership,
+expiry and publication requirements. Separate remote clones still need a backend
+that provides authoritative shared coordination and atomic publication.

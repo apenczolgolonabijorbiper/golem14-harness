@@ -33,7 +33,9 @@ No pending work: exit without writing. Otherwise create a fresh run UUID and cla
 memory/processing-lock.json using compare-and-swap against the current snapshot.
 Use schema_version 1, run_id, status processing, claimed_at, expires_at (15 minutes)
 and observation_ids. An unexpired lease belongs to its owner. Process at most 20
-oldest sources per cycle. Renew before expiry using compare-and-swap; stop on lost
+oldest eligible unreserved sources per cycle. A host may exclude bounded-time
+reservations for external processors; see [host reservation rules](CANDIDATE_MERGE.md#host-owned-reservations).
+The reference claim CLI does not implement exclusions. Renew before expiry using compare-and-swap; stop on lost
 ownership. A Git adapter uses tree + commit + non-force expected-head ref update;
 a filesystem adapter must supply equivalent locking and atomic snapshot commit.
 The CLI and initializer do not implement these storage transactions.
@@ -87,8 +89,14 @@ historical question text in evidence and analysis. Document the semantic review.
    ID. The validator checks structure, provenance and history. Review meaning,
    identity merges, independence and question closure separately.
 4. Re-read the committed head and verify ownership of the lease and the exact
-   source bytes. If the snapshot changed, preserve concurrent intake, merge and
-   revalidate the complete candidate against the fresh prior graph. Atomically
+   source bytes. If the snapshot changed, preserve concurrent intake and use
+   `memory-tool.mjs merge --base BASE --ours FRESH_HEAD --theirs CANDIDATE --out OUT`
+   on coherent immutable snapshots. See [candidate merge](CANDIDATE_MERGE.md) for
+   record conflicts, inherited ledger rows, host ancestry checks and draft summary
+   regeneration. Both branch histories are checked against BASE. Regenerate all
+   flagged summaries and revalidate OUT with `--previous` set to the graph at
+   FRESH_HEAD (ours). The helper neither copies leases nor publishes; the host
+   stages the correct released lease and rechecks ownership, ledger and sources. Atomically
    commit all staged changes against the verified head, then verify saved state.
 
 On error, discard the candidate and release only your own lease with status

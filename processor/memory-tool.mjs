@@ -22,8 +22,13 @@ export async function loadMemory(root){
   return {graph,ledger,queue,sources,layout,hypotheses};
 }
 export async function run(args=process.argv.slice(2)){
-  const command=args.shift(),options={};for(let i=0;i<args.length;i+=2){if(!args[i]?.startsWith('--')||args[i+1]===undefined)throw Error('Expected --option value');const key=args[i].slice(2);if(!['root','previous','query','entity','source','limit','predicate','type','kind','status','hops','expansion-budget','current','valid-at','external-id','scheme','namespace'].includes(key)||Object.hasOwn(options,key))throw Error('Unknown or duplicate option: '+key);options[key]=args[i+1];}
-  if(!['validate','context','stats'].includes(command))throw Error('Usage: node processor/memory-tool.mjs validate|context|stats [--root path] [--previous graph.json] [--query text] [--entity id] [--source uuid] [--limit number] [--predicate list] [--type list] [--kind list] [--status active|all] [--hops 1..3] [--expansion-budget 1..20000] [--current true|false] [--valid-at UTC-ISO] [--external-id value --scheme slug --namespace scope]');
+  const command=args.shift(),options={};
+  if(command==='merge'){
+    for(let i=0;i<args.length;i+=2){const key=args[i]?.slice(2);if(!args[i]?.startsWith('--')||!['base','ours','theirs','out'].includes(key)||args[i+1]===undefined||Object.hasOwn(options,key))throw Error('Expected unique --base/--ours/--theirs/--out paths');options[key]=args[i+1];}
+    const {mergeSnapshots}=await import('../server/candidate-merge.mjs');return mergeSnapshots(options);
+  }
+  for(let i=0;i<args.length;i+=2){if(!args[i]?.startsWith('--')||args[i+1]===undefined)throw Error('Expected --option value');const key=args[i].slice(2);if(!['root','previous','query','entity','source','limit','predicate','type','kind','status','hops','expansion-budget','current','valid-at','external-id','scheme','namespace'].includes(key)||Object.hasOwn(options,key))throw Error('Unknown or duplicate option: '+key);options[key]=args[i+1];}
+  if(!['validate','context','stats'].includes(command))throw Error('Usage: node processor/memory-tool.mjs merge --base BASE --ours OURS --theirs THEIRS --out OUT; or validate|context|stats [--root path] [--previous graph.json] [--query text] [--entity id] [--source uuid] [--limit number] [--predicate list] [--type list] [--kind list] [--status active|all] [--hops 1..3] [--expansion-budget 1..20000] [--current true|false] [--valid-at UTC-ISO] [--external-id value --scheme slug --namespace scope]');
   const root=resolve(options.root||dirname(fileURLToPath(import.meta.url))+'/..'),state=await loadMemory(root);
   const profile=await loadProfile(root);
   const previous=options.previous?JSON.parse(await readFile(resolve(options.previous),'utf8')):undefined;
@@ -38,4 +43,4 @@ export async function run(args=process.argv.slice(2)){
   let remaining=64000;context.source_excerpts=context.sources.map(s=>{const body=state.sources[s.id].body,text=body.slice(0,Math.min(4000,remaining));remaining-=text.length;return {...s,text,truncated:text.length<body.length};});
   context.limits.excerpt_characters=64000;if(context.source_excerpts.some(s=>s.truncated)){context.truncated=true;context.truncation_reasons=[...(context.truncation_reasons??[]),'excerpt_limit'];}return context;
 }
-if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url))run().then(r=>console.log(JSON.stringify(r,null,2))).catch(e=>{console.error(e.message);process.exitCode=1;});
+if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url))run().then(r=>{console.log(JSON.stringify(r,null,2));if(r.conflicts?.length)process.exitCode=1;}).catch(e=>{console.error(e.message);process.exitCode=1;});
