@@ -10,7 +10,7 @@ Each source stores observation ID, immutable path, exact UTF-8 SHA-256 and recor
 
 ## Claims, relations and corrections
 
-Every claim has a subject entity, speaker entity, predicate, scalar or entity object, classification, exact source quotes, assertion time, validity time, status, correction links, uncertainty and creation time. Assertion time is a source's recording time. Validity can be unknown, partial, exact or as reported; do not substitute recording time for an unstated event date. An age reported at a source timestamp is not a timeless age or permission to infer a birthday.
+Every claim has a subject entity, attribution entity, predicate, scalar or entity object, classification, exact source quotes, assertion time, validity time, status, correction links, uncertainty and creation time. Assertion time is a source's recording time. Validity can be unknown, partial, exact or as reported; do not substitute recording time for an unstated event date. An age reported at a source timestamp is not a timeless age or permission to infer a birthday.
 
 The `attributed_to_id` field (legacy alias `speaker_id`) identifies the entity to which the statement or record is
 attributed. It may reference any existing entity type. For a record with no known

@@ -12,7 +12,7 @@ application. There is no model API client, autonomous reasoning loop, scheduler,
 STT/TTS, browser UI or hosting scaffold here.
 Those are integration responsibilities. An optional local Git storage adapter,
 backend scaffold and conformance suite are included; see [storage adapters](docs/ADAPTERS.md).
-No credentials or personal memory ship.
+No credentials or instance data ship.
 
 See [the architecture mapping](docs/ARCHITECTURE_MAPPING.md) for the connection
 to Xemantic’s Golem XIV.
@@ -170,7 +170,7 @@ changing the engine, with batch-scoped delivery and run provenance in the refere
 adapter. Entity kinds refine the existing types; retrieval adds optional filters
 and bounded traversal. [Validation warnings](docs/MEMORY_MODEL.md#validation-warnings)
 are advisory and never weaken integrity checks. Defaults retain existing behavior
-without selected profiles or new retrieval options. See [upgrade notes](docs/UPGRADE_0_5.md).
+without selected profiles or new retrieval options. See [upgrade notes](docs/UPGRADE_0_6.md).
 
 See [instance layout and compatibility](docs/INSTANCE_LAYOUT.md) for neutral defaults,
 legacy paths and source attribution/classification names. Persona-oriented memory
