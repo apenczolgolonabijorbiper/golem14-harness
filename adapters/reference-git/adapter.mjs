@@ -5,7 +5,7 @@ import {existsSync,readFileSync,writeFileSync,mkdirSync,rmSync,lstatSync,readdir
 import {resolve,dirname,join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {parseSource} from '../../processor/memory-tool.mjs';
-import {loadProfile,instancePath,utf8,sha256,within} from '../../server/application-profile.mjs';
+import {loadProfile,instancePath,utf8,sha256,within,physicallyWithin} from '../../server/application-profile.mjs';
 
 const defaultHarness=resolve(dirname(fileURLToPath(import.meta.url)),'../..');
 const LEASE='memory/processing-lock.json',LEDGER='memory/processed.json';
@@ -19,7 +19,7 @@ export class AdapterError extends Error {}
 // Hooks are factory-only test seams, never CLI-loaded executable configuration.
 export function createAdapter({instance,harness=defaultHarness,git='git',node=process.execPath,now=()=>Date.now(),hooks={}}={}) {
   const root=realpathSync(resolve(instance)),engine=realpathSync(harness);
-  if(within(engine,root)||within(root,engine))throw new AdapterError('Instance must be outside the installed engine');
+  if(within(engine,root)||within(root,engine)||physicallyWithin(engine,root)||physicallyWithin(root,engine))throw new AdapterError('Instance must be outside the installed engine');
   const exec=(args,{input,env={},encoding=null}={})=>{
     const inherited={...process.env};for(const name of ['GIT_INDEX_FILE','GIT_DIR','GIT_WORK_TREE','GIT_COMMON_DIR','GIT_OBJECT_DIRECTORY','GIT_ALTERNATE_OBJECT_DIRECTORIES'])delete inherited[name];
     const r=spawnSync(git,['-C',root,...args],{input,encoding,env:{...inherited,GIT_OPTIONAL_LOCKS:'0',...env},maxBuffer:64*1024*1024});

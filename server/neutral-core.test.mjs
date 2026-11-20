@@ -3,13 +3,14 @@ import assert from 'node:assert/strict';
 import {existsSync,renameSync,unlinkSync} from 'node:fs';
 import {join} from 'node:path';
 import {fixture,python,pythonCommand,harness} from './test-fixtures.mjs';
+import {physicallyWithin} from './application-profile.mjs';
 import {resolveLayout} from './instance-layout.mjs';
 import {loadMemory,run} from '../processor/memory-tool.mjs';
 import {validateMemory,schemaErrors,retrieveContext,collectWarnings} from './memory-model.mjs';
 import {createAdapter} from '../adapters/reference-git/adapter.mjs';
 
 test('new instances have neutral purpose, hypothesis and selected profile defaults',async t=>{
-  const f=fixture(t,{profile:true});const layout=await resolveLayout(f.root);
+  const f=fixture(t,{profile:true});assert.equal(physicallyWithin(f.root,join(f.root,'instance')),true);assert.equal(physicallyWithin(f.root,harness),false);const layout=await resolveLayout(f.root);
   assert.deepEqual(layout,{purpose_path:'instance/purpose.md',hypotheses_path:'memory/hypotheses.json'});
   assert.ok(!existsSync(join(f.root,'persona')));assert.ok(!f.read(layout.purpose_path).includes('biography'));
   assert.equal(JSON.parse(f.read('golem.config.json')).profile.path,'profiles/default.md');
