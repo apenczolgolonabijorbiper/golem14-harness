@@ -17,7 +17,12 @@ export async function loadMemory(root){
   const layout=await resolveLayout(root);
   const json=async path=>JSON.parse(utf8(await readInstanceFile(root,path)));
   const [graph,ledger,queue,names]=await Promise.all([json('memory/graph.json'),json('memory/processed.json'),json('questions/queue.json'),readdir(resolve(root,'inbox'))]);
-  const sources={};for(const name of names.filter(n=>n.endsWith('.md'))){const path='inbox/'+name;const source=parseSource(path,utf8(await readInstanceFile(root,path)));sources[source.id]=source;}
+  const sources={},paths=names.filter(n=>n.endsWith('.md')).sort().map(name=>'inbox/'+name);
+  // Bound open handles and preserve deterministic insertion/diagnostic order.
+  for(let offset=0;offset<paths.length;offset+=8){
+    const batch=await Promise.allSettled(paths.slice(offset,offset+8).map(async path=>({path,bytes:await readInstanceFile(root,path)})));
+    for(const result of batch){if(result.status==='rejected')throw result.reason;const {path,bytes}=result.value;const source=parseSource(path,utf8(bytes));sources[source.id]=source;}
+  }
   let hypotheses;try{hypotheses=await json(layout.hypotheses_path);}catch(e){throw Error('Hypotheses file invalid: '+layout.hypotheses_path+': '+(e instanceof SyntaxError?'malformed JSON':e.message));}
   return {graph,ledger,queue,sources,layout,hypotheses};
 }

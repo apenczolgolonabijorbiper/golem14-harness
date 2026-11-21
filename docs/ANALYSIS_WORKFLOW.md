@@ -64,3 +64,12 @@ Zero hits do not establish absence: inputs may still be pending or unfetched.
 Manual hosts without delivered guidance must retain selected profile/config/text
 and hash metadata themselves and verify deterministic policy checks. They may not
 claim reference-adapter capability solely because they copied a recipe.
+
+## Avoid cycle-specific scripts
+
+The optional `processor/write-candidate.mjs` assembles graph/index/journal drafts
+from a structured change set after semantic review. See PERFORMANCE.md. It does
+not replace source indexing, hypothesis/question maintenance or the adapter
+validate/commit sequence. Keep the selected profile concise and committed before
+claim; do not rediscover domain conventions or generate transaction machinery
+for each batch. Observe host process completion instead of fixed sleeps.

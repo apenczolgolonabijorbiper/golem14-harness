@@ -1,3 +1,4 @@
+import {operationMetrics} from '../../server/operation-metrics.mjs';
 import {resolveLayout} from '../../server/instance-layout.mjs';
 import {boundedSpawn} from '../../server/subprocess.mjs';
 import {createHash,randomUUID} from 'node:crypto';
@@ -18,12 +19,13 @@ function runChild(...args){try{return boundedSpawn(...args);}catch(e){throw new 
 
 // The local filesystem implementation supports one dedicated, attached-branch instance clone.
 // Hooks are factory-only test seams, never CLI-loaded executable configuration.
-export function createAdapter({instance,harness=defaultHarness,git='git',node=process.execPath,now=()=>Date.now(),hooks={}}={}) {
+export function createAdapter({instance,harness=defaultHarness,git='git',node=process.execPath,now=()=>Date.now(),hooks={},timings=false}={}) {
+  const metrics=operationMetrics(timings);
   const root=realpathSync(resolve(instance)),engine=realpathSync(harness);
   if(within(engine,root)||within(root,engine)||physicallyWithin(engine,root)||physicallyWithin(root,engine))throw new AdapterError('Instance must be outside the installed engine');
   const exec=(args,{input,env={},encoding=null}={})=>{
     const inherited={...process.env};for(const name of ['GIT_INDEX_FILE','GIT_DIR','GIT_WORK_TREE','GIT_COMMON_DIR','GIT_OBJECT_DIRECTORY','GIT_ALTERNATE_OBJECT_DIRECTORIES'])delete inherited[name];
-    const r=runChild(git,['-C',root,...args],{input,encoding,env:{...inherited,GIT_OPTIONAL_LOCKS:'0',...env},maxBuffer:64*1024*1024});
+    const r=metrics.git(args[0],()=>runChild(git,['-C',root,...args],{input,encoding,env:{...inherited,GIT_OPTIONAL_LOCKS:'0',...env},maxBuffer:64*1024*1024}));
     if(r.error||r.status!==0)throw new AdapterError('Git operation refused: '+args[0]);
     return encoding?r.stdout:r.stdout;
   };
@@ -56,7 +58,8 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
   }
   // One raw batch per immutable tree: no checkout filters, no process per file.
   const snapshots=new Map();
-  function snapshot(commit){
+  function snapshot(commit){return metrics.sync('snapshot',()=>captureSnapshot(commit));}
+  function captureSnapshot(commit){
     if(snapshots.has(commit))return snapshots.get(commit);
     const rows=exec(['ls-tree','-r','-z',commit]).toString('utf8').split('\0').filter(Boolean).map(row=>{
       const m=row.match(/^(100644|100755) blob ([0-9a-f]+)\t([\s\S]+)$/);if(!m)throw new AdapterError('Candidate contains unsupported Git objects');
@@ -92,7 +95,8 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
   function assertLocalProtocol(s) {
     for(const path of [LEASE,LEDGER])if(hash(file(path))!==hash(blob(s.head,path)))throw new AdapterError('Stale or edited local protocol file: '+path+'. Preserve local changes, then restore this file and its index entry from HEAD; do not reset other paths.');
   }
-  function scan(s) {
+  function scan(s) {return metrics.sync('scan',()=>scanImpl(s));}
+  function scanImpl(s) {
     const ready=[],waiting_for_age=[],malformed=[],processed=[],map=new Map(s.ledger.observations.map(r=>[r.id,r]));
     // Reading committed processed sources too detects deletions, including a vanished directory entry.
     for(const row of s.ledger.observations) {
@@ -117,21 +121,23 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
     const raw=exec(['ls-files','--stage','-z','--',...paths]).toString('utf8');
     return raw.split('\0').filter(Boolean).map(row=>{const m=row.match(/^(\d+) ([0-9a-f]+) (\d)\t([\s\S]+)$/);return {mode:m[1],sha:m[2],stage:m[3],path:m[4]};});
   }
-  function assertIndexClean(paths,commit) {
-    const current=indexEntries(paths);
+  function assertIndexClean(paths,commit) {return metrics.sync('index_check',()=>assertIndexCleanImpl(paths,commit));}
+  function assertIndexCleanImpl(paths,commit) {
+    const current=new Map(indexEntries(paths).map(row=>[row.path,row])),originals=snapshot(commit);
     for(const path of paths){
-      const row=current.find(r=>r.path===path),original=exec(['ls-tree',commit,'--',path]).toString('utf8').match(/^(100644|100755) blob ([0-9a-f]+)/);
-      if(row ? row.stage!=='0'||!original||row.mode!==original[1]||row.sha!==original[2] : Boolean(original))throw new AdapterError('Preserve staged changes before processing: '+path);
+      const row=current.get(path),original=originals.get(path);
+      if(row ? row.stage!=='0'||!original||row.mode!==original.mode||row.sha!==original.sha : Boolean(original))throw new AdapterError('Preserve staged changes before processing: '+path);
     }
   }
   function resetEntries(paths,commit) {
+    const originals=snapshot(commit),zero='0'.repeat(originals.values().next().value?.sha.length??40);
     const rows=paths.map(path=>{
-      const bytes=blob(commit,path,true);if(bytes===null)return `0 ${'0'.repeat(40)}\t${path}\0`;
-      const line=exec(['ls-tree',commit,'--',path]).toString('utf8');const m=line.match(/^(100644|100755) blob ([0-9a-f]+)/);return `${m[1]} ${m[2]}\t${path}\0`;
+      const row=originals.get(path);return row?`${row.mode} ${row.sha}\t${path}\0`:`0 ${zero}\t${path}\0`;
     }).join('');
     exec(['update-index','-z','--index-info'],{input:rows});
   }
-  function finishPending() {
+  function finishPending() {return metrics.sync('recovery',()=>finishPendingImpl());}
+  function finishPendingImpl() {
     if(!existsSync(marker))return;
     const pending=JSON.parse(readFileSync(marker,'utf8')),current=head();
     if(current===pending.old){rmSync(marker);return;}
@@ -143,10 +149,10 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
       safeWrite(path,blob(current,path));
     }
     // Only update index entries still at their captured pre-publication or committed values.
-    const index=indexEntries(pending.paths);
-    for(const path of pending.paths){const row=index.find(r=>r.path===path),before=blob(pending.old,path,true),after=blob(current,path,true);const accepted=[before&&hash(before),after&&hash(after)];
-      if(row){const bytes=exec(['cat-file','blob',row.sha]);if(row.stage!=='0'||!accepted.includes(hash(bytes)))throw new AdapterError('Preserve edited index entries before recovery');}
-      else if(before!==null&&after!==null)throw new AdapterError('Preserve staged deletion before recovery');
+    const index=new Map(indexEntries(pending.paths).map(row=>[row.path,row])),beforeTree=snapshot(pending.old),afterTree=snapshot(current);
+    for(const path of pending.paths){const row=index.get(path),before=beforeTree.get(path),after=afterTree.get(path);
+      if(row){if(row.stage!=='0'||![before,after].some(original=>original&&original.sha===row.sha&&original.mode===row.mode))throw new AdapterError('Preserve edited index entries before recovery');}
+      else if(before&&after)throw new AdapterError('Preserve staged deletion before recovery');
     }
     resetEntries(pending.paths,current);rmSync(marker);
   }
@@ -154,22 +160,26 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
     try{mkdirSync(mutex);}catch{throw new AdapterError('Another local adapter operation is running; a stale lock requires operator inspection: '+mutex);}
     try{finishPending();return await action();}finally{rmSync(mutex,{recursive:true,force:true});}
   }
-  function treeFrom(commit,entries) {
+  function treeFrom(commit,entries) {return metrics.sync('build_tree',()=>buildTree(commit,entries));}
+  function buildTree(commit,entries) {
     const temporary=mkdtempSync(join(gitdir,'golem-tree-')),index=join(temporary,'index'),env={GIT_INDEX_FILE:index};
     try{
       exec(['read-tree',commit],{env});
+      const originals=snapshot(commit),rows=[];
       for(const [path,bytes]of entries){
         const id=exec(['hash-object','-w','--stdin'],{input:bytes}).toString().trim();
-        const mode=exec(['ls-tree',commit,'--',path]).toString('utf8').match(/^(100644|100755) blob /)?.[1]??'100644';
-        exec(['update-index','--add','--cacheinfo',`${mode},${id},${path}`],{env});
+        const mode=originals.get(path)?.mode??'100644';
+        rows.push(`${mode} ${id}\t${path}\0`);
       }
+      exec(['update-index','-z','--index-info'],{input:rows.join(''),env});
       return {tree:exec(['write-tree'],{env}).toString().trim(),temporary};
     }catch(e){rmSync(temporary,{recursive:true,force:true});throw e;}
   }
   function dirty() {
     return exec(['status','--porcelain=v1','-z','--untracked-files=all']).toString('utf8').split('\0').filter(Boolean).map(row=>row.slice(3));
   }
-  function publish(s,entries,writes,label,tree) {
+  function publish(s,entries,writes,label,tree) {return metrics.sync('publish',()=>publishImpl(s,entries,writes,label,tree));}
+  function publishImpl(s,entries,writes,label,tree) {
     if(head()!==s.head)throw new AdapterError('Head changed; re-read, merge and revalidate; lease retained');
     assertIndexClean([...entries.keys()],s.head);
     const built=tree?null:treeFrom(s.head,entries);
@@ -195,7 +205,8 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
     for(const path of paths){instancePath(path);if(forbidden.includes(path)||path.startsWith('inbox/')||path.startsWith('vendor/')||path.startsWith('profiles/')||path.startsWith('instance/')||path.startsWith('persona/')&&path!=='persona/hypotheses.json')throw new AdapterError('Output path is reserved: '+path);file(path);}
     return [...new Set(paths)];
   }
-  function sourceCheck(s) {
+  function sourceCheck(s) {return metrics.sync('source_check',()=>sourceCheckImpl(s));}
+  function sourceCheckImpl(s) {
     for(const source of s.lease.sources){try{const bytes=file(source.path);const parsed=parseSource(source.path,utf8(bytes));if(hash(bytes)!==source.sha256||parsed.id!==source.id)throw Error();}catch{throw new AdapterError('Claimed source changed; inputs remain pending');}}
   }
   function errorLease(s,run,diagnostic) {
@@ -203,7 +214,8 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
     const lease={schema_version:1,status:'error',observation_ids:[],last_run_id:run,completed_at:stamp(),reason:typeof diagnostic==='string'&&/^[A-Za-z0-9_ .:()[\]\/-]+$/.test(diagnostic)?diagnostic.slice(0,200):'Processing failed; inputs remain pending'};
     return publish(s,new Map([[LEASE,json(lease)]]),[LEASE],`release-error ${run}`);
   }
-  async function candidate(s,run,outputs) {
+  async function candidate(s,run,outputs) {return metrics.async('candidate',()=>buildCandidate(s,run,outputs));}
+  async function buildCandidate(s,run,outputs) {
     own(s,run);assertLocalProtocol(s);
     const layout=await resolveLayout(root);
     const paths=parseOutputs(outputs),journal=`memory/runs/${run}.md`,journalBytes=file(journal);
@@ -228,13 +240,15 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
     const built=treeFrom(s.head,entries),stage=join(built.temporary,'snapshot');mkdirSync(stage);
     try{
       // Read blobs, never checkout filters; all candidate bytes equal committed bytes.
-      for(const [path,row]of snapshot(built.tree)){mkdirSync(dirname(join(stage,path)),{recursive:true});writeFileSync(join(stage,path),row.bytes);}
+      metrics.sync('materialize',()=>{const tree=snapshot(built.tree);metrics.count('candidate_tree_files',tree.size);metrics.count('candidate_tree_bytes',[...tree.values()].reduce((sum,row)=>sum+row.bytes.length,0));for(const [path,row]of tree){mkdirSync(dirname(join(stage,path)),{recursive:true});writeFileSync(join(stage,path),row.bytes);}});
       // Runtime-required empty directories are not represented in Git trees.
       mkdirSync(join(stage,'inbox'),{recursive:true});
       const previous=join(built.temporary,'previous.json');writeFileSync(previous,blob(s.head,'memory/graph.json'));
-      const r=runChild(node,[join(engine,'processor/memory-tool.mjs'),'validate','--root',stage,'--previous',previous],{encoding:'utf8',maxBuffer:8*1024*1024});
+      const r=metrics.sync('validator',()=>runChild(node,[join(engine,'processor/memory-tool.mjs'),'validate','--root',stage,'--previous',previous],{encoding:'utf8',maxBuffer:8*1024*1024}));
       if(r.error||r.status!==0){const first=(r.stderr??'').split('\n')[0];throw new AdapterError('Candidate validation failed: '+(first.startsWith('Memory validation failed: ')?first.slice(26,526):first.startsWith('Hypotheses file invalid: ')?first.slice(0,500):'invalid snapshot; inspect with memory-tool validate'));}
       const validation=JSON.parse(r.stdout);
+      metrics.count('candidate_output_files',entries.size);metrics.count('claimed_sources',s.lease.sources.length);
+      for(const key of ['entities','claims','sources'])metrics.count('graph_'+key,validation[key]);
       return {...built,entries,validation,files:[...entries.keys()],left_uncommitted:dirty().filter(p=>!entries.has(p))};
     }catch(e){rmSync(built.temporary,{recursive:true,force:true});throw e;}
   }
@@ -282,14 +296,21 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
       }finally{rmSync(built.temporary,{recursive:true,force:true});}
     });}
   };
+  const setup=metrics.report();
+  if(timings)for(const [name,action]of Object.entries(api))api[name]=async (...args)=>{
+    metrics.reset();
+    try {const result=await action(...args);return {...result,timings:{operation:name,setup,...metrics.report()}};}
+    catch(error){error.timings={operation:name,setup,...metrics.report()};throw error;}
+  };
   return api;
 }
 
 export async function run(args=process.argv.slice(2)) {
   const command=args.shift(),options={};
   if(!['status','claim','renew','validate','commit','release-error'].includes(command))throw new AdapterError('Expected status|claim|renew|validate|commit|release-error');
-  for(let i=0;i<args.length;i+=2){const key=args[i]?.slice(2);if(!args[i]?.startsWith('--')||args[i+1]===undefined||!['instance','harness','max','run','outputs','reason'].includes(key)||Object.hasOwn(options,key))throw new AdapterError('Unknown, duplicate or incomplete option');options[key]=args[i+1];}
+  for(let i=0;i<args.length;i+=2){const key=args[i]?.slice(2);if(!args[i]?.startsWith('--')||args[i+1]===undefined||!['instance','harness','max','run','outputs','reason','timings'].includes(key)||Object.hasOwn(options,key))throw new AdapterError('Unknown, duplicate or incomplete option');options[key]=args[i+1];}
   if(!options.instance)throw new AdapterError('--instance is required');
-  return createAdapter(options)[command](options);
+  if(options.timings!==undefined&&!['true','false'].includes(options.timings))throw new AdapterError('--timings must be true or false');
+  return createAdapter({...options,timings:options.timings==='true'})[command](options);
 }
-if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url))run().then(r=>console.log(JSON.stringify(r,null,2))).catch(e=>{console.error(e instanceof AdapterError?e.message:'Adapter operation failed; inspect local configuration and protocol state');process.exitCode=1;});
+if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url))run().then(r=>console.log(JSON.stringify(r,null,2))).catch(e=>{if(e.timings)console.error('GOLEM_TIMINGS '+JSON.stringify(e.timings));console.error(e instanceof AdapterError?e.message:'Adapter operation failed; inspect local configuration and protocol state');process.exitCode=1;});
