@@ -1,5 +1,8 @@
 """Repository-only regressions for generation, provenance and safe persistence."""
 import importlib.util
+import base64
+import gzip
+import hashlib
 import json
 from pathlib import Path
 import re
@@ -30,7 +33,7 @@ class ExplorerTests(unittest.TestCase):
         self.root.mkdir()
         for name in ['processor', 'server', 'adapters', 'integration', 'tools', 'schemas', 'docs']:
             shutil.copytree(ROOT / name, self.root / name,
-                            ignore=shutil.ignore_patterns('__pycache__', 'architecture-explorer.html'))
+                            ignore=shutil.ignore_patterns('__pycache__', 'node_modules', 'architecture-explorer.html'))
         for name in ['README.md', 'VERSION', 'LICENSE']:
             shutil.copyfile(ROOT / name, self.root / name)
         git(self.root, 'init', '-b', 'master')
@@ -48,6 +51,20 @@ class ExplorerTests(unittest.TestCase):
         page = self.output.read_text(encoding='utf-8')
         match = re.search(r'<script id="atlas-data" type="application/json">(.*?)</script>', page, re.S)
         return page, json.loads(match.group(1))
+
+    def test_rendering_engine_is_embedded_and_integrity_checked(self):
+        self.builder.build(self.output)
+        page = self.output.read_text(encoding='utf-8')
+        packed = re.search(r'<script id="markdown-vendor" type="application/octet-stream">(.*?)</script>', page, re.S)
+        bundle = base64.b64decode(packed.group(1))
+        manifest = json.loads((self.builder.ASSETS / 'vendor/manifest.json').read_text(encoding='utf-8'))
+        self.assertEqual(hashlib.sha256(bundle).hexdigest(), manifest['sha256'])
+        self.assertEqual(hashlib.sha256(gzip.decompress(bundle)).hexdigest(), manifest['uncompressed_sha256'])
+        self.assertIn('How the LLM fits', page)
+        self.assertIn('third-party-notices', page)
+        (self.builder.ASSETS / 'vendor/markdown.bundle.js.gz').write_bytes(b'corrupted')
+        with self.assertRaisesRegex(ValueError, 'hash mismatch'):
+            self.builder.build(self.output)
 
     def test_repeat_build_and_generated_only_commit_are_identical(self):
         self.builder.build(self.output)
@@ -77,7 +94,9 @@ class ExplorerTests(unittest.TestCase):
         self.assertEqual(added['code'], malicious)
         self.assertIn('synthetic()', added['functions'][0]['signature'])
         self.assertNotIn('</script><script>bad()', page)
-        self.assertNotRegex(page, r'<script[^>]+src=|<link[^>]+stylesheet|@import')
+        self.assertNotRegex(page, r'<script[^>]+src=|<link[^>]+stylesheet')
+        styles = '\n'.join(re.findall(r'<style[^>]*>(.*?)</style>', page, re.S))
+        self.assertNotIn('@import', styles)
         self.assertNotIn('__VERSION__', page)
         self.assertNotIn('/*__DATA__*/', page)
 
