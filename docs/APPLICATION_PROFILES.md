@@ -154,4 +154,61 @@ claim wrapper checks backend status before acquisition. Hosts can also call
 requireCapabilities(status) from server/core-policies.mjs explicitly. A missing
 core-policies-v2 capability throws before the backend claim is invoked.
 
-See [reviewed source initialization](APPLICATION_SOURCES.md) for exact-byte application-owned profile and purpose bundles.
+## Application-owned sources and fresh initialization
+
+A source bundle contains golem.config.json and every
+referenced core, section and vocabulary file, plus optional purpose.md. Only these
+files are managed; arbitrary source directory files are ignored. Every selector
+is validated, including unobserved kinds. The source alias purpose.md maps to
+instance/purpose.md. Missing optional purpose preserves the installed purpose;
+it never authorizes deletion. An explicit missing --purpose-from is an error.
+
+Install targets are deliberately narrower than the existing profile read contract:
+core/section/vocabulary targets must be under profiles/ or guidance/. No linked
+source file or ancestor, duplicate/case-colliding/overlapping target, traversal,
+absolute path, inbox/engine or canonical protocol-role target is accepted. Review
+and relocate an older broadly located selection before using this installer.
+No runtime file discovery or automatic activation is introduced.
+
+```sh
+python3 processor/init-instance.py --root ../fresh --profile-from ../app/golem-guidance --node node
+python3 processor/init-instance.py --root ../purpose-only --purpose-from ../app/purpose.md
+node processor/memory-tool.mjs profile-check --root ../fresh --source ../app/golem-guidance
+node processor/memory-tool.mjs profile-check --root ../fresh --kinds feature_profile,git_commit_digest
+node processor/memory-tool.mjs vocabulary-survey --root ../fresh --single-valued has_state --prefix tracker:WI-
+```
+
+--profile and --profile-from conflict. Bundle purpose plus --purpose-from conflicts;
+there is no hidden precedence. Without either purpose input the initializer keeps
+its stub. Inputs are captured once as exact bytes and validated through the shared
+Node reader before staging; no Python copy of the profile validator exists. --json returns the destination plus metadata captured from the installed snapshot. --node
+selects the Node executable via an argv element (Node 22.12+, Python 3.12+). Success
+publishes the staged directory; validation failures preserve absent/empty targets.
+Nonempty destinations are never reset. `processor/source-bundle.mjs SOURCE PURPOSE`
+(the second argument may be empty) returns base64 captured bytes and setup metadata
+for hosts requiring a machine-readable initialization record. It performs no writes.
+
+Source metadata includes resolved source paths, per-file SHA-256, and locally
+obtainable Git revision/dirty state (null means unknown). These are provenance,
+not content identity. No network operation occurs. Explicit --source, --profile-from
+and --purpose-from authorize these bounded external reads. Runtime processing reads
+only installed immutable claim bytes. Null/absent selection is supported in a source;
+installation refuses implicit deselection of a currently selected profile.
+
+Inspection returns none/stub/selected (only the exact known initializer bytes count
+as stub), sizes with advisory budgets, selected paths, per-kind sections, unseen
+selectors, used/unused vocabulary and purpose-bound identities. Empty inboxes still
+inspect core/configuration. Without --kinds the observed kinds are used; --kinds
+chooses their deterministic union. Malformed selected guidance fails. If graph
+loading/validation fails, configuration inspection remains available with separate
+graph diagnostics. Source comparison reports per-path in-sync/missing/differs plus
+stale managed paths independently. No graph/ledger/lease/queue/source writes occur.
+
+Surveys inventory entity kinds/types, predicate subject/object shapes and external
+ID scheme/namespace/value shapes. Embedded-prefix detection is advisory and excludes
+full hashes/UUIDs; prefix previews never rewrite identifiers. Temporal inspection
+uses O(n log n) sorting and an O(n) sweep per subject/predicate, inclusive endpoints,
+and separately counts uncertain dates. Output categories return at most 100 rows,
+disclose totals/truncation and sort deterministically. The graph is read once;
+there is no source-body sampling or incremental graph database. Duplicate headings
+are heuristic notices only, never semantic conflict/permission decisions.
