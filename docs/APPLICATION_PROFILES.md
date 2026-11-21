@@ -154,4 +154,91 @@ claim wrapper checks backend status before acquisition. Hosts can also call
 requireCapabilities(status) from server/core-policies.mjs explicitly. A missing
 core-policies-v2 capability throws before the backend claim is invoked.
 
-See [reviewed source initialization](APPLICATION_SOURCES.md) for exact-byte application-owned profile and purpose bundles.
+## Application-owned sources and fresh initialization
+
+Follow [the scan/wizard procedure](../integration/SETUP.profile.md) to derive rules
+from application evidence. A source bundle contains golem.config.json and every
+referenced core, section and vocabulary file, plus optional purpose.md. Only these
+files are managed; arbitrary source directory files are ignored. Every selector
+is validated, including unobserved kinds. The source alias purpose.md maps to
+instance/purpose.md. Missing optional purpose preserves the installed purpose;
+it never authorizes deletion. An explicit missing --purpose-from is an error.
+
+Install targets are deliberately narrower than the existing profile read contract:
+core/section/vocabulary targets must be under profiles/ or guidance/. No linked
+source file or ancestor, duplicate/case-colliding/overlapping target, traversal,
+absolute path, inbox/engine or canonical protocol-role target is accepted. Review
+and relocate an older broadly located selection before using this installer.
+No runtime file discovery or automatic activation is introduced.
+
+```sh
+python3 processor/init-instance.py --root ../fresh --profile-from ../app/golem-guidance --node node
+python3 processor/init-instance.py --root ../purpose-only --purpose-from ../app/purpose.md
+node processor/memory-tool.mjs profile-check --root ../fresh --source ../app/golem-guidance
+node processor/memory-tool.mjs profile-check --root ../fresh --kinds feature_profile,git_commit_digest
+node processor/memory-tool.mjs vocabulary-survey --root ../fresh --single-valued has_state --prefix tracker:WI-
+```
+
+--profile and --profile-from conflict. Bundle purpose plus --purpose-from conflicts;
+there is no hidden precedence. Without either purpose input the initializer keeps
+its stub. Inputs are captured once as exact bytes and validated through the shared
+Node reader before staging; no Python copy of the profile validator exists. --json returns the destination plus metadata captured from the installed snapshot. --node
+selects the Node executable via an argv element (Node 22.12+, Python 3.12+). Success
+publishes the staged directory; validation failures preserve absent/empty targets.
+Nonempty destinations are never reset. `processor/source-bundle.mjs SOURCE PURPOSE`
+(the second argument may be empty) returns base64 captured bytes and setup metadata
+for hosts requiring a machine-readable initialization record. It performs no writes.
+
+Source metadata includes resolved source paths, per-file SHA-256, and locally
+obtainable Git revision/dirty state (null means unknown). These are provenance,
+not content identity. No network operation occurs. Explicit --source, --profile-from
+and --purpose-from authorize these bounded external reads. Runtime processing reads
+only installed immutable claim bytes. Null/absent selection is supported in a source;
+installation refuses implicit deselection of a currently selected profile.
+
+Inspection returns none/stub/selected (only the exact known initializer bytes count
+as stub), sizes with advisory budgets, selected paths, per-kind sections, unseen
+selectors, used/unused vocabulary and purpose-bound identities. Empty inboxes still
+inspect core/configuration. Without --kinds the observed kinds are used; --kinds
+chooses their deterministic union. Malformed selected guidance fails. If graph
+loading/validation fails, configuration inspection remains available with separate
+graph diagnostics. Source comparison reports per-path in-sync/missing/differs plus
+stale managed paths independently. No graph/ledger/lease/queue/source writes occur.
+
+Surveys inventory entity kinds/types, predicate subject/object shapes and external
+ID scheme/namespace/value shapes. Embedded-prefix detection is advisory and excludes
+full hashes/UUIDs; prefix previews never rewrite identifiers. Temporal inspection
+uses O(n log n) sorting and an O(n) sweep per subject/predicate, inclusive endpoints,
+and separately counts uncertain dates. Output categories return at most 100 rows,
+disclose totals/truncation and sort deterministically. The graph is read once;
+there is no source-body sampling or incremental graph database. Duplicate headings
+are heuristic notices only, never semantic conflict/permission decisions.
+
+## Purpose-bound guidance format 2
+
+`loadProfile` remains a profile-only helper. `loadGuidance` and the reference
+adapter use **purpose-guidance-v2**: every claimed run includes canonical purpose,
+even without a profile. Text order is exact UTF-8 purpose, then two LF characters
+and core/selected sections when selected. Purpose must be present, nonempty UTF-8.
+The version object has insertion-ordered fields: schema_version (2), purpose_path,
+purpose_sha256, config_sha256 (null if absent), profile (the loadProfile v1 metadata
+or null), delivered_sha256. Vocabulary and selector bytes are covered by nested
+profile metadata/config hash. Kind order and repository revision are not identity.
+The identity is SHA-256 of JSON.stringify(version,null,2) plus one LF, shared by
+adapter, inspection and candidate writer. Retained text and metadata are committed
+with the lease; the immutable claim revision records their provenance.
+
+Hosts requiring this promise must require purpose-guidance-v2, not merely
+profile-guidance-v1. The reference adapter replaces its v1 advertisement with v2;
+there is no compatibility promise for the old wire format. Dirty purpose/configuration/selected files and staged guidance
+are refused at claim. Committed purpose/configuration changes during a lease require
+release/reclaim; completion checks the retained snapshot hash/identity and journal.
+Analysis outputs cannot overwrite any selected guidance or canonical purpose.
+Purpose prose grants no permission or deterministic validation exception.
+
+Drain/release active leases before upgrading to this format. No old guidance-format
+reader or migration is provided. Historical records are retained unchanged; owners
+may archive unsupported instances and create fresh target-format instances. Manual
+hosts record purpose path/hash plus retained text or immutable revision, alongside
+profile metadata. A hash alone is insufficient for replay and delivered guidance
+is not proof of inference adherence.

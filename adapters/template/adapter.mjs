@@ -9,6 +9,8 @@ export function createAdapter(backend) {
   return {
     status: options => call('status',options),
     claim: options => options?.required_capabilities?Promise.resolve(call('status')).then(status=>{requireCapabilities(status,options.required_capabilities);return call('claim',options);}):call('claim',options),
+    'profile-status': options => call('profile-status',options),
+    'profile-install': options => call('profile-install',options),
     renew: options => call('renew',options),
     validate: options => call('validate',options),
     commit: options => call('commit',options),

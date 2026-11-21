@@ -14,7 +14,7 @@ function invoke(f,command,...args){const r=boundedSpawn(cli[0],[...cli.slice(1),
 test('CLI conformance: no work, age gating, claim/owner checks, renew and error release',t=>{
   const f=fixture(t),before=f.git('rev-parse','HEAD');assert.equal(invoke(f,'claim').status,'no-work');assert.equal(f.git('rev-parse','HEAD'),before);
   f.observe(1,{age:0});assert.equal(invoke(f,'status').waiting_for_age.length,1);assert.equal(invoke(f,'claim').status,'no-work');
-  f.observe(1);const claimed=invoke(f,'claim');assert.equal(claimed.status,'claimed');assert.equal('guidance_version' in claimed,false);assert.throws(()=>invoke(f,'claim'),/lease/);
+  f.observe(1);const claimed=invoke(f,'claim');assert.equal(claimed.status,'claimed');assert.equal('guidance_version' in claimed,invoke(f,'status').capabilities?.includes('purpose-guidance-v2')??false);assert.throws(()=>invoke(f,'claim'),/lease/);
   const wrong='00000000-0000-4000-8000-000000000099';assert.throws(()=>invoke(f,'renew','--run',wrong),/own/);assert.throws(()=>invoke(f,'release-error','--run',wrong),/own/);
   invoke(f,'renew','--run',claimed.run_id);invoke(f,'release-error','--run',claimed.run_id,'--reason','not stored');const status=invoke(f,'status');assert.equal(status.lease.status,'error');assert.equal(status.processed,0);assert.equal(status.ready.length,1);
 });
@@ -37,12 +37,12 @@ test('CLI conformance: unsafe output paths are rejected without releasing the le
   for(const path of ['/tmp/unsafe','../outside','memory/../graph.json','.git/config','C:/unsafe','missing.md','escape.md','memory','memory/processed.json','profiles/new.md'])assert.throws(()=>invoke(f,'commit','--run',claim.run_id,'--outputs',path));assert.equal(invoke(f,'status').lease.status,'processing');
 });
 test('CLI conformance: selected guidance, scoped sections, journal enforcement and immutable version',t=>{
-  const f=fixture(t,{profile:true});if(!invoke(f,'status').capabilities?.includes('profile-guidance-v1')){t.skip('Adapter does not advertise profile-guidance-v1');return;}f.write('profiles/notes.md','Notes guidance');f.write('profiles/digests.md','Digest guidance');f.write('profiles/vocab.json',{schema_version:2,kinds:['record'],predicates:['describes']});
+  const f=fixture(t,{profile:true});if(!invoke(f,'status').capabilities?.some(c=>['profile-guidance-v1','purpose-guidance-v2'].includes(c))){t.skip('Adapter does not advertise profile delivery');return;}f.write('profiles/notes.md','Notes guidance');f.write('profiles/digests.md','Digest guidance');f.write('profiles/vocab.json',{schema_version:2,kinds:['record'],predicates:['describes']});
   f.write('golem.config.json',{schema_version:1,profile:{path:'profiles/default.md',vocabulary:'profiles/vocab.json',sections:[{id:'notes',path:'profiles/notes.md',kinds:['note']},{id:'digests',path:'profiles/digests.md',kinds:['digest']}]}});f.save();
   f.observe(1,{kind:'note'});let claim=invoke(f,'claim');assert.ok(claim.guidance.includes('Notes guidance'));assert.ok(!claim.guidance.includes('Digest guidance'));assert.ok(claim.guidance_boundary.includes('data'));f.analyze(claim);
   const original=f.read('profiles/default.md');f.write('profiles/default.md',original+'\nUpdated');
   assert.equal(JSON.parse(f.read(claim.guidance_path)).guidance,claim.guidance);f.write(`memory/runs/${claim.run_id}.md`,'Missing identity');assert.throws(()=>invoke(f,'commit','--run',claim.run_id),/guidance_version/);f.write(`memory/runs/${claim.run_id}.md`,'guidance_version: '+claim.guidance_identity+'\n');invoke(f,'commit','--run',claim.run_id);
-  f.save();f.observe(2,{kind:'../../evil'});const next=invoke(f,'claim');assert.notEqual(next.guidance_version.profile_sha256,claim.guidance_version.profile_sha256);assert.equal(next.guidance_version.sections.length,0);assert.ok(next.guidance.includes('Updated'));
+  f.save();f.observe(2,{kind:'../../evil'});const next=invoke(f,'claim');assert.notEqual((next.guidance_version.profile??next.guidance_version).profile_sha256,(claim.guidance_version.profile??claim.guidance_version).profile_sha256);assert.equal((next.guidance_version.profile??next.guidance_version).sections.length,0);assert.ok(next.guidance.includes('Updated'));
 });
 
 // Factory-only fault injection exercises storage mechanics beyond the CLI contract.
@@ -96,4 +96,17 @@ test('CLI conformance: concurrent claims cannot both acquire ownership',async t=
   const f=fixture(t);f.observe();
   const call=()=>new Promise((done,reject)=>{const child=spawn(cli[0],[...cli.slice(1),'claim','--instance',f.root,...(process.env.GOLEM_ADAPTER?[]:['--harness',harness])],{stdio:['ignore','pipe','pipe'],env:{...process.env,GIT_TERMINAL_PROMPT:'0',GCM_INTERACTIVE:'Never'},timeout:180000});let stdout='',stderr='';child.stdout.on('data',b=>stdout+=b);child.stderr.on('data',b=>stderr+=b);child.on('error',reject);child.on('close',(code,signal)=>signal?reject(Error('Adapter claim child stopped ('+signal+'): '+JSON.stringify(cli)+'\n'+stderr.slice(0,2000))):done({code,stdout,stderr}));});
   const results=await Promise.all([call(),call()]);assert.equal(results.filter(r=>r.code===0).length,1);const winner=JSON.parse(results.find(r=>r.code===0).stdout);assert.equal(invoke(f,'status').lease.run_id,winner.run_id);
+});
+
+test('CLI optional profile-install-v1: install/status/unchanged with source and stale paths',t=>{
+ const f=fixture(t);if(!invoke(f,'status').capabilities?.includes('profile-install-v1')){t.skip('Adapter does not advertise profile-install-v1');return;}
+ const source=fixture(t,{profile:true});source.write('purpose.md','# Synthetic purpose\nReviewed source.');source.write('profiles/default.md','Reviewed profile');
+ assert.equal(invoke(f,'profile-status','--source',source.root).state,'not-installed');assert.equal(invoke(f,'profile-install','--source',source.root).status,'installed');assert.equal(invoke(f,'profile-status','--source',source.root).state,'in-sync');
+ const head=f.git('rev-parse','HEAD');assert.equal(invoke(f,'profile-install','--source',source.root).status,'unchanged');assert.equal(f.git('rev-parse','HEAD'),head);
+ f.observe();const c=invoke(f,'claim');assert.throws(()=>invoke(f,'profile-install','--source',source.root),/lease/);invoke(f,'release-error','--run',c.run_id);
+});
+test('CLI optional purpose-guidance-v2: purpose-only immutable delivery and dirty refusal',t=>{
+ const f=fixture(t);if(!invoke(f,'status').capabilities?.includes('purpose-guidance-v2')){t.skip('Adapter does not advertise purpose-guidance-v2');return;}
+ const purpose=f.read('instance/purpose.md');f.observe();f.write('instance/purpose.md',purpose+'Dirty');const head=f.git('rev-parse','HEAD');assert.throws(()=>invoke(f,'claim'),/purpose/);assert.equal(f.git('rev-parse','HEAD'),head);f.write('instance/purpose.md',purpose);
+ const c=invoke(f,'claim');assert.equal(c.guidance_version.schema_version,2);assert.equal(c.guidance_version.profile,null);assert.equal(c.guidance,purpose);assert.equal(JSON.parse(f.read(c.guidance_path)).guidance,c.guidance);f.analyze(c);assert.equal(invoke(f,'commit','--run',c.run_id).status,'committed');
 });
