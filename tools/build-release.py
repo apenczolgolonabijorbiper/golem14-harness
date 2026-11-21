@@ -23,6 +23,9 @@ FILES = (
     'processor/init-instance.py', 'processor/memory-tool.mjs', 'processor/process.py',
     'processor/test-observation-portability.py', 'processor/test-validation.py',
     'schemas/memory-graph.schema.json', 'schemas/hypotheses.schema.json',
+    'server/operation-metrics.mjs', 'server/adapter-performance.test.mjs',
+    'processor/write-candidate.mjs', 'server/candidate-writer.test.mjs',
+    'tools/benchmark-cycle.mjs', 'docs/PERFORMANCE.md',
     'server/candidate-merge.mjs', 'server/candidate-merge.test.mjs', 'docs/CANDIDATE_MERGE.md',
     'server/core-policies.mjs', 'server/hypotheses.mjs', 'server/core-priorities.test.mjs',
     'tools/benchmark-capacity.mjs', 'tools/measure-cli.mjs', 'tools/intake-example.mjs', 'server/intake.test.mjs',
@@ -62,6 +65,7 @@ def build(output):
             path.write_bytes(data)
         subprocess.run(['node', '--test', 'server/memory-core.test.mjs',
                         'server/claim-validation.test.mjs', 'server/domain-memory.test.mjs', 'server/candidate-merge.test.mjs',
+                        'server/adapter-performance.test.mjs', 'server/candidate-writer.test.mjs',
                         'adapters/conformance/adapter.test.mjs', 'server/neutral-core.test.mjs', 'server/subprocess.test.mjs', 'server/core-priorities.test.mjs', 'server/intake.test.mjs'],
                        cwd=stage, check=True, env={**os.environ, 'GOLEM_PYTHON': os.environ.get('GOLEM_PYTHON', sys.executable)})
         for script in ['processor/test-validation.py', 'processor/test-observation-portability.py',

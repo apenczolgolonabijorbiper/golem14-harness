@@ -198,3 +198,11 @@ oldest eligible unreserved inputs. Reservations are host-owned hints; the curren
 reference claim CLI has no exclusion option. See the merge guide for ownership,
 expiry and publication requirements. Separate remote clones still need a backend
 that provides authoritative shared coordination and atomic publication.
+
+## Performance diagnostics (0.9.0)
+
+Pass `--timings true` to any reference CLI command for an additional timings
+object. See [PERFORMANCE.md](PERFORMANCE.md) for fields, fixed-label privacy,
+benchmarks and the candidate writer. The six-command contract, validation and
+publication semantics are unchanged. Timings are a reference extension, not a
+required adapter capability.

@@ -1,3 +1,24 @@
+# Golem XIV Harness 0.9.0
+
+- Reference Git adapter reuses immutable snapshot metadata for index checks,
+  modes and reconciliation; groups index updates; compares recovery entries by
+  blob identity and mode instead of reading one blob per process.
+- Optional `--timings true` emits monotonic stage durations and Git command counts
+  with fixed labels, including setup. Failures attach safe timing diagnostics on
+  stderr. Default command responses are unchanged.
+- Memory loading reads sources in bounded batches of eight, retaining exact-byte
+  hashes and deterministic source ordering.
+- `processor/write-candidate.mjs` consumes a structured change set, checks base
+  hashes and source/lease state, preserves history and writes graph/index/journal
+  drafts. Preview is the default. It does not publish or change leases/ledger.
+- Added realistic-size synthetic cycle benchmarks, performance guidance and
+  regression tests included in packaged release verification.
+
+Target graph/hypothesis/vocabulary formats remain unchanged. Candidate reuse is
+not implemented: adapter validate and commit still validate independently. There
+is no model client, scheduler, automatic application profile or parallel writer.
+See PERFORMANCE.md for the helper's scope, host responsibilities and measurements.
+
 # Golem XIV Harness 0.8.0
 
 VP-013 (#35) adds `memory-tool.mjs merge --base BASE --ours OURS --theirs THEIRS

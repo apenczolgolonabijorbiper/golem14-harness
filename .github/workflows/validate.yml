@@ -61,3 +61,5 @@ jobs:
         run: node tools/benchmark-capacity.mjs 500,2000,5000,10000 256
       - name: Larger note measurement
         run: node tools/benchmark-capacity.mjs 2000 2048
+      - name: Small batch cycle measurements
+        run: node tools/benchmark-cycle.mjs 5,10,20 3
