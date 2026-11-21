@@ -23,7 +23,7 @@ The selected config remains {"schema_version":1,"profile":{"path":
 are in the external instance. JSON policy is declarative; prose is agent guidance.
 
 4. Check adapter status/capabilities. The reference adapter advertises
-   candidate-validation-v1, profile-guidance-v1 and core-policies-v2. When selecting
+   candidate-validation-v1, purpose-guidance-v2 and core-policies-v2. When selecting
    policies, require core-policies-v2 or a host-owned implementation with the same
    immutable guidance and validation semantics; do not silently use an old adapter.
 5. Claim at most 20 aged, finalized observations. Read delivered guidance and keep

@@ -18,6 +18,7 @@ FILES = (
     'server/guidance.mjs',
     'server/profile-inspection.mjs',
     'server/profile-inspection.test.mjs',
+    'server/purpose-guidance.test.mjs',
 
     'README.md', 'VERSION', 'LICENSE', 'docs/RELEASE_NOTES.md',
     'docs/architecture-explorer.html',
@@ -83,6 +84,7 @@ def build(output):
         subprocess.run(['node', '--test', 'server/memory-core.test.mjs',
                         'server/application-source.test.mjs',
                         'server/profile-inspection.test.mjs',
+                        'server/purpose-guidance.test.mjs',
 
                         'server/claim-validation.test.mjs', 'server/domain-memory.test.mjs', 'server/candidate-merge.test.mjs',
                         'server/adapter-performance.test.mjs', 'server/candidate-writer.test.mjs',

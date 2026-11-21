@@ -1,3 +1,4 @@
+import {loadGuidance,guidanceIdentity,assertRetainedGuidance} from '../server/guidance.mjs';
 import {readFileSync,writeFileSync,lstatSync,existsSync,unlinkSync,realpathSync} from 'node:fs';
 import {resolve,join} from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -27,6 +28,9 @@ export async function writeCandidate({root,changes,apply=false}) {
   const graphBytes=await readInstanceFile(base,'memory/graph.json'),indexBytes=await readInstanceFile(base,'memory/index.md');
   if(sha256(graphBytes)!==changes.base_graph_sha256||sha256(indexBytes)!==changes.base_index_sha256)throw Error('Draft base changed; reread and regenerate the change set');
   await loadProfile(base);
+  const guidance=await loadGuidance(base,{kinds:[...new Set(status.lease.sources.map(s=>s.kind).filter(Boolean))]});
+  if(JSON.stringify(guidance.guidance_version)!==JSON.stringify(status.lease.guidance_version))throw Error('Claimed guidance changed; release and reclaim');
+  assertRetainedGuidance(JSON.parse(utf8(await readInstanceFile(base,`memory/runs/${changes.run_id}.guidance.json`))),status.lease.guidance_version);
   const state=await loadMemory(base),previous=JSON.parse(utf8(graphBytes)),graph=structuredClone(previous),at=new Date().toISOString();
   // Reject a draft already changed between the initial read and loadMemory.
   if(JSON.stringify(state.graph)!==JSON.stringify(previous))throw Error('Draft base changed during loading');
@@ -61,8 +65,8 @@ export async function writeCandidate({root,changes,apply=false}) {
   for(const q of state.queue.questions)if(!queueMarkdown.includes(q.id)||!queueMarkdown.includes(q.text))errors.push('Readable queue missing question: '+q.id);
   if(errors.length)throw Error('Candidate preflight failed: '+errors[0]);
   const sourceLines=status.lease.sources.map(source=>`- ${source.id} (${source.sha256})`).join('\n');
-  const guidance=status.lease.guidance_version?`guidance_version: ${sha256(json(status.lease.guidance_version))}\n`:'';
-  const report=`# Analysis cycle ${changes.run_id}\n\nModel: ${changes.model}\n${guidance}\n## Sources\n\n${sourceLines}\n\n## Semantic review\n\n${changes.review.trim()}\n\n## Verification\n\nLocal structural preflight passed. Adapter candidate validation and commit remain required.\n`;
+  const guidanceLine=status.lease.guidance_version?`guidance_version: ${sha256(json(status.lease.guidance_version))}\n`:'';
+  const report=`# Analysis cycle ${changes.run_id}\n\nModel: ${changes.model}\n${guidanceLine}\n## Sources\n\n${sourceLines}\n\n## Semantic review\n\n${changes.review.trim()}\n\n## Verification\n\nLocal structural preflight passed. Adapter candidate validation and commit remain required.\n`;
   const index=`${utf8(indexBytes).trimEnd()}\n\n## Cycle ${changes.run_id}\n\n${changes.review.trim()}\n\nSources: ${status.lease.sources.length}; entities added: ${(changes.entities??[]).length}; claims added: ${(changes.claims??[]).length}. See ${journal}.\n`;
   const writes=new Map([['memory/graph.json',json(graph)],['memory/index.md',index],[journal,report]]),before=new Map();
   // Preflight every destination, including parents, before the first write.
