@@ -1,7 +1,7 @@
-"""Build the repository-only, standalone Interactive Architecture Explorer.
+"""Build the standalone Interactive Architecture Explorer from repository source.
 
-Python standard library only. The output, generator and template are deliberately
-absent from tools/build-release.py's explicit distribution allowlist.
+Python standard library only. The HTML output is distributed in release ZIPs;
+the generator and template remain outside the distribution allowlist.
 """
 import argparse
 import hashlib

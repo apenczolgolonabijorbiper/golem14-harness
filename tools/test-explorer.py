@@ -3,7 +3,6 @@ import importlib.util
 import json
 from pathlib import Path
 import re
-import runpy
 import shutil
 import subprocess
 import tempfile
@@ -32,7 +31,7 @@ class ExplorerTests(unittest.TestCase):
         for name in ['processor', 'server', 'adapters', 'integration', 'tools', 'schemas', 'docs']:
             shutil.copytree(ROOT / name, self.root / name,
                             ignore=shutil.ignore_patterns('__pycache__', 'architecture-explorer.html'))
-        for name in ['README.md', 'VERSION']:
+        for name in ['README.md', 'VERSION', 'LICENSE']:
             shutil.copyfile(ROOT / name, self.root / name)
         git(self.root, 'init', '-b', 'master')
         git(self.root, 'config', 'user.name', 'Synthetic Test')
@@ -82,13 +81,24 @@ class ExplorerTests(unittest.TestCase):
         self.assertNotIn('__VERSION__', page)
         self.assertNotIn('/*__DATA__*/', page)
 
-    def test_refuses_to_overwrite_input_and_excludes_explorer_from_package(self):
+    def test_refuses_input_overwrite_and_packages_only_generated_html(self):
         original = (self.root / 'README.md').read_bytes()
         with self.assertRaisesRegex(ValueError, 'overwrite'):
             self.builder.build(self.root / 'README.md')
         self.assertEqual(original, (self.root / 'README.md').read_bytes())
-        files = runpy.run_path(str(ROOT / 'tools/build-release.py'))['FILES']
-        self.assertFalse(any('explorer' in name.lower() for name in files))
+        release = module('release_builder', self.root / 'tools/build-release.py')
+        release.ROOT = self.root
+        self.assertEqual([name for name in release.FILES if 'explorer' in name.lower()],
+                         ['docs/architecture-explorer.html'])
+        # A direct release build must regenerate stale tracked HTML.
+        self.output.write_text('STALE HTML', encoding='utf-8')
+        (self.root / 'VERSION').write_text('9.8.7\n', encoding='utf-8')
+        entries = release.release_entries()
+        self.assertEqual(entries['docs/architecture-explorer.html'], self.output.read_bytes())
+        self.assertEqual(self.data()[1]['version'], '9.8.7')
+        self.assertNotIn('STALE HTML', entries['docs/architecture-explorer.html'].decode())
+        self.assertNotIn('tools/build-explorer.py', entries)
+        self.assertFalse(any(name.startswith('tools/explorer/') for name in entries))
 
     def test_persistence_fast_forward_noop_and_stale_head_refusal(self):
         remote = Path(self.temp.name) / 'remote.git'

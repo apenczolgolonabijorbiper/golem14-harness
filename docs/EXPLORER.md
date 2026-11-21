@@ -1,7 +1,7 @@
 # Interactive Architecture Explorer
 
-Open [architecture-explorer.html](architecture-explorer.html) after downloading
-the raw HTML from the repository, or download the
+Open [architecture-explorer.html](architecture-explorer.html) inside the extracted
+harness release ZIP, download the raw HTML from the repository, or download the
 `golem-harness-architecture-explorer` artifact from a successful release workflow.
 Open that single file directly in a browser. It requires no server, network,
 external fonts or JavaScript libraries. GitHub's file viewer displays the source;
@@ -59,6 +59,13 @@ the subsequent persistence step still runs. It commits only the generated page
 to master using the workflow token and a normal fast-forward push. The release
 tag still targets the original source commit, not the later generated-page commit.
 
+`tools/build-release.py` also invokes the generator itself before collecting
+release entries, so direct local builds cannot package a stale tracked page.
+`golem-harness/docs/architecture-explorer.html` is included in the ZIP and its
+exact bytes are SHA-256-covered by RELEASE.json. This is static documentation;
+it does not execute inference or modify an instance. Existing published ZIPs are
+not overwritten; the first release with this packaging is 0.9.1.
+
 The release workflow is triggered by VERSION, its own definition, and generator
 assets; it can also be dispatched manually on master. A generated HTML-only push
 does not match those paths and cannot cause a release loop. For source or docs
@@ -71,7 +78,7 @@ already-uploaded artifact remains available. Configure the repository to permit
 this workflow's normal generated-file commit if automatic persistence is desired;
 the workflow does not bypass protection.
 
-The generator, template, metadata, persistence helper, tests, this guide and
-generated HTML are repository-only. None is added to `tools/build-release.py`'s
-explicit FILES allowlist, the release ZIP, or its integrity manifest. The explorer
-is a separate workflow artifact, not a release asset or installed runtime feature.
+The generator, template, metadata, persistence helper, tests and this guide are
+repository-only. Only the generated HTML is added to the release FILES allowlist
+and integrity manifest. The extra workflow artifact provides the same page for
+standalone downloading without extracting the release ZIP.
