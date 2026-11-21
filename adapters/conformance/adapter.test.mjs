@@ -98,6 +98,13 @@ test('CLI conformance: concurrent claims cannot both acquire ownership',async t=
   const results=await Promise.all([call(),call()]);assert.equal(results.filter(r=>r.code===0).length,1);const winner=JSON.parse(results.find(r=>r.code===0).stdout);assert.equal(invoke(f,'status').lease.run_id,winner.run_id);
 });
 
+test('CLI optional profile-install-v1: install/status/unchanged with source and stale paths',t=>{
+ const f=fixture(t);if(!invoke(f,'status').capabilities?.includes('profile-install-v1')){t.skip('Adapter does not advertise profile-install-v1');return;}
+ const source=fixture(t,{profile:true});source.write('purpose.md','# Synthetic purpose\nReviewed source.');source.write('profiles/default.md','Reviewed profile');
+ assert.equal(invoke(f,'profile-status','--source',source.root).state,'not-installed');assert.equal(invoke(f,'profile-install','--source',source.root).status,'installed');assert.equal(invoke(f,'profile-status','--source',source.root).state,'in-sync');
+ const head=f.git('rev-parse','HEAD');assert.equal(invoke(f,'profile-install','--source',source.root).status,'unchanged');assert.equal(f.git('rev-parse','HEAD'),head);
+ f.observe();const c=invoke(f,'claim');assert.throws(()=>invoke(f,'profile-install','--source',source.root),/lease/);invoke(f,'release-error','--run',c.run_id);
+});
 test('CLI optional purpose-guidance-v2: purpose-only immutable delivery and dirty refusal',t=>{
  const f=fixture(t);if(!invoke(f,'status').capabilities?.includes('purpose-guidance-v2')){t.skip('Adapter does not advertise purpose-guidance-v2');return;}
  const purpose=f.read('instance/purpose.md');f.observe();f.write('instance/purpose.md',purpose+'Dirty');const head=f.git('rev-parse','HEAD');assert.throws(()=>invoke(f,'claim'),/purpose/);assert.equal(f.git('rev-parse','HEAD'),head);f.write('instance/purpose.md',purpose);
