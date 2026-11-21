@@ -20,6 +20,7 @@ FILES = (
     'server/profile-inspection.test.mjs',
     'server/purpose-guidance.test.mjs',
     'server/profile-lifecycle.test.mjs',
+    'integration/SETUP.profile.md',
 
     'README.md', 'VERSION', 'LICENSE', 'docs/RELEASE_NOTES.md',
     'docs/architecture-explorer.html',

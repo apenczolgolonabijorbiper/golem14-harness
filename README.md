@@ -208,3 +208,7 @@ and docs/CAPACITY_BENCHMARKS.md for the measured resource envelope.
 New tools include strict hypotheses validation, direct dependency review warnings,
 scoped identifiers, capacity usage and conflict-aware --current/--valid-at retrieval.
 They preserve evidence and prompt review; they do not infer truth or merge records.
+
+For reviewed domain setup, use [scan/wizard onboarding](integration/SETUP.profile.md),
+[application-owned sources and inspection](docs/APPLICATION_PROFILES.md), and
+[transactional profile installation](docs/ADAPTERS.md).

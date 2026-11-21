@@ -162,3 +162,7 @@ manual setup. Keep unresolved scheduling requests visible in the setup record.
 Finish with a copyable resume instruction naming the saved record and target,
 plus any remaining blocker. In a later chat, load those settings and ask only
 about missing or conflicting choices.
+
+For evidence-based profile onboarding or an absent/null/stub selection, follow
+[integration/SETUP.profile.md](SETUP.profile.md). Use read-only profile-check before
+publication and preserve application-owned profile/purpose sources for fresh setup.

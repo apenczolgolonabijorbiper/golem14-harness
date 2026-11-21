@@ -156,7 +156,8 @@ core-policies-v2 capability throws before the backend claim is invoked.
 
 ## Application-owned sources and fresh initialization
 
-A source bundle contains golem.config.json and every
+Follow [the scan/wizard procedure](../integration/SETUP.profile.md) to derive rules
+from application evidence. A source bundle contains golem.config.json and every
 referenced core, section and vocabulary file, plus optional purpose.md. Only these
 files are managed; arbitrary source directory files are ignored. Every selector
 is validated, including unobserved kinds. The source alias purpose.md maps to
