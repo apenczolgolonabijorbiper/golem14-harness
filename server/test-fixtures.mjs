@@ -1,4 +1,4 @@
-import {mkdtempSync,readFileSync,writeFileSync,mkdirSync,rmSync} from 'node:fs';
+import {mkdtempSync,realpathSync,readFileSync,writeFileSync,mkdirSync,rmSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join,resolve,dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -22,7 +22,7 @@ export function python(args,options={}) {
 }
 
 export function fixture(t,{profile=false}={}) {
-  const base=mkdtempSync(join(tmpdir(),'golem-test-')),root=join(base,'instance');
+  const base=realpathSync(mkdtempSync(join(tmpdir(),'golem-test-'))),root=join(base,'instance');
   t.after(()=>rmSync(base,{recursive:true,force:true,maxRetries:10,retryDelay:100}));
   python([join(harness,'processor/init-instance.py'),'--root',root,...(profile?['--profile']:[])]);
   const read=path=>readFileSync(join(root,path),'utf8');

@@ -153,3 +153,5 @@ import to the unchanged installed engine. Passing required_capabilities to its
 claim wrapper checks backend status before acquisition. Hosts can also call
 requireCapabilities(status) from server/core-policies.mjs explicitly. A missing
 core-policies-v2 capability throws before the backend claim is invoked.
+
+See [reviewed source initialization](APPLICATION_SOURCES.md) for exact-byte application-owned profile and purpose bundles.
