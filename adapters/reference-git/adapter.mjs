@@ -1,3 +1,5 @@
+import {managedPaths} from '../../server/application-source.mjs';
+import {loadGuidance,guidanceIdentity,assertRetainedGuidance} from '../../server/guidance.mjs';
 import {operationMetrics} from '../../server/operation-metrics.mjs';
 import {resolveLayout} from '../../server/instance-layout.mjs';
 import {boundedSpawn} from '../../server/subprocess.mjs';
@@ -197,7 +199,7 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
     return async path=>{const data=blob(commit,path,true);if(data===null){const error=Error('Committed instance file missing: '+path);error.code='ENOENT';throw error;}return data;};
   }
   async function profileAt(commit,kinds) {
-    return loadProfile(root,{read:readAt(commit),kinds});
+    return loadGuidance(root,{read:readAt(commit),kinds});
   }
   function parseOutputs(value) {
     const paths=Array.isArray(value)?value:typeof value==='string'?value.split(','):[];
@@ -217,8 +219,11 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
   async function candidate(s,run,outputs) {return metrics.async('candidate',()=>buildCandidate(s,run,outputs));}
   async function buildCandidate(s,run,outputs) {
     own(s,run);assertLocalProtocol(s);
+    if(s.lease.guidance_version?.schema_version!==2)throw new AdapterError('Unsupported guidance format; release and reclaim');
     const layout=await resolveLayout(root);
-    const paths=parseOutputs(outputs),journal=`memory/runs/${run}.md`,journalBytes=file(journal);
+    const paths=parseOutputs(outputs),reserved=await managedPaths(root,{read:readAt(s.head)});
+    for(const path of paths)if(reserved.includes(path))throw new AdapterError('Output path is reserved: '+path);
+    const journal=`memory/runs/${run}.md`,journalBytes=file(journal);
     sourceCheck(s);
     if(scan(s).malformed.length)throw new AdapterError('Processed source changed or missing; intervention required');
     const entries=new Map();
@@ -227,10 +232,13 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
     if(s.lease.guidance_version){
       const bound=await profileAt(s.head,[...new Set(s.lease.sources.map(x=>x.kind).filter(Boolean))]);
       if(JSON.stringify(bound?.guidance_version)!==JSON.stringify(s.lease.guidance_version))throw new AdapterError('Claimed profile changed; release and reclaim before completion');
-      const identity=sha256(json(s.lease.guidance_version));
+      if(s.lease.guidance_version.schema_version!==2)throw new AdapterError('Unsupported guidance format; release and reclaim');
+      const identity=guidanceIdentity(s.lease.guidance_version);
       if(!utf8(journalBytes).split('\n').includes('guidance_version: '+identity))throw new AdapterError('Journal guidance_version missing or mismatched');
       const path=`memory/runs/${run}.guidance.json`,bytes=blob(s.head,path),snapshot=JSON.parse(utf8(bytes));
-      if(JSON.stringify(snapshot.guidance_version)!==JSON.stringify(s.lease.guidance_version)||sha256(snapshot.guidance)!==snapshot.guidance_version.delivered_sha256)throw new AdapterError('Claimed guidance provenance mismatch');
+      assertRetainedGuidance(snapshot,s.lease.guidance_version);
+      if(JSON.stringify(snapshot)!==JSON.stringify(bound))throw new AdapterError('Retained guidance text differs from claim snapshot');
+      if(hash(file('instance/purpose.md'))!==hash(blob(s.head,'instance/purpose.md')))throw new AdapterError('Dirty purpose; restore claimed bytes before completion');
       entries.set(path,bytes);
     }
     const ledger={...s.ledger,updated_at:stamp(),observations:[...s.ledger.observations,...s.lease.sources.map(source=>({id:source.id,source_file:source.path,source_sha256:source.sha256,status:'processed',processed_at:stamp(),outputs:paths,run:journal}))]};
@@ -253,10 +261,12 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
     }catch(e){rmSync(built.temporary,{recursive:true,force:true});throw e;}
   }
   const api={
-    async status(){const s=state();return {contract_version:1,capabilities:['candidate-validation-v1','profile-guidance-v1','core-policies-v2'],head:s.head,lease:{...s.lease,held:s.held},...scan(s),recovery_required:existsSync(marker)||[LEASE,LEDGER].some(path=>hash(file(path,{optional:true}))!==hash(blob(s.head,path)))};},
-    async claim({max=20}={}){return locked(async()=>{
+    async status(){const s=state();return {contract_version:1,capabilities:['candidate-validation-v1','purpose-guidance-v2','core-policies-v2'],head:s.head,lease:{...s.lease,held:s.held},...scan(s),recovery_required:existsSync(marker)||[LEASE,LEDGER].some(path=>hash(file(path,{optional:true}))!==hash(blob(s.head,path)))};},
+    async claim({max=20,required_capabilities=[]}={}){return locked(async()=>{
       if(!Number.isInteger(Number(max))||Number(max)<1||Number(max)>20)throw new AdapterError('max must be an integer in 1..20');
       const s=state();assertLocalProtocol(s);
+      for(const capability of required_capabilities)if(!['candidate-validation-v1','purpose-guidance-v2','core-policies-v2'].includes(capability))throw new AdapterError('Required capability unavailable: '+capability);
+      if(hash(file('instance/purpose.md'))!==hash(blob(s.head,'instance/purpose.md')))throw new AdapterError('Commit instance purpose before claiming');
       const layout=await resolveLayout(root),committedLayout=await resolveLayout(root,{read:readAt(s.head)});
       if(JSON.stringify(layout)!==JSON.stringify(committedLayout))throw new AdapterError('Commit instance layout changes before claiming');
       if(s.held)throw new AdapterError('An unexpired processing lease is held');
@@ -266,13 +276,14 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
       // Dirty configured guidance cannot silently be ignored in favor of older committed instructions.
       const config=blob(s.head,'golem.config.json',true);
       if(hash(file('golem.config.json',{optional:true}))!==hash(config))throw new AdapterError('Commit profile configuration before claiming');
-      if(profile){const cfg=JSON.parse(utf8(config)).profile;for(const path of [cfg.path,...(cfg.sections??[]).map(s=>s.path),...(cfg.vocabulary?[cfg.vocabulary]:[])])if(hash(file(path))!==hash(blob(s.head,path)))throw new AdapterError('Commit selected profile files before claiming');}
+      if(config&&JSON.parse(utf8(config)).profile){const cfg=JSON.parse(utf8(config)).profile;for(const path of [cfg.path,...(cfg.sections??[]).map(s=>s.path),...(cfg.vocabulary?[cfg.vocabulary]:[])])if(hash(file(path))!==hash(blob(s.head,path)))throw new AdapterError('Commit selected profile files before claiming');}
+      assertIndexClean(['instance/purpose.md','golem.config.json',...await managedPaths(root,{read:readAt(s.head)})],s.head);
       if(!sources.length)return {status:'no-work'};
       const run=randomUUID(),lease={schema_version:1,run_id:run,status:'processing',claimed_at:stamp(),expires_at:new Date(now()+900000).toISOString(),observation_ids:sources.map(s=>s.id),sources,...(profile?{guidance_version:profile.guidance_version}:{})};
       const entries=new Map([[LEASE,json(lease)]]),writes=[LEASE];
       if(profile){const path=`memory/runs/${run}.guidance.json`;entries.set(path,json(profile));writes.push(path);}
       const next=publish(s,entries,writes,`claim ${run}`);
-      return {status:'claimed',run_id:run,head:next,expires_at:lease.expires_at,sources,...(profile?{guidance:profile.guidance,guidance_version:profile.guidance_version,guidance_boundary:profile.guidance_boundary,guidance_identity:sha256(json(profile.guidance_version)),guidance_path:`memory/runs/${run}.guidance.json`}:{})};
+      return {status:'claimed',run_id:run,head:next,expires_at:lease.expires_at,sources,...(profile?{guidance:profile.guidance,guidance_version:profile.guidance_version,guidance_boundary:profile.guidance_boundary,guidance_identity:guidanceIdentity(profile.guidance_version),guidance_path:`memory/runs/${run}.guidance.json`}:{})};
     });},
     async renew({run}={}){return locked(async()=>{const s=state();assertLocalProtocol(s);own(s,run);const lease={...s.lease,expires_at:new Date(now()+900000).toISOString()};const next=publish(s,new Map([[LEASE,json(lease)]]),[LEASE],`renew ${run}`);return {head:next,expires_at:lease.expires_at};});},
     async 'release-error'({run}={}){return locked(async()=>{const s=state();assertLocalProtocol(s);const next=errorLease(s,run);return {status:'error',head:next};});},

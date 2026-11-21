@@ -212,3 +212,32 @@ and separately counts uncertain dates. Output categories return at most 100 rows
 disclose totals/truncation and sort deterministically. The graph is read once;
 there is no source-body sampling or incremental graph database. Duplicate headings
 are heuristic notices only, never semantic conflict/permission decisions.
+
+## Purpose-bound guidance format 2
+
+`loadProfile` remains a profile-only helper. `loadGuidance` and the reference
+adapter use **purpose-guidance-v2**: every claimed run includes canonical purpose,
+even without a profile. Text order is exact UTF-8 purpose, then two LF characters
+and core/selected sections when selected. Purpose must be present, nonempty UTF-8.
+The version object has insertion-ordered fields: schema_version (2), purpose_path,
+purpose_sha256, config_sha256 (null if absent), profile (the loadProfile v1 metadata
+or null), delivered_sha256. Vocabulary and selector bytes are covered by nested
+profile metadata/config hash. Kind order and repository revision are not identity.
+The identity is SHA-256 of JSON.stringify(version,null,2) plus one LF, shared by
+adapter, inspection and candidate writer. Retained text and metadata are committed
+with the lease; the immutable claim revision records their provenance.
+
+Hosts requiring this promise must require purpose-guidance-v2, not merely
+profile-guidance-v1. The reference adapter replaces its v1 advertisement with v2;
+there is no compatibility promise for the old wire format. Dirty purpose/configuration/selected files and staged guidance
+are refused at claim. Committed purpose/configuration changes during a lease require
+release/reclaim; completion checks the retained snapshot hash/identity and journal.
+Analysis outputs cannot overwrite any selected guidance or canonical purpose.
+Purpose prose grants no permission or deterministic validation exception.
+
+Drain/release active leases before upgrading to this format. No old guidance-format
+reader or migration is provided. Historical records are retained unchanged; owners
+may archive unsupported instances and create fresh target-format instances. Manual
+hosts record purpose path/hash plus retained text or immutable revision, alongside
+profile metadata. A hash alone is insufficient for replay and delivered guidance
+is not proof of inference adherence.

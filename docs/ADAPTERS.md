@@ -3,7 +3,7 @@
 The host owns input capture, model access and storage. The harness supplies the
 processing protocol, validation and the optional adapter contract described here.
 Contract version 1 has six commands. Profile guidance is an optional capability
-profile-guidance-v1; adapters without it follow the direct profile procedure in
+purpose-guidance-v2 (including selected profiles); adapters without it follow the direct profile procedure in
 APPLICATION_PROFILES.md. A backend may add result keys but must preserve required
 semantics. Application warnings cannot downgrade mandatory validation errors.
 
@@ -206,3 +206,5 @@ object. See [PERFORMANCE.md](PERFORMANCE.md) for fields, fixed-label privacy,
 benchmarks and the candidate writer. The six-command contract, validation and
 publication semantics are unchanged. Timings are a reference extension, not a
 required adapter capability.
+
+Purpose-only runs require purpose-guidance-v2. See APPLICATION_PROFILES.md for the new version 2 wire format, dirty-purpose refusal and drain/release-before-upgrade requirement.
