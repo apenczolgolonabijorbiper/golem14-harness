@@ -42,7 +42,7 @@ export async function benchmark(count,bodyCharacters=256){
       out[operation+'_child_peak_rss_mib']=metrics.peak_rss_mib;
     }
     const source=f.observe(count,{body:'Synthetic record.'});full.graph.sources[full.graph.sources.length-1]={id:source.id,path:source.path,sha256:source.sha256,recorded_at:source.recorded_at};full.graph.updated_at=new Date().toISOString();
-    const adapter=createAdapter({instance:f.root}),claim=await adapter.claim();f.write('memory/graph.json',full.graph);f.write(`memory/runs/${claim.run_id}.md`,'Synthetic benchmark review');
+    const adapter=createAdapter({instance:f.root}),claim=await adapter.claim();f.write('memory/graph.json',full.graph);f.write(`memory/runs/${claim.run_id}.md`,'Synthetic benchmark review\n'+(claim.guidance_identity?'guidance_version: '+claim.guidance_identity+'\n':''));
     let at=performance.now();await adapter.validate({run:claim.run_id});out.candidate_validate_ms=Math.round(performance.now()-at);
     at=performance.now();await adapter.commit({run:claim.run_id});out.candidate_commit_ms=Math.round(performance.now()-at);
     at=performance.now();await adapter.validate();out.working_tree_validate_ms=Math.round(performance.now()-at);
