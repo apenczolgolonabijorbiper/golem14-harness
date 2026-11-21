@@ -1,3 +1,34 @@
+# Golem XIV Harness 0.10.0
+
+This release integrates the reviewed profile/purpose lifecycle changes from
+PRs #50–#54 (issues #41–#45). Their stacked feature-branch merges had left
+#51–#54 outside master; this release brings the complete reviewed stack together.
+
+- Initialize fresh instances from explicitly reviewed application-owned profile
+  and purpose sources, preserving exact bytes and recording source provenance.
+- Inspect selection and source drift with profile-check; survey vocabulary and
+  temporal intervals without modifying instance data.
+- Install reviewed sources transactionally through optional profile-install-v1,
+  with lease/CAS checks, stale-file deletion recovery and per-instance guards.
+- Bind purpose and selected profile guidance to immutable per-run snapshots,
+  including purpose-only instances, under purpose-guidance-v2.
+- Package evidence-based scan/wizard onboarding and fresh-instance procedures.
+- Include the updated offline explorer with rendered Markdown and a high-level
+  introduction to host, LLM and harness responsibilities.
+
+Runtime requirements: Node 22.12+ and Python 3.12+; the reference adapter also
+requires Git and a dedicated attached-branch instance clone. Drain or release
+active leases before upgrading. Reference adapters now advertise
+purpose-guidance-v2 instead of profile-guidance-v1; hosts must check capabilities.
+Unsupported guidance formats are rejected. Stored history is not rewritten;
+there are no legacy readers or migrations. Graph v2, hypotheses v1 and vocabulary
+v2 formats remain unchanged. No consuming application or private instance is
+modified by this release.
+
+The inactive software-development template pack (#46) remains pending and is
+not included. Tracker #47 remains open for that remaining deliverable and its
+integrated template workflow verification.
+
 # Golem XIV Harness 0.9.1
 
 - Include the standalone Interactive Architecture Explorer at

@@ -5,7 +5,7 @@ import {mkdtempSync,realpathSync,readFileSync,writeFileSync,mkdirSync,rmSync,exi
 import {tmpdir} from 'node:os';
 import {fixture,python,harness} from './test-fixtures.mjs';
 import {readApplicationSource,compareSource} from './application-source.mjs';
-import {loadProfile} from './application-profile.mjs';
+import {loadGuidance,guidanceIdentity} from './guidance.mjs';
 import {run} from '../processor/memory-tool.mjs';
 export function bundle(t,{purpose=true}={}){
   const root=realpathSync(mkdtempSync(join(tmpdir(),'golem-source-')));t.after(()=>rmSync(root,{recursive:true,force:true}));
@@ -23,7 +23,11 @@ test('source initialization captures bytes, purpose, all section selectors and i
   const captured=await readApplicationSource(src.root);
   for(const [path,bytes]of captured.files)assert.deepEqual(readFileSync(join(f.root,path)),bytes);
   assert.equal((await compareSource(f.root,captured)).state,'in-sync');
-  const before=inventory(f.root),sourceBefore=inventory(src.root);await run(['stats','--root',f.root]);assert.deepEqual(inventory(f.root),before);assert.deepEqual(inventory(src.root),sourceBefore);
+  const report=await run(['profile-check','--root',f.root,'--source',src.root,'--kinds','note,other']);
+  const guidance=await loadGuidance(f.root,{kinds:['other','note']});assert.equal(report.guidance_identity,guidanceIdentity(guidance.guidance_version));
+  assert.deepEqual(report.batches.rows.find(x=>x.kind==='other').section_ids,[]);
+  assert.deepEqual(report.selectors.rows[0].unseen,['note','future']);
+  const before=inventory(f.root),sourceBefore=inventory(src.root);await run(['vocabulary-survey','--root',f.root]);assert.deepEqual(inventory(f.root),before);assert.deepEqual(inventory(src.root),sourceBefore);
   src.write('profiles/core.md','Later');assert.equal(captured.files.get('profiles/core.md').toString(),'# Domain\r\nExact bytes.\r\n');assert.equal((await compareSource(f.root,await readApplicationSource(src.root))).files.find(x=>x.path==='profiles/core.md').state,'differs');
 });
 test('source errors and conflicting options expose no partial destination',async t=>{
@@ -39,7 +43,7 @@ test('source errors and conflicting options expose no partial destination',async
 test('purpose-only initialization leaves profile unselected; omitted purpose retains stub',async t=>{
   const src=bundle(t),f=fixture(t);rmSync(f.root,{recursive:true});
   python([join(harness,'processor/init-instance.py'),'--root',f.root,'--purpose-from',join(src.root,'purpose.md')]);
-  assert.deepEqual(readFileSync(join(f.root,'instance/purpose.md')),readFileSync(join(src.root,'purpose.md')));assert.equal(await loadProfile(f.root),null);
+  assert.deepEqual(readFileSync(join(f.root,'instance/purpose.md')),readFileSync(join(src.root,'purpose.md')));assert.equal((await run(['profile-check','--root',f.root])).state,'none');
   rmSync(f.root,{recursive:true});rmSync(join(src.root,'purpose.md'));python([join(harness,'processor/init-instance.py'),'--root',f.root,'--profile-from',src.root]);assert.match(readFileSync(join(f.root,'instance/purpose.md'),'utf8'),/Define the purpose/);
 });
 test('comparison reports stale, missing and drift independently and preserves omitted purpose',async t=>{
