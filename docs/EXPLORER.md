@@ -7,6 +7,25 @@ Open that single file directly in a browser. It requires no server, network,
 external fonts or JavaScript libraries. GitHub's file viewer displays the source;
 it does not execute the presentation.
 
+Embedded Markdown renders in the reference browser, related-document dialog and
+release notes: headings, lists, tables, blockquotes, fenced code and Mermaid
+diagrams share the explorer theme. Relative Markdown links open embedded files
+where available; code-module source remains literal text. Invalid diagrams keep
+their readable source. Renderer libraries and license notices are bundled inside
+the single HTML file, with no external resource requests. A current browser with
+native DecompressionStream support is required for the compressed engine.
+
+Start with **How the LLM fits** for an explanation of the app/host, model
+inference, harness instructions/tools and external memory. Its round-trip
+example separates model interpretation from deterministic validation and atomic
+publication; the host owns the model API connection and authorized tool execution.
+
+Renderer regression tests run in the lightweight Linux explorer job. They use
+a pinned jsdom development dependency and synthetic SVG text measurements to
+check Markdown structure, diagram SVG generation, sanitization, internal links,
+raw code views and zero resource requests. They are DOM/logic checks, not a
+substitute for visual layout inspection in desktop/mobile browsers.
+
 ## Build locally
 
 From any working directory, with Python 3.12+ and Git installed:

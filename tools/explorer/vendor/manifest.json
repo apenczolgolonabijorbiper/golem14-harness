@@ -1,0 +1,10 @@
+{
+  "packages": {
+    "marked": "18.2.1",
+    "dompurify": "3.4.18",
+    "mermaid": "12.3.0"
+  },
+  "bundler": "esbuild 0.27.4",
+  "sha256": "8bdaa257cc5947d392cf5a51eec55f77ac6f9c64c455b00fe306f1c83016341b",
+  "uncompressed_sha256": "8ece429e44d4db57753853d1315ea5988d2b1a5a427e9d7d81efabe133831a62"
+}

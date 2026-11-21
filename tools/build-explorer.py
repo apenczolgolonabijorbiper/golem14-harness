@@ -4,6 +4,7 @@ Python standard library only. The HTML output is distributed in release ZIPs;
 the generator and template remain outside the distribution allowlist.
 """
 import argparse
+import base64
 import hashlib
 import json
 from pathlib import Path
@@ -66,9 +67,32 @@ def build(output):
         raise ValueError('Template must contain exactly one data marker')
     page = template.replace('__VERSION__', data['version']).replace('__SOURCE_DATE__', date)
     page = page.replace('/*__DATA__*/', payload)
+    vendor = ASSETS / 'vendor'
+    packed = (vendor / 'markdown.bundle.js.gz').read_bytes()
+    manifest = json.loads((vendor / 'manifest.json').read_text(encoding='utf-8'))
+    if hashlib.sha256(packed).hexdigest() != manifest['sha256']:
+        raise ValueError('Markdown renderer bundle hash mismatch')
+    # A compressed in-document bundle keeps the full Mermaid engine portable
+    # without runtime downloads. Modern browsers provide gzip decompression.
+    embedded = '<script id="markdown-vendor" type="application/octet-stream">' + base64.b64encode(packed).decode('ascii') + '</script>'
+    embedded += '''<script>
+window.golemMarkdownReady = (async () => {
+  const bytes = Uint8Array.from(atob(document.getElementById('markdown-vendor').textContent), c => c.charCodeAt(0));
+  const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'));
+  const source = await new Response(stream).text();
+  (0, eval)(source);
+  return window.GolemMarkdown;
+})();
+</script>'''
+    page = page.replace('/*__VENDOR__*/', embedded)
+    renderer = (ASSETS / 'markdown.js').read_text(encoding='utf-8')
+    page = page.replace('/*__MARKDOWN__*/', renderer.replace('</script', r'<\/script'))
+    notices = (vendor / 'THIRD_PARTY_NOTICES.txt').read_text(encoding='utf-8')
+    page = page.replace('/*__NOTICES__*/', json.dumps(notices).replace('<', r'\u003c'))
     output = Path(output).resolve()
     inputs = {ROOT / m['path'] for m in modules} | set(docpaths)
     inputs |= {ASSETS / 'template.html', ASSETS / 'modules.json', ROOT / 'VERSION'}
+    inputs |= {p for p in ASSETS.rglob('*') if p.is_file()}
     inputs |= set((ROOT / 'schemas').glob('*.json'))
     if output in {p.resolve() for p in inputs}:
         raise ValueError('Output cannot overwrite explorer inputs')
