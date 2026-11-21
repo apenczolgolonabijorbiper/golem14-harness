@@ -1,4 +1,4 @@
-import {managedPaths} from '../../server/application-source.mjs';
+import {readApplicationSource,compareSource,managedPaths,mapReader,installPath,sourceMetadata} from '../../server/application-source.mjs';
 import {loadGuidance,guidanceIdentity,assertRetainedGuidance} from '../../server/guidance.mjs';
 import {operationMetrics} from '../../server/operation-metrics.mjs';
 import {resolveLayout} from '../../server/instance-layout.mjs';
@@ -21,7 +21,7 @@ function runChild(...args){try{return boundedSpawn(...args);}catch(e){throw new 
 
 // The local filesystem implementation supports one dedicated, attached-branch instance clone.
 // Hooks are factory-only test seams, never CLI-loaded executable configuration.
-export function createAdapter({instance,harness=defaultHarness,git='git',node=process.execPath,now=()=>Date.now(),hooks={},timings=false}={}) {
+export function createAdapter({instance,harness=defaultHarness,git='git',node=process.execPath,now=()=>Date.now(),hooks={},timings=false,sourceGuard}={}) {
   const metrics=operationMetrics(timings);
   const root=realpathSync(resolve(instance)),engine=realpathSync(harness);
   if(within(engine,root)||within(root,engine)||physicallyWithin(engine,root)||physicallyWithin(root,engine))throw new AdapterError('Instance must be outside the installed engine');
@@ -51,6 +51,7 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
   }
   function safeWrite(path,bytes) {
     instancePath(path);let current=root;
+    if(bytes===null){if(file(path,{optional:true})!==null)rmSync(join(root,path));return;}
     for(const part of path.split('/').slice(0,-1)) {
       current=join(current,part);
       if(!existsSync(current))mkdirSync(current);
@@ -106,8 +107,8 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
       catch {malformed.push({id:row.id,path:row.source_file,reason:'Processed source changed or missing; intervention required'});}
     }
     file('memory/graph.json');
-    const inbox=join(root,'inbox');if(lstatSync(inbox).isSymbolicLink())throw new AdapterError('Unsafe inbox directory');
-    for(const name of readdirSync(inbox).filter(n=>n.endsWith('.md')).sort()) {
+    const inbox=join(root,'inbox');let names=[];try{const st=lstatSync(inbox);if(st.isSymbolicLink()||!st.isDirectory())throw new AdapterError('Unsafe inbox directory');names=readdirSync(inbox);}catch(e){if(e.code!=='ENOENT')throw e;}
+    for(const name of names.filter(n=>n.endsWith('.md')).sort()) {
       const path='inbox/'+name;
       try {
         const bytes=file(path),source=parseSource(path,utf8(bytes));
@@ -148,10 +149,10 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
       const actual=hash(file(path,{optional:true}));
       if(actual===after)continue;
       if(actual!==before)throw new AdapterError('Published state is valid; preserve edited '+path+' and restore it from HEAD before retrying recovery');
-      safeWrite(path,blob(current,path));
+      safeWrite(path,blob(current,path,true));
     }
     // Only update index entries still at their captured pre-publication or committed values.
-    const index=new Map(indexEntries(pending.paths).map(row=>[row.path,row])),beforeTree=snapshot(pending.old),afterTree=snapshot(current);
+    const index=new Map(indexEntries(pending.paths).map(row=>[row.path,row])),beforeTree=snapshot(pending.old??current),afterTree=snapshot(current);
     for(const path of pending.paths){const row=index.get(path),before=beforeTree.get(path),after=afterTree.get(path);
       if(row){if(row.stage!=='0'||![before,after].some(original=>original&&original.sha===row.sha&&original.mode===row.mode))throw new AdapterError('Preserve edited index entries before recovery');}
       else if(before&&after)throw new AdapterError('Preserve staged deletion before recovery');
@@ -169,6 +170,7 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
       exec(['read-tree',commit],{env});
       const originals=snapshot(commit),rows=[];
       for(const [path,bytes]of entries){
+        if(bytes===null){rows.push(`0 ${'0'.repeat(originals.values().next().value?.sha.length??40)}\t${path}\0`);continue;}
         const id=exec(['hash-object','-w','--stdin'],{input:bytes}).toString().trim();
         const mode=originals.get(path)?.mode??'100644';
         rows.push(`${mode} ${id}\t${path}\0`);
@@ -260,12 +262,65 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
       return {...built,entries,validation,files:[...entries.keys()],left_uncommitted:dirty().filter(p=>!entries.has(p))};
     }catch(e){rmSync(built.temporary,{recursive:true,force:true});throw e;}
   }
+  async function profileStatus(source) {
+    const s=state(),recovery_required=existsSync(marker)||[LEASE,LEDGER].some(path=>hash(file(path,{optional:true}))!==hash(blob(s.head,path)));
+    let bundle;try{bundle=await readApplicationSource(source,{git});}catch(e){return {state:'source-invalid',error:e.message,head:s.head,recovery_required};}
+    const committed=await compareSource(root,bundle,{read:readAt(s.head)}),working=await compareSource(root,bundle);
+    const paths=[...new Set([...bundle.files.keys(),...committed.stale_managed_paths])];
+    const dirtyPaths=paths.filter(path=>hash(file(path,{optional:true}))!==hash(blob(s.head,path,true)));
+    const config=blob(s.head,'golem.config.json',true);
+    const installed=config!==null&&JSON.parse(utf8(config)).profile!=null;
+    return {state:!installed&&JSON.parse(utf8(bundle.files.get('golem.config.json'))).profile!=null?'not-installed':committed.state!=='in-sync'?'drift':dirtyPaths.length?'dirty':'in-sync',head:s.head,recovery_required,committed,working,dirty_paths:dirtyPaths,files:paths.map(path=>({path,source_sha256:hash(bundle.files.get(path)??null),head_sha256:hash(blob(s.head,path,true)),working_sha256:hash(file(path,{optional:true}))}))};
+  }
+  async function validateInstall(s,entries){
+    const built=treeFrom(s.head,entries),stage=join(built.temporary,'snapshot');mkdirSync(stage);
+    try{
+      for(const [path,row]of snapshot(built.tree)){mkdirSync(dirname(join(stage,path)),{recursive:true});writeFileSync(join(stage,path),row.bytes);}
+      mkdirSync(join(stage,'inbox'),{recursive:true});
+      const previous=join(built.temporary,'previous.json');writeFileSync(previous,blob(s.head,'memory/graph.json'));
+      const result=runChild(node,[join(engine,'processor/memory-tool.mjs'),'validate','--root',stage,'--previous',previous],{encoding:'utf8',maxBuffer:8*1024*1024});
+      if(result.status!==0)throw new AdapterError('Profile candidate validation failed: '+(result.stderr??'').split('\n')[0]);
+      return built;
+    }catch(e){rmSync(built.temporary,{recursive:true,force:true});throw e;}
+  }
   const api={
-    async status(){const s=state();return {contract_version:1,capabilities:['candidate-validation-v1','purpose-guidance-v2','core-policies-v2'],head:s.head,lease:{...s.lease,held:s.held},...scan(s),recovery_required:existsSync(marker)||[LEASE,LEDGER].some(path=>hash(file(path,{optional:true}))!==hash(blob(s.head,path)))};},
+    async status(){const s=state();return {contract_version:1,capabilities:['candidate-validation-v1','purpose-guidance-v2','profile-install-v1','core-policies-v2'],head:s.head,lease:{...s.lease,held:s.held},...scan(s),recovery_required:existsSync(marker)||[LEASE,LEDGER].some(path=>hash(file(path,{optional:true}))!==hash(blob(s.head,path)))};},
+    async 'profile-status'({source}={}){if(!source)throw new AdapterError('--source is required');return profileStatus(source);},
+    async 'profile-install'({source}={}){return locked(async()=>{
+      if(!source)throw new AdapterError('--source is required');
+      const s=state();assertLocalProtocol(s);if(s.held)throw new AdapterError('An unexpired processing lease is held');
+      if(s.lease.status==='processing')throw new AdapterError('Release the expired processing lease before installing guidance');
+      const bundle=await readApplicationSource(source,{git}),read=readAt(s.head);
+      const old=await managedPaths(root,{read});
+      if(old.length&&JSON.parse(utf8(bundle.files.get('golem.config.json'))).profile==null)throw new AdapterError('Implicit profile deselection refused');
+      const stale=old.filter(path=>!bundle.files.has(path));for(const path of stale)if(path!=='golem.config.json')installPath(path);
+      const entries=new Map(bundle.files);for(const path of stale)entries.set(path,null);
+      // A newly owned path must not erase an unrelated local file. Previously selected
+      // guidance and canonical purpose are explicitly restored by this operation.
+      for(const [path,bytes]of entries){
+        const local=file(path,{optional:true}),committed=blob(s.head,path,true);
+        if(!old.includes(path)&&path!=='instance/purpose.md'&&path!=='golem.config.json'&&local!==null&&hash(local)!==hash(committed)&&hash(local)!==hash(bytes))throw new AdapterError('Preserve unowned local file before installation: '+path);
+      }
+      assertIndexClean([...entries.keys()],s.head);
+      const changed=[...entries].some(([path,bytes])=>hash(bytes)!==hash(blob(s.head,path,true)));
+      const restored=[...entries].filter(([path,bytes])=>hash(file(path,{optional:true}))!==hash(bytes)).map(([path])=>path);
+      if(!changed){
+        // Use the same durable reconciliation record even when no new commit is needed.
+        const writes=restored.map(path=>({path,before:hash(file(path,{optional:true})),after:hash(entries.get(path))}));
+        if(writes.length){writeFileSync(marker,json({old:null,next:s.head,paths:[...entries.keys()],writes}),{flag:'wx'});finishPending();}
+        return {status:'unchanged',head:s.head,restored_paths:restored,source:sourceMetadata(bundle)};
+      }
+      const built=await validateInstall(s,entries);
+      try{await hooks.beforeInstall?.({head:s.head,tree:built.tree});
+        const next=publish(s,entries,[...entries.keys()],'profile-install '+JSON.stringify(sourceMetadata(bundle)),built.tree);
+        return {status:'installed',head:next,restored_paths:restored,removed_paths:stale,source:sourceMetadata(bundle)};
+      }finally{rmSync(built.temporary,{recursive:true,force:true});}
+    });},
     async claim({max=20,required_capabilities=[]}={}){return locked(async()=>{
       if(!Number.isInteger(Number(max))||Number(max)<1||Number(max)>20)throw new AdapterError('max must be an integer in 1..20');
       const s=state();assertLocalProtocol(s);
-      for(const capability of required_capabilities)if(!['candidate-validation-v1','purpose-guidance-v2','core-policies-v2'].includes(capability))throw new AdapterError('Required capability unavailable: '+capability);
+      for(const capability of required_capabilities)if(!['candidate-validation-v1','purpose-guidance-v2','profile-install-v1','core-policies-v2'].includes(capability))throw new AdapterError('Required capability unavailable: '+capability);
+      if(sourceGuard){const checked=await profileStatus(sourceGuard);if(checked.state!=='in-sync'||checked.recovery_required)throw new AdapterError('Reviewed source drift; run profile-install for this instance');}
       if(hash(file('instance/purpose.md'))!==hash(blob(s.head,'instance/purpose.md')))throw new AdapterError('Commit instance purpose before claiming');
       const layout=await resolveLayout(root),committedLayout=await resolveLayout(root,{read:readAt(s.head)});
       if(JSON.stringify(layout)!==JSON.stringify(committedLayout))throw new AdapterError('Commit instance layout changes before claiming');
@@ -318,10 +373,10 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
 
 export async function run(args=process.argv.slice(2)) {
   const command=args.shift(),options={};
-  if(!['status','claim','renew','validate','commit','release-error'].includes(command))throw new AdapterError('Expected status|claim|renew|validate|commit|release-error');
-  for(let i=0;i<args.length;i+=2){const key=args[i]?.slice(2);if(!args[i]?.startsWith('--')||args[i+1]===undefined||!['instance','harness','max','run','outputs','reason','timings'].includes(key)||Object.hasOwn(options,key))throw new AdapterError('Unknown, duplicate or incomplete option');options[key]=args[i+1];}
+  if(!['status','claim','renew','validate','commit','release-error','profile-status','profile-install'].includes(command))throw new AdapterError('Expected status|claim|renew|validate|commit|release-error|profile-status|profile-install');
+  for(let i=0;i<args.length;i+=2){const key=args[i]?.slice(2);if(!args[i]?.startsWith('--')||args[i+1]===undefined||!['instance','harness','max','run','outputs','reason','timings','git','node','source','source-guard'].includes(key)||Object.hasOwn(options,key))throw new AdapterError('Unknown, duplicate or incomplete option');options[key]=args[i+1];}
   if(!options.instance)throw new AdapterError('--instance is required');
   if(options.timings!==undefined&&!['true','false'].includes(options.timings))throw new AdapterError('--timings must be true or false');
-  return createAdapter({...options,timings:options.timings==='true'})[command](options);
+  return createAdapter({...options,sourceGuard:options['source-guard'],timings:options.timings==='true'})[command](options);
 }
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url))run().then(r=>console.log(JSON.stringify(r,null,2))).catch(e=>{if(e.timings)console.error('GOLEM_TIMINGS '+JSON.stringify(e.timings));console.error(e instanceof AdapterError?e.message:'Adapter operation failed; inspect local configuration and protocol state');process.exitCode=1;});
