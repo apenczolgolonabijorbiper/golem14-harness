@@ -47,3 +47,7 @@ Run relevant application tests, invoke documented harness validation against the
 external instance, and compare harness files with RELEASE.json hashes to detect
 accidental modification. Report application changes, checks and integration limits.
 Never repair a hash mismatch by regenerating the engine manifest.
+
+For evidence-based profile onboarding or an absent/null/stub selection, follow
+HARNESS_ROOT/integration/SETUP.profile.md. Use read-only profile-check before
+publication and preserve application-owned profile/purpose sources for fresh setup.
