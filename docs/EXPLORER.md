@@ -39,6 +39,19 @@ CI uses full Git history and a clean source checkout.
 
 ## Release integration and persistence
 
+PR and master-push validation classify the complete change set first. Docs,
+explorer assets and workflow-only changes run one Linux explorer/routing test
+job; the platform correctness and capacity matrices are skipped. Changes in
+processor, server, schemas, adapters or integration, packaging, VERSION,
+benchmarks and unknown paths retain both full matrices. Mixed changes always
+take the full route. Integration Markdown is part of the executable agent
+contract and is deliberately not treated as ordinary documentation.
+
+The workflow itself always starts, including for docs-only changes, so checks
+are not left pending by top-level path exclusions. `validation-result` aggregates
+the required selected jobs, accepting skips only on the lightweight route.
+It can be used as a stable branch-protection check across both routes.
+
 The existing release workflow runs generation and repository-only checks, uploads
 the standalone HTML as a workflow artifact, builds/verifies the ordinary harness
 ZIP, and publishes a new version if needed. Even if that release already exists,
