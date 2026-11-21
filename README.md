@@ -1,4 +1,4 @@
-# Golem native cognitive harness — 0.9.0
+# Golem native cognitive harness — 0.9.1
 
 A host-independent cognitive harness inspired by Stanisław Lem’s Golem XIV and Xemantic’s work on metacognitive AI. The host LLM performs
 interpretation by following AGENTS.md and docs/PROCESSING.md; the executable core
@@ -146,12 +146,21 @@ Limits: 10,000 graph sources, 5,000 entities, 20,000 claims, 100 retrieved claim
 For resend handling and restoring inbox observations into a fresh instance,
 see [the processing protocol](docs/PROCESSING.md).
 
+## Interactive Architecture Explorer
+
+Open [the standalone architecture explorer](docs/architecture-explorer.html)
+to browse modules, functions, data schemas, processing and storage contracts offline.
+The release workflow regenerates it from source and saves it to this repository.
+The generated HTML is included in the harness ZIP and integrity manifest;
+its generator and template remain repository-only. See the
+[build and workflow guide](https://github.com/apenczolgolonabijorbiper/golem14-harness/blob/master/docs/EXPLORER.md).
+
 ## Build a release
 
 From the maintainer checkout run:
 
 ```sh
-python3 tools/build-release.py --output ../golem-cognitive-harness-0.9.0.zip
+python3 tools/build-release.py --output ../golem-cognitive-harness-0.9.1.zip
 ```
 
 The builder runs the release tests, packages an explicit file list, and produces

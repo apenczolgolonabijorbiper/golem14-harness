@@ -9,7 +9,45 @@ concurrency:
 permissions:
   contents: read
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      platforms: ${{ steps.scope.outputs.platforms }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@v7.1.0
+        with:
+          python-version: '3.12'
+      - name: Select validation scope
+        id: scope
+        env:
+          SCOPE_EVENT: ${{ github.event_name }}
+          SCOPE_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+          SCOPE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: python tools/ci/validation-scope.py
+
+  explorer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@v7.1.0
+        with:
+          python-version: '3.12'
+      - name: Repository-only explorer and CI routing checks
+        run: |
+          python tools/test-explorer.py
+          python tools/ci/test-validation-scope.py
+
   validate:
+    needs: changes
+    if: needs.changes.outputs.platforms == 'true'
     timeout-minutes: 10
     strategy:
       fail-fast: false
@@ -41,6 +79,8 @@ jobs:
         run: python tools/build-release.py --output ../platform-release.zip
 
   capacity:
+    needs: changes
+    if: needs.changes.outputs.platforms == 'true'
     timeout-minutes: 20
     strategy:
       fail-fast: false
@@ -63,3 +103,26 @@ jobs:
         run: node tools/benchmark-capacity.mjs 2000 2048
       - name: Small batch cycle measurements
         run: node tools/benchmark-cycle.mjs 5,10,20 3
+
+  validation-result:
+    if: always()
+    needs: [changes, explorer, validate, capacity]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require successful selected checks
+        env:
+          CHANGES: ${{ needs.changes.result }}
+          EXPLORER: ${{ needs.explorer.result }}
+          VALIDATE: ${{ needs.validate.result }}
+          CAPACITY: ${{ needs.capacity.result }}
+          PLATFORMS: ${{ needs.changes.outputs.platforms }}
+        run: |
+          test "$CHANGES" = success
+          test "$EXPLORER" = success
+          if [ "$PLATFORMS" = true ]; then
+            test "$VALIDATE" = success
+            test "$CAPACITY" = success
+          else
+            test "$VALIDATE" = skipped
+            test "$CAPACITY" = skipped
+          fi

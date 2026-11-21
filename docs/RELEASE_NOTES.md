@@ -1,3 +1,14 @@
+# Golem XIV Harness 0.9.1
+
+- Include the standalone Interactive Architecture Explorer at
+  `docs/architecture-explorer.html` in the release ZIP and integrity manifest.
+- Regenerate the page from current checkout sources before every release build;
+  keep the generator, template, metadata and tests repository-only.
+- Release workflow retains the generated page in Git and as a separate workflow
+  artifact. Lightweight CI handles explorer/docs-only changes; runtime and
+  packaging changes retain full platform validation.
+- No runtime schema or processing contract changes.
+
 # Golem XIV Harness 0.9.0
 
 - Reference Git adapter reuses immutable snapshot metadata for index checks,

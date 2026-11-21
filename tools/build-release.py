@@ -12,6 +12,7 @@ import zipfile
 ROOT = Path(__file__).resolve().parents[1]
 FILES = (
     'README.md', 'VERSION', 'LICENSE', 'docs/RELEASE_NOTES.md',
+    'docs/architecture-explorer.html',
     'docs/EXTRACTION.md', 'docs/MEMORY_MODEL.md', 'docs/PROCESSING.md',
     'docs/PROVENANCE.md', 'docs/ARCHITECTURE_MAPPING.md',
     'docs/CHATGPT_WORK.md', 'docs/CODEX.md', 'docs/DIRECTORY_LAYOUT.md',
@@ -44,12 +45,20 @@ def digest(data):
     return hashlib.sha256(data).hexdigest()
 
 
+def release_entries():
+    # Direct local builds and CI both package a fresh page. Generator/template
+    # stay repository-only; only the output enters the integrity manifest.
+    subprocess.run([sys.executable, str(ROOT / 'tools/build-explorer.py')], check=True)
+    entries = {name: (ROOT / name).read_bytes() for name in FILES}
+    entries['AGENTS.md'] = (ROOT / 'integration/AGENTS.distribution.md').read_bytes()
+    return entries
+
+
 def build(output):
     checksum = output.with_suffix(output.suffix + '.sha256')
     if output.exists() or checksum.exists():
         raise FileExistsError('Choose an unused output filename')
-    entries = {name: (ROOT / name).read_bytes() for name in FILES}
-    entries['AGENTS.md'] = (ROOT / 'integration/AGENTS.distribution.md').read_bytes()
+    entries = release_entries()
     manifest = {
         'version': entries['VERSION'].decode().strip(),
         'schema_version': 1,
