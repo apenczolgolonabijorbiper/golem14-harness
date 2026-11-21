@@ -39,6 +39,8 @@ jobs:
         env:
           GOLEM_TRACE_COMMANDS: '1'
         run: python tools/build-release.py --output ../platform-release.zip
+      - name: Repository-only explorer checks
+        run: python tools/test-explorer.py
 
   capacity:
     timeout-minutes: 20

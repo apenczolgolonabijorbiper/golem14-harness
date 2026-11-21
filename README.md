@@ -146,6 +146,14 @@ Limits: 10,000 graph sources, 5,000 entities, 20,000 claims, 100 retrieved claim
 For resend handling and restoring inbox observations into a fresh instance,
 see [the processing protocol](docs/PROCESSING.md).
 
+## Interactive Architecture Explorer
+
+Download and open [the standalone architecture explorer](https://github.com/apenczolgolonabijorbiper/golem14-harness/blob/master/docs/architecture-explorer.html)
+to browse modules, functions, data schemas, processing and storage contracts offline.
+The release workflow regenerates it from source and saves it to this repository.
+Its generator and HTML are excluded from the harness ZIP; see the
+[build and workflow guide](https://github.com/apenczolgolonabijorbiper/golem14-harness/blob/master/docs/EXPLORER.md).
+
 ## Build a release
 
 From the maintainer checkout run:

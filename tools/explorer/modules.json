@@ -1,0 +1,157 @@
+{
+  "processor/memory-tool.mjs": [
+    "Memory CLI",
+    "Interface",
+    "Loads and validates a complete snapshot before validation, context retrieval or statistics. Dispatches completed-candidate merges.",
+    [
+      "parseSource: Parses canonical observation headers, checks identity and computes the exact UTF-8 SHA-256.",
+      "loadMemory: Loads graph, sources, ledger, queues, hypotheses and canonical layout.",
+      "run: Parses CLI options, validates state and dispatches the selected operation."
+    ]
+  ],
+  "processor/process.py": [
+    "Evidence indexer",
+    "Processing",
+    "Creates evidence/UUID.json from inbox observations. Existing evidence is skipped. interpretation is not_inferred; indexing never creates semantic claims.",
+    []
+  ],
+  "processor/init-instance.py": [
+    "Instance initializer",
+    "Integration",
+    "Creates a fresh canonical graph v2, hypotheses v1, ledger, idle lease, queues, purpose and directories. --profile creates and selects a profile stub. Refuses a nonempty destination.",
+    []
+  ],
+  "server/memory-model.mjs": [
+    "Memory core",
+    "Core",
+    "Validates graph structure, provenance and history; retrieves lexical context with bounded graph expansion; computes statistics, capacity and review warnings.",
+    [
+      "schemaErrors: Bounded JSON Schema evaluator; unknown schema keywords fail closed.",
+      "validateMemory: Checks references, exact quotations, source hashes, ledger parity, correction history and dependencies.",
+      "retrieveContext: Applies temporal policy, exact scoped identifiers and lexical/graph retrieval.",
+      "memoryStats: Totals, pending counts, relation counts, UTC timeline and capacity.",
+      "collectWarnings: Advisory findings; does not establish truth."
+    ]
+  ],
+  "server/core-policies.mjs": [
+    "Policy engine",
+    "Core",
+    "Declarative vocabulary, scoped identity matching, acyclic dependency checks, conflict warnings and temporal selection. No executable policy hooks.",
+    [
+      "validateVocabulary: Validates vocabulary v2 and bounded lists.",
+      "externalKey: Exact scheme/namespace/value identity key.",
+      "dependencyErrors: Stack-safe O(V+E) topology check.",
+      "temporalSelection: Selects effective intervals and current single-valued claims, preserving explicit alternatives.",
+      "requireCapabilities: Requires candidate-validation-v1 and core-policies-v2 by default."
+    ]
+  ],
+  "server/hypotheses.mjs": [
+    "Hypothesis validator",
+    "Core",
+    "Validates strict hypothesis records, source and claim references, confidence bounds, collection timestamps and status evidence requirements.",
+    []
+  ],
+  "server/application-profile.mjs": [
+    "Profile & path boundary",
+    "Core",
+    "Loads explicitly selected core guidance, kind-scoped sections and vocabulary. Retains exact hashes and delivered text provenance; rejects unsafe paths and engine-contained data.",
+    [
+      "loadProfile: Accepts an optional immutable-snapshot reader and batch kinds; returns guidance, boundary, version and optional vocabulary.",
+      "readInstanceFile: Reads regular UTF-8 data outside the engine without symlink traversal.",
+      "instancePath: Enforces portable relative paths."
+    ]
+  ],
+  "server/instance-layout.mjs": [
+    "Layout resolver",
+    "Core",
+    "Resolves required canonical purpose and hypothesis paths; missing files fail. No legacy layout conversion.",
+    []
+  ],
+  "server/candidate-merge.mjs": [
+    "Candidate merge",
+    "Core",
+    "Three-way ID-keyed merge of same-base completed snapshots. Enforces immutable byte/history rules, flags summary regeneration and produces a private review draft. Never publishes or manages leases.",
+    []
+  ],
+  "server/subprocess.mjs": [
+    "Bounded subprocess",
+    "Infrastructure",
+    "Runs noninteractive child processes with bounded execution and output. Used by Git operations and fixtures.",
+    []
+  ],
+  "adapters/reference-git/adapter.mjs": [
+    "Local Git adapter",
+    "Storage",
+    "Six-command adapter with lease ownership, exact candidate validation, private index, expected-head CAS publication and interrupted-publication recovery. Dedicated local instance repository only.",
+    [
+      "createAdapter: Factory accepting instance, harness, Git/Node executables, clock and test hooks.",
+      "run: CLI entry point for status, claim, renew, validate, commit and release-error."
+    ]
+  ],
+  "adapters/template/adapter.mjs": [
+    "Backend scaffold",
+    "Storage",
+    "Explicitly failing delegation scaffold for an application-owned backend. Supplies the interface, not working storage.",
+    []
+  ],
+  "integration/install-host.py": [
+    "Shared host installer",
+    "Integration",
+    "Verifies release manifest hashes and installs an intact engine plus managed host instructions. Preserves unrelated application content; refuses conflicting installations.",
+    []
+  ],
+  "integration/install-codex.py": [
+    "Codex installer",
+    "Integration",
+    "Host entry point for Codex CLI/Desktop; calls shared installer. Discovery must be checked in a fresh client session.",
+    []
+  ],
+  "integration/install-cursor.py": [
+    "Cursor installer",
+    "Integration",
+    "Installs shared instructions and an alwaysApply Cursor MDC rule. It does not initialize memory or start inference.",
+    []
+  ],
+  "tools/build-release.py": [
+    "Release builder",
+    "Maintenance",
+    "Runs release checks, stages an explicit distribution file list, creates RELEASE.json, ZIP and SHA-256 checksum. Maintainer tooling, not instance processing.",
+    []
+  ],
+  "tools/benchmark-capacity.mjs": [
+    "Capacity benchmark",
+    "Maintenance",
+    "Synthetic measurement of validators, retrieval and adapter operations within documented platform and byte limits.",
+    []
+  ],
+  "tools/measure-cli.mjs": [
+    "CLI measurement",
+    "Maintenance",
+    "Measures command execution for capacity reporting.",
+    []
+  ],
+  "tools/intake-example.mjs": [
+    "Intake example",
+    "Maintenance",
+    "Synthetic intake demonstration; host-owned ingestion remains outside the core.",
+    []
+  ],
+  "processor/write-candidate.mjs": [
+    "Candidate writer",
+    "Processing",
+    "Assembles graph/index/journal drafts from an agent-authored structured change set. Preview by default; checks base hashes, source bytes and owned lease. Does not publish or write leases/ledger.",
+    []
+  ],
+  "server/operation-metrics.mjs": [
+    "Operation metrics",
+    "Infrastructure",
+    "Opt-in monotonic phase timings and Git counters with fixed labels; no arguments, source text, paths or credentials collected.",
+    []
+  ],
+  "tools/benchmark-cycle.mjs": [
+    "Cycle benchmark",
+    "Maintenance",
+    "Synthetic realistic-size 5/10/20-source cycle probes using fresh adapters. Measures deterministic operations, not LLM inference.",
+    []
+  ]
+}
