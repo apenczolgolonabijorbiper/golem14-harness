@@ -13,7 +13,7 @@ PROCESSOR = Path(__file__).resolve().parent
 
 class ObservationPortabilityTest(unittest.TestCase):
     def setUp(self):
-        self.work = Path(self.enterContext(tempfile.TemporaryDirectory()))
+        self.work = Path(self.enterContext(tempfile.TemporaryDirectory())).resolve()
         self.source = self.work / 'source'
         self.run_python('init-instance.py', '--root', self.source)
         self.ids = []

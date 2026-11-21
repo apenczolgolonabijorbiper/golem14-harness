@@ -11,6 +11,11 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 FILES = (
+    'server/application-source.mjs',
+    'processor/source-bundle.mjs',
+    'server/application-source.test.mjs',
+    'docs/APPLICATION_SOURCES.md',
+
     'README.md', 'VERSION', 'LICENSE', 'docs/RELEASE_NOTES.md',
     'docs/architecture-explorer.html',
     'docs/EXTRACTION.md', 'docs/MEMORY_MODEL.md', 'docs/PROCESSING.md',
@@ -73,6 +78,8 @@ def build(output):
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(data)
         subprocess.run(['node', '--test', 'server/memory-core.test.mjs',
+                        'server/application-source.test.mjs',
+
                         'server/claim-validation.test.mjs', 'server/domain-memory.test.mjs', 'server/candidate-merge.test.mjs',
                         'server/adapter-performance.test.mjs', 'server/candidate-writer.test.mjs',
                         'adapters/conformance/adapter.test.mjs', 'server/neutral-core.test.mjs', 'server/subprocess.test.mjs', 'server/core-priorities.test.mjs', 'server/intake.test.mjs'],

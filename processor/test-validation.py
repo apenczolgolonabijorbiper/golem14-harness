@@ -18,7 +18,7 @@ RECORDED_AT = '2026-01-01T12:00:00.000Z'
 
 class ValidationTest(unittest.TestCase):
     def setUp(self):
-        work = Path(self.enterContext(tempfile.TemporaryDirectory()))
+        work = Path(self.enterContext(tempfile.TemporaryDirectory())).resolve()
         self.root = initialize(work / 'candidate')
         self.previous = work / 'prior-graph.json'
         graph_file = self.root / 'memory/graph.json'
