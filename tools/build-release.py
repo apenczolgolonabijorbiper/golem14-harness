@@ -11,6 +11,8 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 FILES = (
+    'server/memory-timings.test.mjs',
+    'server/cycle-artifacts.mjs',
     'server/application-source.mjs',
     'processor/source-bundle.mjs',
     'server/application-source.test.mjs',
@@ -90,7 +92,7 @@ def build(output):
                         'server/profile-lifecycle.test.mjs',
 
                         'server/claim-validation.test.mjs', 'server/domain-memory.test.mjs', 'server/candidate-merge.test.mjs',
-                        'server/adapter-performance.test.mjs', 'server/candidate-writer.test.mjs',
+                        'server/adapter-performance.test.mjs', 'server/candidate-writer.test.mjs', 'server/memory-timings.test.mjs',
                         'adapters/conformance/adapter.test.mjs', 'server/neutral-core.test.mjs', 'server/subprocess.test.mjs', 'server/core-priorities.test.mjs', 'server/intake.test.mjs'],
                        cwd=stage, check=True, env={**os.environ, 'GOLEM_PYTHON': os.environ.get('GOLEM_PYTHON', sys.executable)})
         for script in ['processor/test-validation.py', 'processor/test-observation-portability.py',

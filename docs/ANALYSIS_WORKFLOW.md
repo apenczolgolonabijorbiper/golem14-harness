@@ -73,3 +73,11 @@ not replace source indexing, hypothesis/question maintenance or the adapter
 validate/commit sequence. Keep the selected profile concise and committed before
 claim; do not rediscover domain conventions or generate transaction machinery
 for each batch. Observe host process completion instead of fixed sleeps.
+
+
+Complete-cycle drafting: the reference local writer can assemble explicit question
+updates, schema-1 hypotheses and chat events in one preview/apply. See
+[PERFORMANCE.md](PERFORMANCE.md#complete-cycle-drafts-vp-020) for base hashes,
+canonical queue fields, output paths and publication boundaries. Both queues are
+rendered from the same records. Evidence indexing and adapter completion remain
+separate required operations.

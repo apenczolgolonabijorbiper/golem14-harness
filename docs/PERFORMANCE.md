@@ -103,7 +103,7 @@ node processor/write-candidate.mjs --root ../private-instance --changes ../scrat
 
 Preview performs structural checks and returns file names/counts without writes.
 Apply rechecks committed head, lease, source bytes and draft base hashes, then
-writes only `memory/graph.json`, `memory/index.md` and `memory/runs/RUN.md`.
+always drafts `memory/graph.json`, `memory/index.md` and `memory/runs/RUN.md`; optional cycle artifacts are described below.
 It preflights regular-file destinations and rejects symlinks/unsafe directories.
 Use one draft writer in an isolated agent workspace; these working-tree writes
 are not an atomic transaction or a lock against other local editors. On an I/O
@@ -112,8 +112,7 @@ after termination or partial I/O inspect/preserve drafts and restore this cycle'
 files before retrying. It refuses a graph already containing the claimed sources.
 
 The helper preserves current questions and hypotheses and checks them for
-structural consistency. Maintaining those records, both readable/JSON queues,
-events and evidence indexing remains the agent/host's responsibility. Write and
+structural consistency. Supplying those records remains the agent/host's responsibility. The writer can assemble both queues, hypotheses and chat events; evidence indexing remains the indexer's responsibility. Write and
 review those artifacts as required before adapter completion. Draft preflight is
 not proof of semantic truth, committed history integrity or transaction validity.
 It uses a proposed ledger only in memory; it never writes the ledger or lease.
@@ -192,3 +191,43 @@ samples are preliminary evidence, not a reliable tail-latency estimate. The
 existing capacity fixture at 500 sources/5,000 entities/20,000 claims also passed;
 its single-run timing is not used to claim a speedup. CI runs cycle probes on
 Linux and Windows and packaged correctness checks on Linux, Windows and macOS.
+
+
+## Complete cycle drafts (VP-020)
+
+The reference writer supports a dedicated local Git instance owned by the reference
+adapter. It is not a remote Chelm artifact-upload API or a generic contract-v1
+adapter binding. It never infers claims, leases, evidence or ledger completion.
+
+Optional change-set fields (schema_version remains 1):
+
+| Field | Meaning |
+|---|---|
+| questions | Array of full canonical records keyed by id: id, text, status, source_observation_id; optional created_at, answer, analysis. Updates merge by ID; unmentioned records survive. Closed records need analysis.status=answered and analysis.source_observation_ids. Empty array changes nothing. |
+| hypotheses | Full schema-1 replacement document, including collection updated_at. No record uncertainty field; updated_at must cover record timestamps. |
+| events | Array of observation_id, question_id, answer, answered_at; each targets a claimed observation and a known question, matching any source question_id. Existing events are never overwritten. |
+| base_files_sha256 | Required map for every optional output: existing bytes' SHA-256, or null for a new event. Include both question queue paths. |
+| at | Optional UTC timestamp used for graph/journal generation. Preview returns at; reuse it for predictable apply content. |
+
+Omitted sections preserve existing bytes. Preview makes no directories/files and
+lists the exact planned outputs; it aggregates independent semantic diagnostics.
+Apply rechecks the current head, owned lease, guidance, source bytes and base
+files. It creates safe missing event directories, writes temporary files before
+replacement and restores only its own still-matching outputs after failure.
+Existing unrelated drafts are preserved. The output files still need adapter
+validate/commit; run memory-tool validate after publication (the real ledger is
+still pending before completion). Queue Markdown uses literal text fences;
+graph totals are computed while unrelated index prose is retained.
+
+## Memory command timings (VP-022)
+
+validate, context and stats accept --timings true|false. Omitted/false preserves
+existing output bytes and exit behavior. True adds timings with elapsed_ms,
+phases, counts and git, using fixed names only. Validation stages are load,
+schema, graph (identities/questions), provenance (ledger/sources/entities),
+claims, history and hypotheses. Profile loading is separate. Context also
+measures query/render; stats measures stats. Stages skipped after an earlier
+failure are absent. No validation pass is repeated. Counters/Git are empty when
+no work is recorded. Durations exclude process startup and final JSON encoding.
+On failure the original diagnostic and nonzero exit remain; enabled timing is
+one additional JSON object on stderr. Timings describe work, never correctness.
