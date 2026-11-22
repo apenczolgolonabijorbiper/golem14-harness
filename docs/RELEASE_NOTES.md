@@ -1,3 +1,33 @@
+# Golem XIV Harness 0.11.0
+
+- Extend the reference candidate writer to draft questions, hypotheses and chat
+  events together with graph/index/journal in one preview/apply (VP-020).
+- Generate matching JSON/Markdown question queues and graph totals; validate
+  explicit references and hypotheses before writing; protect auxiliary base
+  hashes and restore earlier draft writes after a later artifact failure.
+- Add optional --timings true|false to memory-tool validate/context/stats (VP-022).
+  Default results, diagnostics and exit status remain unchanged. Enabled reports
+  use monotonic phase timings and numeric counts without source content.
+- Refresh the offline architecture explorer from the packaged sources.
+
+Runtime requirements remain Node 22.12+, Python 3.12+ and Git for the reference
+adapter. Canonical graph v2, hypotheses v1 and vocabulary v2 remain unchanged.
+Existing canonical 0.10.0 instances retain memory and require no migration or
+reset: pause executors, drain/release active leases, verify the new package,
+replace the complete engine directory and revalidate before resuming.
+
+The writer remains specific to a dedicated local reference-Git instance; it
+neither publishes completion nor exposes Chelm remote artifact slots. Optional
+question changes use canonical text records and explicit auxiliary base hashes.
+Timing stages can overlap and must not be summed. The POSIX permission-fault
+rollback test passes on Linux and is explicitly skipped where that fault cannot
+be injected on Windows; the remaining Windows tests pass.
+
+Chelm-host must explicitly declare support for this release before upgrading a
+paired host runtime. The coordinated Chelm-host 1.1.0 release targets this exact
+published package. No consuming application or private instance is upgraded by
+publishing the release.
+
 # Golem XIV Harness 0.10.0
 
 This release integrates the reviewed profile/purpose lifecycle changes from
