@@ -1,3 +1,4 @@
+import {operationMetrics} from '../server/operation-metrics.mjs';
 import {loadGuidance} from '../server/guidance.mjs';
 import {profileCheck,vocabularySurvey} from '../server/profile-inspection.mjs';
 import {validateHypotheses} from '../server/hypotheses.mjs';
@@ -37,9 +38,10 @@ export async function run(args=process.argv.slice(2)){
     for(let i=0;i<args.length;i+=2){const key=args[i]?.slice(2);if(!args[i]?.startsWith('--')||!['base','ours','theirs','out'].includes(key)||args[i+1]===undefined||Object.hasOwn(options,key))throw Error('Expected unique --base/--ours/--theirs/--out paths');options[key]=args[i+1];}
     const {mergeSnapshots}=await import('../server/candidate-merge.mjs');return mergeSnapshots(options);
   }
-  const allowed={validate:['root','previous'],stats:['root'], 'profile-check':['root','kinds','source'], 'vocabulary-survey':['root','single-valued','prefix'],context:['root','query','entity','source','limit','predicate','type','kind','status','hops','expansion-budget','current','valid-at','external-id','scheme','namespace']}[command];
+  const allowed={validate:['root','previous','timings'],stats:['root','timings'], 'profile-check':['root','kinds','source'], 'vocabulary-survey':['root','single-valued','prefix'],context:['timings','root','query','entity','source','limit','predicate','type','kind','status','hops','expansion-budget','current','valid-at','external-id','scheme','namespace']}[command];
   for(let i=0;i<args.length;i+=2){if(!args[i]?.startsWith('--')||args[i+1]===undefined)throw Error('Expected --option value');const key=args[i].slice(2);if(!allowed?.includes(key)||Object.hasOwn(options,key))throw Error('Unknown or duplicate option: '+key);options[key]=args[i+1];}
-  if(!['validate','context','stats','profile-check','vocabulary-survey'].includes(command))throw Error('Usage: node processor/memory-tool.mjs merge --base BASE --ours OURS --theirs THEIRS --out OUT; or profile-check --root PATH [--kinds a,b] [--source DIR]; vocabulary-survey --root PATH [--single-valued p1,p2] [--prefix scheme:PFX]; see integration/SETUP.profile.md; validate|context|stats [--root path] [--previous graph.json] [--query text] [--entity id] [--source uuid] [--limit number] [--predicate list] [--type list] [--kind list] [--status active|all] [--hops 1..3] [--expansion-budget 1..20000] [--current true|false] [--valid-at UTC-ISO] [--external-id value --scheme slug --namespace scope]');
+  if(!['validate','context','stats','profile-check','vocabulary-survey'].includes(command))throw Error('Usage: node processor/memory-tool.mjs merge --base BASE --ours OURS --theirs THEIRS --out OUT; or profile-check --root PATH [--kinds a,b] [--source DIR]; vocabulary-survey --root PATH [--single-valued p1,p2] [--prefix scheme:PFX]; see integration/SETUP.profile.md; validate|context|stats [--root path] [--timings true|false] [--previous graph.json] [--query text] [--entity id] [--source uuid] [--limit number] [--predicate list] [--type list] [--kind list] [--status active|all] [--hops 1..3] [--expansion-budget 1..20000] [--current true|false] [--valid-at UTC-ISO] [--external-id value --scheme slug --namespace scope]');
+  if(options.timings!==undefined&&!['true','false'].includes(options.timings))throw Error('Expected --timings true|false');
   const root=resolve(options.root||dirname(fileURLToPath(import.meta.url))+'/..');
   if(command==='profile-check'){
     let state,graphError;try{state=await loadMemory(root);const errors=validateMemory(state.graph,state);if(errors.length)graphError=errors[0];}catch(e){graphError=e.message;}
@@ -47,18 +49,24 @@ export async function run(args=process.argv.slice(2)){
     return profileCheck(root,{state,graphError,kinds:options.kinds?.split(',').filter(Boolean),source:options.source});
   }
   if(command==='vocabulary-survey'){const graph=JSON.parse(utf8(await readInstanceFile(root,'memory/graph.json')));const errors=schemaErrors(graph);if(errors.length)throw Error('Survey graph unavailable: '+errors[0]);return vocabularySurvey(graph,{singleValued:options['single-valued']?.split(','),prefix:options.prefix,vocabulary:(await loadProfile(root))?.vocabulary});}
-  const state=await loadMemory(root);
-  const profile=await loadProfile(root);
+  const enabled=options.timings==='true',metrics=operationMetrics(enabled);
+  const finish=value=>enabled?{...value,timings:metrics.report()}:value;
+  try {
+  const state=await metrics.async('load',()=>loadMemory(root));
+  metrics.count('entities',state.graph.entities.length);metrics.count('claims',state.graph.claims.length);metrics.count('sources',Object.keys(state.sources).length);
+  const profile=await metrics.async('profile',()=>loadProfile(root));
   const previous=options.previous?JSON.parse(await readFile(resolve(options.previous),'utf8')):undefined;
-  const errors=validateMemory(state.graph,{...state,previous});
-  if(!errors.length)errors.push(...validateHypotheses(state.hypotheses,state.graph,{path:state.layout.hypotheses_path}));
+  const errors=validateMemory(state.graph,{...state,previous,metrics:enabled?metrics:undefined});
+  if(!errors.length)errors.push(...metrics.sync('hypotheses',()=>validateHypotheses(state.hypotheses,state.graph,{path:state.layout.hypotheses_path})));
   const markdown=utf8(await readInstanceFile(root,'questions/queue.md'));
   for(const q of state.queue.questions)if(!markdown.includes(q.id)||!markdown.includes(q.text))errors.push('Readable queue missing question: '+q.id);
   if (errors.length) throw Error(`Memory validation failed: ${errors[0]}\n${errors.join('\n')}`);
-  if(command==='validate'){const warnings=collectWarnings(state.graph,{...state,vocabulary:profile?.vocabulary});return {valid:true,layout:state.layout,profile:{state:profile?'selected':'none',guidance_version:(await loadGuidance(root)).guidance_version},warnings:warnings.slice(0,1000),warning_summary:{total:warnings.length,returned:Math.min(1000,warnings.length),truncated:warnings.length>1000},entities:state.graph.entities.length,claims:state.graph.claims.length,sources:state.graph.sources.length};}
-  if(command==='stats')return memoryStats(state.graph,state.sources,state.ledger,state.queue);
-  const context=retrieveContext(state.graph,{vocabulary:profile?.vocabulary,current:options.current,valid_at:options['valid-at'],external_id:options['external-id'],scheme:options.scheme,namespace:options.namespace,query:options.query,entity_id:options.entity,source_id:options.source,limit:options.limit,predicate:options.predicate,type:options.type,kind:options.kind,status:options.status,hops:options.hops,expansion_budget:options['expansion-budget']});
+  if(command==='validate'){const warnings=collectWarnings(state.graph,{...state,vocabulary:profile?.vocabulary});return finish({valid:true,layout:state.layout,profile:{state:profile?'selected':'none',guidance_version:(await loadGuidance(root)).guidance_version},warnings:warnings.slice(0,1000),warning_summary:{total:warnings.length,returned:Math.min(1000,warnings.length),truncated:warnings.length>1000},entities:state.graph.entities.length,claims:state.graph.claims.length,sources:state.graph.sources.length});}
+  if(command==='stats')return finish(metrics.sync('stats',()=>memoryStats(state.graph,state.sources,state.ledger,state.queue)));
+  const context=metrics.sync('query',()=>retrieveContext(state.graph,{vocabulary:profile?.vocabulary,current:options.current,valid_at:options['valid-at'],external_id:options['external-id'],scheme:options.scheme,namespace:options.namespace,query:options.query,entity_id:options.entity,source_id:options.source,limit:options.limit,predicate:options.predicate,type:options.type,kind:options.kind,status:options.status,hops:options.hops,expansion_budget:options['expansion-budget']}));
+  const endRender=metrics.stage('render');
   let remaining=64000;context.source_excerpts=context.sources.map(s=>{const body=state.sources[s.id].body,text=body.slice(0,Math.min(4000,remaining));remaining-=text.length;return {...s,text,truncated:text.length<body.length};});
-  context.limits.excerpt_characters=64000;if(context.source_excerpts.some(s=>s.truncated)){context.truncated=true;context.truncation_reasons=[...(context.truncation_reasons??[]),'excerpt_limit'];}return context;
+  context.limits.excerpt_characters=64000;if(context.source_excerpts.some(s=>s.truncated)){context.truncated=true;context.truncation_reasons=[...(context.truncation_reasons??[]),'excerpt_limit'];}endRender();return finish(context);
+  }catch(error){if(enabled)error.timings=metrics.report();throw error;}
 }
-if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url))run().then(r=>{console.log(JSON.stringify(r,null,2));if(r.conflicts?.length)process.exitCode=1;}).catch(e=>{console.error(e.message);process.exitCode=1;});
+if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url))run().then(r=>{console.log(JSON.stringify(r,null,2));if(r.conflicts?.length)process.exitCode=1;}).catch(e=>{console.error(e.message);if(e.timings)console.error(JSON.stringify({timings:e.timings}));process.exitCode=1;});

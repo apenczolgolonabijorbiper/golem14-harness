@@ -35,9 +35,11 @@ export function schemaErrors(value,schema=graphSchema){
 export const attributionId = claim => claim.attributed_to_id;
 export const classificationName = value => value;
 
-export function validateMemory(graph,{sources={},ledger,queue,previous}={}){
-  const errors=schemaErrors(graph);if(errors.length)return errors;
+export function validateMemory(graph,{sources={},ledger,queue,previous,metrics}={}){
+  const errors=metrics?metrics.sync('schema',()=>schemaErrors(graph)):schemaErrors(graph);if(errors.length)return errors;
   if(previous&&schemaErrors(previous).length)return ['Unsupported/invalid previous graph'];
+  let end=metrics?.stage('graph');
+  try {
   const fail=message=>errors.push(message);
   function index(rows,name){const map=new Map();for(const row of rows){if(map.has(row.id))fail(name+': duplicate ID '+row.id);map.set(row.id,row);}return map;}
   const es=index(graph.entities,'entities'),cs=index(graph.claims,'claims'),ss=index(graph.sources,'sources');
@@ -45,6 +47,7 @@ export function validateMemory(graph,{sources={},ledger,queue,previous}={}){
   const qs=Array.isArray(queue?.questions)?queue.questions:[];
   if(!queue||queue.schema_version!==1||!Array.isArray(queue.questions))fail('Invalid question queue');
   const qi=new Set();for(const q of qs||[]){if(typeof q.id!=='string'||! /^[a-zA-Z0-9_-]{1,80}$/.test(q.id)||qi.has(q.id)||!['open','closed'].includes(q.status)||typeof q.text!=='string'||!q.text.trim()||q.text.length>2000)fail('Invalid/duplicate question');qi.add(q.id);if(!sources[q.source_observation_id])fail('Question source missing: '+q.id);for(const id of q.analysis?.source_observation_ids||[])if(!sources[id])fail('Question analysis source missing: '+q.id);if(q.status==='closed'&&(!q.analysis?.source_observation_ids?.length||q.analysis.status!=='answered'))fail('Closed question needs an analyzed answer: '+q.id);}
+  end?.();end=metrics?.stage('provenance');
   if(!ledger||ledger.schema_version!==1||!Array.isArray(ledger.observations))fail('Invalid processed ledger');
   const processed=new Map();
   for(const row of Array.isArray(ledger?.observations)?ledger.observations:[]){if(processed.has(row.id)||row.status!=='processed'||!sources[row.id]||row.source_file!==sources[row.id]?.path||row.source_sha256!==sources[row.id]?.sha256)fail('Ledger source mismatch: '+row.id);processed.set(row.id,row);if(!ss.has(row.id))fail('Processed source missing from graph: '+row.id);}
@@ -54,6 +57,7 @@ export function validateMemory(graph,{sources={},ledger,queue,previous}={}){
   for(const e of graph.entities){
     const keys=new Set();for(const id of e.external_ids??[]){const key=externalKey(id);if(keys.has(key)||id.namespace.trim()!==id.namespace||id.value.trim()!==id.value)fail('Invalid/duplicate external identifier: '+e.id);keys.add(key);}
     for(const id of e.source_ids)if(!ss.has(id))fail('Entity source missing: '+e.id);if(Date.parse(e.created_at)>Date.parse(graph.updated_at))fail('Entity created after graph update: '+e.id);}
+  end?.();end=metrics?.stage('claims');
   for(const c of graph.claims){
     const references = [
       ['subject_id', c.subject_id],
@@ -84,6 +88,7 @@ export function validateMemory(graph,{sources={},ledger,queue,previous}={}){
     if(c.status==='superseded'&&!graph.claims.some(x=>x.supersedes.includes(c.id)))fail('Missing replacement claim: '+c.id);
   }
   for(const error of dependencyErrors(graph.claims.map(c=>({...c,depends_on:c.supersedes}))))fail(error.replace('Claim dependency cycle:','Correction cycle:'));
+  end?.();end=metrics?.stage('history');
   if(previous){
     if(Date.parse(graph.updated_at)<Date.parse(previous.updated_at))fail('Graph update timestamp went backwards');
     for(const e of previous.entities||[]){const now=es.get(e.id);for(const id of e.external_ids??[])if(!now?.external_ids?.some(x=>externalKey(x)===externalKey(id)))fail('Entity external identifier history removed: '+e.id);if(!now||now.type!==e.type||(e.kind!==undefined&&now.kind!==e.kind)||now.created_at!==e.created_at||e.source_ids.some(id=>!now.source_ids.includes(id)))fail('Entity identity/history removed: '+e.id);}
@@ -91,6 +96,7 @@ export function validateMemory(graph,{sources={},ledger,queue,previous}={}){
     for(const s of previous.sources||[])if(JSON.stringify(ss.get(s.id))!==JSON.stringify(s))fail('Source history changed: '+s.id);
   }
   return [...new Set(errors)];
+  } finally {end?.();}
 }
 
 const terms=text=>String(text).normalize('NFKD').replace(/\p{M}/gu,'').toLowerCase().replaceAll('ł','l').match(/[\p{L}\p{N}_-]+/gu)||[];

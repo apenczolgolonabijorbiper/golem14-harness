@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {unlinkSync,symlinkSync} from 'node:fs';
+import {unlinkSync,symlinkSync,mkdirSync,chmodSync,writeFileSync} from 'node:fs';
 import {join} from 'node:path';
 import {fixture,command,harness} from './test-fixtures.mjs';
 import {sha256} from './application-profile.mjs';
@@ -68,4 +68,40 @@ test('candidate writer blocks unreadable selected guidance before writing drafts
   unlinkSync(join(f.root,'profiles/default.md'));
   await assert.rejects(()=>writeCandidate({root:f.root,changes,apply:true}));
   assert.equal(f.read('memory/graph.json'),original);assert.equal(f.read('memory/index.md'),index);
+});
+
+test('complete cycle renders queues, hypotheses and chat event and publishes every declared output',async t=>{
+  const {f,adapter,claim,changes}=await prepared(t),source=claim.sources[0].id;
+  f.write('questions/queue.json',{schema_version:1,questions:[{id:'q-old',text:'Was it checked?',status:'open',source_observation_id:source}]});
+  const at=new Date().toISOString();
+  const delta={...changes,at,questions:[{id:'q-old',text:'Was it checked?',status:'closed',source_observation_id:source,analysis:{status:'answered',source_observation_ids:[source]}},{id:'q-next',text:'Żółć | <tag>\nWhat next?',status:'open',source_observation_id:source}],hypotheses:{schema_version:1,updated_at:at,hypotheses:[{id:'hyp-test',statement:'Still uncertain',status:'open',support:[],refutation:[],confidence:0.2,updated_at:at}]},events:[{observation_id:source,question_id:'q-old',answer:'The declaration was reviewed.',answered_at:at}],base_files_sha256:{}};
+  for(const path of ['questions/queue.json','questions/queue.md','memory/hypotheses.json'])delta.base_files_sha256[path]=sha256(f.read(path));
+  delta.base_files_sha256[`memory/events/chat/${source}.json`]=null;
+  const preview=await writeCandidate({root:f.root,changes:delta});assert.equal(preview.files.length,7);
+  const written=await writeCandidate({root:f.root,changes:delta,apply:true});assert.deepEqual(written.files,preview.files);
+  assert.equal(f.read('questions/queue.md'),'# Questions\n\n## q-old (closed)\n\n```text\nWas it checked?\n```\n\n## q-next (open)\n\n```text\nŻółć | <tag>\nWhat next?\n```\n');
+  assert.match(f.read('memory/index.md'),/- Graph: 1 entities, 1 claims/);
+  await adapter.validate({run:claim.run_id,outputs:written.files});await adapter.commit({run:claim.run_id,outputs:written.files});
+  const checked=JSON.parse(command(process.execPath,[join(harness,'processor/memory-tool.mjs'),'validate','--root',f.root]));assert.equal(checked.valid,true);
+});
+
+test('complete writer aggregates invalid references/hypotheses and refuses stale auxiliary bases without writes',async t=>{
+  const {f,changes,original}=await prepared(t),at=new Date().toISOString();
+  await assert.rejects(()=>writeCandidate({root:f.root,changes:{...changes,questions:[1,2].map(n=>({id:'q-'+n,status:'open',text:'Question '+n,source_observation_id:'missing-'+n})),hypotheses:{schema_version:1,updated_at:at,hypotheses:[{id:'hyp-bad',statement:'No',status:'open',support:[],refutation:[],confidence:0,updated_at:at,uncertainty:[]}]}}}),e=>e.message.includes('missing-1')&&e.message.includes('missing-2')&&e.message.includes('uncertainty'));
+  const delta={...changes,questions:[{id:'q-one',status:'open',text:'Next?',source_observation_id:'00000000-0000-4000-8000-000000000001'}],base_files_sha256:{'questions/queue.json':sha256(f.read('questions/queue.json')),'questions/queue.md':sha256(f.read('questions/queue.md'))}};
+  f.write('questions/queue.md','Concurrent draft');
+  await assert.rejects(()=>writeCandidate({root:f.root,changes:delta,apply:true}),/stale base_files/);assert.equal(f.read('memory/graph.json'),original);assert.equal(f.read('questions/queue.md'),'Concurrent draft');
+});
+
+
+test('failed late artifact write restores the earlier draft bytes and leaves the lease owned',async t=>{
+ const {f,adapter,claim,changes,original,index}=await prepared(t),source=claim.sources[0].id;
+ const dir=join(f.root,'memory/events/chat');mkdirSync(dir,{recursive:true});chmodSync(dir,0o500);
+ try {
+ try{writeFileSync(join(dir,'probe'),'x');t.skip('Filesystem does not enforce directory write permissions');return;}catch(error){assert.equal(error.code,'EACCES');}
+ const event=`memory/events/chat/${source}.json`,delta={...changes,questions:[{id:'q-one',text:'What next?',status:'open',source_observation_id:source}],events:[{observation_id:source,question_id:'q-one',answer:'Reviewed.',answered_at:new Date().toISOString()}],base_files_sha256:{'questions/queue.json':sha256(f.read('questions/queue.json')),'questions/queue.md':sha256(f.read('questions/queue.md')),[event]:null}};
+ const queue=f.read('questions/queue.json'),markdown=f.read('questions/queue.md');
+ await assert.rejects(writeCandidate({root:f.root,changes:delta,apply:true}),{code:'EACCES'});
+ assert.equal(f.read('memory/graph.json'),original);assert.equal(f.read('memory/index.md'),index);assert.equal(f.read('questions/queue.json'),queue);assert.equal(f.read('questions/queue.md'),markdown);assert.throws(()=>f.read(`memory/runs/${claim.run_id}.md`));assert.equal((await adapter.status()).lease.run_id,claim.run_id);
+ }finally{chmodSync(dir,0o700);}
 });

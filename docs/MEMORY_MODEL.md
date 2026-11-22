@@ -200,3 +200,11 @@ prompt review; no absence of warnings proves truth or independent corroboration.
 Hosts may add namespaced advisory warnings at their boundary. Policies cannot
 weaken schema, quotation, history, identity or transaction rules. No executable
 warning hooks, total evidence-strength ordering or automatic truth scores exist.
+
+
+Complete-cycle drafting: the reference local writer can assemble explicit question
+updates, schema-1 hypotheses and chat events in one preview/apply. See
+[PERFORMANCE.md](PERFORMANCE.md#complete-cycle-drafts-vp-020) for base hashes,
+canonical queue fields, output paths and publication boundaries. Both queues are
+rendered from the same records. Evidence indexing and adapter completion remain
+separate required operations.
