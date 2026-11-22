@@ -1,4 +1,4 @@
-# Golem native cognitive harness — 0.10.0
+# Golem native cognitive harness — 0.11.0
 
 A host-independent cognitive harness inspired by Stanisław Lem’s Golem XIV and Xemantic’s work on metacognitive AI. The host LLM performs
 interpretation by following AGENTS.md and docs/PROCESSING.md; the executable core
@@ -160,7 +160,7 @@ its generator and template remain repository-only. See the
 From the maintainer checkout run:
 
 ```sh
-python3 tools/build-release.py --output ../golem-cognitive-harness-0.10.0.zip
+python3 tools/build-release.py --output ../golem-cognitive-harness-0.11.0.zip
 ```
 
 The builder runs the release tests, packages an explicit file list, and produces
