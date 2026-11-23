@@ -75,7 +75,9 @@ historical question text in evidence and analysis. Document the semantic review.
    events, memory index, cycle journal and released lease in the same candidate.
    The journal records sources, changes, unresolved questions, model and
    verification, plus selected profile path/revision and exact-byte hashes (or the
-   claimed guidance_identity and retained run snapshot). The released lease has `schema_version: 1`, `status: idle`,
+   claimed guidance_identity and retained run snapshot). Before validation, record
+   completed local checks, mark host checks pending and identify their durable
+   completion record as described below. The released lease has `schema_version: 1`, `status: idle`,
    `observation_ids: []`, `last_run_id` and `completed_at`.
 3. Validate the complete candidate using the graph from the current committed
    snapshot as `PRIOR_GRAPH`:
@@ -101,6 +103,63 @@ historical question text in evidence and analysis. Document the semantic review.
 
 On error, discard the candidate and release only your own lease with status
 error and no transcript content. Leave inputs pending for a clean retry.
+
+### Verification record and journal pointer (VI-019)
+
+The journal is part of the candidate, so write it before candidate validation.
+Record checks already performed and their observed outcomes. Mark adapter
+validation, publication and persisted-state checks as pending until they run.
+Identify where the host will retain their results, keyed by instance and run ID.
+The verdicts need not be copied back into the journal: an unchanged journal with
+a pointer that resolves to the durable completion record conforms.
+
+The completion record identifies:
+
+- the instance and run ID (plus attempt/submission identity when needed to
+  distinguish retries);
+- the checks actually run and their observed outcomes; unavailable results stay
+  explicitly unknown or pending;
+- the published commit or equivalent immutable snapshot identity;
+- the committed warnings and warning summary when returned by the adapter;
+  unavailable fields stay explicitly unknown.
+
+Candidate validation, successful publication and verification of saved state are
+distinct checks. Never claim an unrun check passed or infer semantic truth from
+structural validation. Retain the actual adapter results at the selected location.
+
+Any conforming host may use one of these locations:
+
+1. **The analysis commit message.** A journal pointer can say: "Completion record:
+   message of the analysis commit containing this journal; instance INSTANCE;
+   run RUN_ID." The retained containing commit identifies itself implicitly;
+   its message need not contain its own commit SHA. A tree hash may appear in
+   the message because the message is outside that tree. The message must retain
+   the actual check results and warning details, not just a title such as
+   `complete RUN_ID`. Checks performed only after publication must remain pending
+   until observed; retain their outcomes in a linked durable follow-up record if
+   the original message cannot contain them.
+2. **A durable external report.** State its exact path or resolvable identifier
+   and the instance/run lookup key. Keep it outside the candidate it reports on,
+   and preserve it with the instance's retention and backup policy.
+3. **Git notes**, only when the host preserves the specified notes ref through
+   retention, fetch and backup. Include the notes ref and lookup key in the pointer.
+
+An unretained CLI/MCP response, chat transcript or rotating operation log is not
+a durable completion record. Selecting a pointer does not create its target;
+the host must persist the observed results there and report an unresolved record
+as pending. This is a portable documentation/procedure rule, not a new schema,
+validator requirement or automatic reporting feature.
+
+Do not embed a journal's own final tree hash in that journal: inserting the hash
+changes the tree being identified. A real earlier check may name its earlier
+snapshot, but it is not verification of the changed final candidate. Any edit
+after validation requires validation of the changed candidate. Do not edit a
+committed journal merely to add its final verdict or snapshot hash.
+
+| Example | Classification |
+|---|---|
+| A: Before validation, the journal records completed local checks, marks host checks pending and points to the analysis commit message or an exact external report by instance/run. The host retains actual results and snapshot identity there, with any later checks in a linked retained follow-up. The journal stays unchanged. | Conforming when the pointer resolves to those records. |
+| B: The journal says validation passed before it ran, or embeds its own final tree hash and is edited after validation without revalidation. | Nonconforming: premature verdict or a different candidate. A commit title alone also leaves the completion record unresolved. |
 
 ## Moving observations to another instance
 

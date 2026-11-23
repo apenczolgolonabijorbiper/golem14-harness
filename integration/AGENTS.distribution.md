@@ -123,7 +123,15 @@ candidate against the committed prior graph. Publish completion only through the
 atomic commit. On conflicts re-read, merge and revalidate.
 Never overwrite another processor's lease or force-push. Verify persisted writes.
 Record each completed cycle in memory/runs/ with sources, changes and unresolved
-questions. No work means no state writes or completion notification.
+questions. Before validation, record completed local checks, mark host checks
+pending and name a durable completion record by instance/run following
+docs/PROCESSING.md's verification-pointer rule. An analysis commit message is
+permitted when it retains the actual results; a commit title alone is insufficient.
+After publication, retain observed outcomes, snapshot identity and returned
+warnings at the selected location. Leave the journal unchanged; candidate edits
+after validation require revalidation. Never claim unrun checks passed or embed
+the journal's own final tree hash. No work means no state writes or completion
+notification.
 
 Exclude all runtime state and private history from code distributions. Initialize
 new instances separately. Do not claim automatic execution, scheduling, model
