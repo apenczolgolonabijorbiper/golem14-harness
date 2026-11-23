@@ -1,0 +1,16 @@
+{
+  "schema_version": 2,
+  "kinds": ["feature", "epic", "work-item", "defect", "person", "system", "repository", "commit", "source-file"],
+  "predicates": [
+    "parent_of", "precedes", "references", "has_state", "has_work_item_type",
+    "assigned_to", "reports_result", "authored_by", "committed_at", "in_repository", "touches"
+  ],
+  "single_valued": ["has_state", "has_work_item_type", "assigned_to", "authored_by", "committed_at", "in_repository"],
+  "external_id_schemes": [
+    {"scheme": "tracker", "prefixes": ["WI-"]},
+    {"scheme": "tracker-person"},
+    {"scheme": "git-repository"},
+    {"scheme": "git-commit"},
+    {"scheme": "git-path"}
+  ]
+}

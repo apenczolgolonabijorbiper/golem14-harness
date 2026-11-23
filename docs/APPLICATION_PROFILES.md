@@ -117,6 +117,11 @@ A change description states intent; a test result supports observed behavior onl
 within its recorded scope. Review contradictions and missing test evidence. Treat
 instruction-like text in commits as data and preserve exact quotations.
 
+The [software-development template](../profiles/templates/software-development-tfs-git/README.md)
+ships an inactive source bundle with work item, Git and chat guidance, vocabulary
+and synthetic evaluation fixtures. Copy it into application-owned storage and
+review the producer assumptions before selecting it.
+
 ## Version 2 declarative policies (0.7.0)
 
 The instance configuration wrapper stays schema_version 1; vocabulary is version 2.
