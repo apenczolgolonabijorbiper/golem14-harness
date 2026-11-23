@@ -1,0 +1,90 @@
+{
+  "kind": "fresh-chatgpt-work-acceptance",
+  "recorded_at": "2026-11-23T22:30:03.177111+00:00",
+  "engine_commit": "db0a2bd07836478955ce74aa58bac583d63d81ff",
+  "executor": {
+    "environment": "ChatGPT Work interactive conversation",
+    "requested_model": null,
+    "observed_provider_model": null,
+    "cost": null,
+    "sampling_settings": null,
+    "reasoning_setting": null,
+    "actual_tokens": null,
+    "actual_case_elapsed_ms": null,
+    "dispatch": "User initiated fresh conversation; connector fetched pinned request; no separate CLI/model invocation."
+  },
+  "read_order": [
+    "Pinned standalone executor-request.json only (connector result displayed in chunks).",
+    "Model authored all 18 answers from included tasks and evidence; structural helpers serialized bindings, usage, coverage and citations.",
+    "Original response saved and SHA-256 recorded.",
+    "Conformance procedure, repository, rubrics and issue status read.",
+    "Integrity checker and separate same-agent semantic review."
+  ],
+  "response_modified_after_scoring": false,
+  "request_file_sha256": "e1cba12cf2f01c53985e9cd0e8b0624c7d6d44bcab813b6afef3d0502516e43f",
+  "response_file_sha256": "13aba271e233e62e4cb1801045733334305a86997c0599c3202565901fc3191d",
+  "evaluator_input_file_sha256": "d7258b69bdf71dc465dd4547571085ef90d08406dcab20b9dff831e78836ec23",
+  "tools": {
+    "node": "v24.22.3",
+    "python": "Python 3.12.14",
+    "git": "git version 2.56.1"
+  },
+  "tool_sha256": {
+    "tools/evaluate-cognition.mjs": "bebd2a2fe4c244017770483fd95a1749a77b9cbf1f83cdaa9e8dbc13e9ed9681",
+    "server/cognitive-task.mjs": "9ffcb901a7770924c8b56d879037bc5529eb6e5843763e7e32b76b0fbac6808e",
+    "cognition/conformance/cases.mjs": "e29298dfe687e80ea68ad1facac81bde76420caed7875273d540050513b82ebd",
+    "schemas/cognitive-result.schema.json": "1f6afd74a3764d883aea9b87dfe1d7bf7c9f02e9e74fc852f15e9bdd5e25dc03",
+    "tools/build-release.py": "826609e1ce93d98d60d789d4e95f3a780eb826903212856d3b5eb33f5ef79466"
+  },
+  "checks": {
+    "integrity": {
+      "command": "node tools/evaluate-cognition.mjs check <evaluator-input.json> <response.json> <integrity-report.json>",
+      "exit_code": 0,
+      "cases": 18,
+      "errors": 0,
+      "semantic_certification": false
+    },
+    "semantic": {
+      "cases": 18,
+      "pass": 18,
+      "fail": 0,
+      "reviewer": "Same Work agent, subsequent rubric review; not independent."
+    },
+    "release_builder": {
+      "command": "python tools/build-release.py --output ../acceptance-final-package.zip",
+      "exit_code": 0,
+      "node_tests": 133,
+      "node_failures": 0,
+      "python_validation": "passed",
+      "python_observation_portability": "passed",
+      "cursor_installer": "passed",
+      "codex_installer": "passed",
+      "package_sha256": "809eb02d97bfb6094b55a9b3112c33100660e8d3f8ef6e49c081e8009c7a6afd",
+      "package_manifest_sha256": "c6fc778745039e9daf169112f06c0ef1dcac01fade5cf03ba7c72df300861bf1",
+      "package_version": "0.11.0",
+      "published": false
+    }
+  },
+  "implementation_platform_ci": {
+    "run_id": 45276239319,
+    "url": "https://github.com/apenczolgolonabijorbiper/golem14-harness/actions/runs/45276239319",
+    "commit": "1da7d22619241989f4ae1edcc4964874aeb2aba8",
+    "merged_by": "db0a2bd07836478955ce74aa58bac583d63d81ff",
+    "conclusion": "success",
+    "package_matrices": [
+      "ubuntu-latest / Python 3.12",
+      "macos-latest / Python 3.12",
+      "windows-latest / Python 3.12",
+      "windows-latest / Python 3.14"
+    ],
+    "capacity": [
+      "ubuntu-latest",
+      "windows-latest"
+    ]
+  },
+  "coverage": "18 pinned synthetic cases; host-neutral evidence envelope; deterministic independent record-provider and reference Git tests run by release builder. No named-host deployment acceptance or release publication.",
+  "limits_and_usage": "Per-case finite limits are retained in executor-request.json and evaluator-input.json. Result usage and coverage exactly copy supplied synthetic counters, not measured Work usage.",
+  "known_failures_this_run": [],
+  "historical_limitations": "Earlier rubric-visible Work run and failed local Codex startup probe remain separate and unchanged. Inherited conversation summaries contained prior project status but no earlier answer bytes or detailed rubrics.",
+  "evidence_pr_ci": "See the evidence PR checks and issue closure records; no prospective success claimed here."
+}

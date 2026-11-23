@@ -73,14 +73,24 @@ record and fix/retest actual failures.
 
 ## Delivery status
 
-Protocol/runtime implementation and deterministic conformance are reviewable.
-The retained ChatGPT Work run has 18 passing integrity checks and now a separate
-case-by-case semantic review in
-`cognition/conformance/chatgpt-work/semantic-review.json`. That review explicitly
-retains the rubric-exposure limitation and does not certify a fresh run.
+The fresh ChatGPT Work execution on 2026-11-23 is retained in
+`cognition/conformance/chatgpt-work/fresh-2026-11-23/`. All 18 original responses
+pass deterministic integrity checks and the separately retained per-case semantic
+review. The executor read only the pinned standalone request before saving the
+response; repository content and rubrics were opened afterward. The original
+response bytes were never revised. The review was performed subsequently by the
+same agent; no independent second reviewer is claimed.
 
-Vendor actual-model verification remains pending until a functioning external
-executor completes the retained cases and semantic review. Platform CI must also
-pass before release acceptance. No named host release or downstream runtime
-upgrade is required to complete Harness verification. This implementation does
-not claim issue #68's actual-model gate has passed.
+The evidence includes exact request/response bytes, evaluator input, integrity
+report, semantic reasons, hashes, configuration, limitations and package/platform
+validation. Actual model identifiers, inference settings, tokens and cost were
+not exposed. Supplied usage counters are synthetic and are not performance
+measurements. This verifies the retained 18-case synthetic coverage, not every
+possible cognitive task or downstream deployment.
+
+The earlier run and its review remain in the parent directory with their original
+rubric-exposure limitation. They are not reclassified as fresh execution. PR #81
+passed Linux, macOS and Windows validation (including Windows Python 3.14) in
+Actions run 45276239319 before merge. No named host release or downstream runtime
+upgrade is required to complete Harness verification. Publishing a release is a
+separate action.
