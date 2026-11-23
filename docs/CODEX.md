@@ -140,3 +140,12 @@ The installer accepts an otherwise exact generated block with LF or CRLF endings
 Equivalent current blocks are unchanged byte-for-byte; legacy migration retains
 the managed block's newline style and all prefix/suffix bytes. Actual wording or
 whitespace edits still require manual review and fail before writes (VI-008).
+
+## Memory-backed questions and goals
+
+Use [the portable cognitive-task protocol](../docs/COGNITIVE_TASKS.md) and
+[the SudoLang task prompt](../integration/COGNITIVE_TASK.sudo.md) for question or
+goal-driven cognition. The host binds committed memory and guidance, schedules
+finite invocations and retains linked conversation messages. User and Golem
+questions can branch; inferred intent never grants action/write authorization.
+This read-only answer path is separate from observation-batch processing.

@@ -27,7 +27,7 @@ def build(output):
     date = git('show', '-s', '--format=%cs', revision)
     metadata = json.loads((ASSETS / 'modules.json').read_text(encoding='utf-8'))
     paths = []
-    for directory in ['processor', 'server', 'adapters', 'integration', 'tools']:
+    for directory in ['processor', 'server', 'adapters', 'integration', 'tools', 'cognition']:
         for path in (ROOT / directory).rglob('*'):
             name = path.relative_to(ROOT).as_posix()
             if (path.suffix in {'.py', '.mjs'} and path.is_file()

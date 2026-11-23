@@ -37,6 +37,15 @@ No npm/pip dependency, inference client, daemon or automatic renewal is involved
 Git commits use golem-adapter <golem-adapter@localhost>. Local authorization remains
 the host's responsibility; commit attribution is not user authentication.
 
+The host retains verification results according to the
+[journal-pointer rule](PROCESSING.md#verification-record-and-journal-pointer-vi-019).
+An analysis commit message is an allowed completion-record location when it
+contains actual results. The reference adapter writes only `complete RUN_ID`,
+not a verification report; its caller must retain the returned head, warnings
+and warning summary plus observed check outcomes in a separate durable report.
+Other host adapters may supply the full commit-message record instead. The
+six-command contract, validation and publication logic are unchanged.
+
 ## Command contract
 
 All CLI options are --name value pairs. Success prints JSON; refusals exit 1 on
@@ -255,3 +264,12 @@ source provenance, then update the host setup record to the fresh location. Do n
 copy old leases, ledgers, graph or processed markers to the fresh instance. Recollect
 observations under the application's authorized intake policy. Never silently
 archive or reset a consuming application's real data.
+
+## Cognitive task read view and reviewed learning
+
+The additive JS `openCognition({instance_id})` method supplies an immutable
+committed read view with binding, guidance, context and exact source ranges. It
+does not acquire a write lease or consume observations. The neutral task contract
+and optional `publishLearning({task,proposal,authorization})` method are specified
+in [COGNITIVE_TASKS.md](COGNITIVE_TASKS.md). These are distinct negotiated
+capabilities, not a reinterpretation of claim/commit or a host's ask API.

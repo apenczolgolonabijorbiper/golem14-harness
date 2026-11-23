@@ -123,8 +123,27 @@ candidate against the committed prior graph. Publish completion only through the
 atomic commit. On conflicts re-read, merge and revalidate.
 Never overwrite another processor's lease or force-push. Verify persisted writes.
 Record each completed cycle in memory/runs/ with sources, changes and unresolved
-questions. No work means no state writes or completion notification.
+questions. Before validation, record completed local checks, mark host checks
+pending and name a durable completion record by instance/run following
+docs/PROCESSING.md's verification-pointer rule. An analysis commit message is
+permitted when it retains the actual results; a commit title alone is insufficient.
+After publication, retain observed outcomes, snapshot identity and returned
+warnings at the selected location. Leave the journal unchanged; candidate edits
+after validation require revalidation. Never claim unrun checks passed or embed
+the journal's own final tree hash. No work means no state writes or completion
+notification.
 
 Exclude all runtime state and private history from code distributions. Initialize
 new instances separately. Do not claim automatic execution, scheduling, model
 training, semantic embeddings or external engine activation without verification.
+
+## Question and goal-driven cognition
+
+For user questions/goals over existing memory, follow docs/COGNITIVE_TASKS.md and
+integration/COGNITIVE_TASK.sudo.md. Negotiate cognitive-task/context/result-v1 and
+use host-authorized immutable snapshot reads. Recognize explicit or inferred
+intent (retain uncertainty); intent is not action authorization. Link messages
+by ID/reply_to so questions, answers and Golem's clarification/check questions
+can branch or arrive in any order. Do not require observation intake, a write
+lease or forced role alternation. Keep answers and optional reviewed hypothesis
+proposals separate; preserve provenance, limits and host-owned authorization.

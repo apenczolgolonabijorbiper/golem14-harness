@@ -76,3 +76,12 @@ These are host acceptance scenarios for conversational behavior. Run them in fre
 Work sessions before declaring interactive setup verified. A release-builder pass
 establishes package integrity and deterministic regression coverage. End-to-end
 memory processing also requires a separately exercised transactional adapter.
+
+## Memory-backed questions and goals
+
+Use [the portable cognitive-task protocol](../docs/COGNITIVE_TASKS.md) and
+[the SudoLang task prompt](../integration/COGNITIVE_TASK.sudo.md) for question or
+goal-driven cognition. The host binds committed memory and guidance, schedules
+finite invocations and retains linked conversation messages. User and Golem
+questions can branch; inferred intent never grants action/write authorization.
+This read-only answer path is separate from observation-batch processing.

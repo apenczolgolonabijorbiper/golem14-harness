@@ -31,7 +31,7 @@ class ExplorerTests(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name) / 'checkout'
         self.root.mkdir()
-        for name in ['processor', 'server', 'adapters', 'integration', 'tools', 'schemas', 'docs']:
+        for name in ['processor', 'server', 'adapters', 'integration', 'tools', 'schemas', 'docs', 'cognition']:
             shutil.copytree(ROOT / name, self.root / name,
                             ignore=shutil.ignore_patterns('__pycache__', 'node_modules', 'architecture-explorer.html'))
         for name in ['README.md', 'VERSION', 'LICENSE']:

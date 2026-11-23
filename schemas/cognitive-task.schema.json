@@ -1,0 +1,255 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Cognitive task v1",
+  "type": "object",
+  "properties": {
+    "protocol_version": {
+      "const": 1
+    },
+    "task_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "conversation_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "binding": {
+      "type": "object",
+      "properties": {
+        "instance_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "snapshot_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "guidance_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        }
+      },
+      "required": [
+        "instance_id",
+        "snapshot_id",
+        "guidance_id"
+      ],
+      "additionalProperties": false
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "read_only",
+        "propose_learning"
+      ]
+    },
+    "messages": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "user_question",
+              "user_request",
+              "question_answer",
+              "cognitive_question",
+              "collection_request",
+              "answer",
+              "clarification",
+              "correction",
+              "hypothesis"
+            ]
+          },
+          "author": {
+            "type": "string",
+            "enum": [
+              "user",
+              "golem",
+              "application"
+            ]
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16000
+          },
+          "reply_to": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "maxItems": 32
+          },
+          "intent": {
+            "type": "object",
+            "properties": {
+              "category": {
+                "type": "string",
+                "enum": [
+                  "ask",
+                  "explain",
+                  "compare",
+                  "verify",
+                  "plan",
+                  "request_action",
+                  "clarify",
+                  "correct",
+                  "explore",
+                  "unknown"
+                ]
+              },
+              "origin": {
+                "type": "string",
+                "enum": [
+                  "user",
+                  "golem",
+                  "application"
+                ]
+              },
+              "basis": {
+                "type": "string",
+                "enum": [
+                  "explicit",
+                  "inferred",
+                  "unknown"
+                ]
+              },
+              "description": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4000
+              },
+              "uncertainty": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4000
+                },
+                "maxItems": 20
+              }
+            },
+            "required": [
+              "category",
+              "origin",
+              "basis",
+              "description",
+              "uncertainty"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "id",
+          "kind",
+          "author",
+          "text",
+          "reply_to",
+          "intent"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 256
+    },
+    "scope": {
+      "type": "object",
+      "properties": {
+        "subject_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "maxItems": 32
+        },
+        "valid_at": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "subject_ids",
+        "valid_at"
+      ],
+      "additionalProperties": false
+    },
+    "limits": {
+      "type": "object",
+      "properties": {
+        "rounds": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 32
+        },
+        "context_requests": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 64
+        },
+        "claims": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "source_bytes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1048576
+        },
+        "expansion_budget": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 20000
+        },
+        "elapsed_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3600000
+        }
+      },
+      "required": [
+        "rounds",
+        "context_requests",
+        "claims",
+        "source_bytes",
+        "expansion_budget",
+        "elapsed_ms"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "protocol_version",
+    "task_id",
+    "conversation_id",
+    "binding",
+    "mode",
+    "messages",
+    "scope",
+    "limits"
+  ],
+  "additionalProperties": false
+}
