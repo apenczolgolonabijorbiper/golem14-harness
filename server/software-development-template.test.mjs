@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
-import {cpSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync} from 'node:fs';
+import {cpSync, existsSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {parseSource, run} from '../processor/memory-tool.mjs';
@@ -51,7 +51,8 @@ function writeFixture(root, observations, expected) {
 }
 
 test('copied software development template loads offline and validates both fixture graphs', async t => {
-  const base = mkdtempSync(join(tmpdir(), 'golem-software-profile-'));
+  // macOS tmpdir() uses /var -> /private/var; initialization rejects linked ancestors.
+  const base = realpathSync(mkdtempSync(join(tmpdir(), 'golem-software-profile-')));
   t.after(() => rmSync(base, {recursive: true, force: true, maxRetries: 10, retryDelay: 100}));
   const source = join(base, 'app-guidance');
   const root = join(base, 'instance');
