@@ -221,6 +221,12 @@ function baseContext(graph,options={}) {
 export function retrieveContext(graph,options={}) {
   let selected=graph,metadata=[],hidden={};
   if(options.current!==undefined||options.valid_at!==undefined){const result=temporalSelection(graph,options,options.vocabulary);selected=result.graph;metadata=result.metadata;hidden=result.hidden;}
+  // Exact dependency reads narrow the already temporally selected snapshot, so a
+  // requested historical record cannot become 'current' just by hiding its peers.
+  if(options.claim_ids!==undefined){
+    if(!Array.isArray(options.claim_ids)||options.claim_ids.length>100||options.claim_ids.some(id=>typeof id!=='string'||!id.trim())||new Set(options.claim_ids).size!==options.claim_ids.length)throw Error('Invalid exact claim IDs');
+    const ids=new Set(options.claim_ids);selected={...selected,claims:selected.claims.filter(c=>ids.has(c.id))};
+  }
   const lookup=[options.external_id,options.scheme,options.namespace];
   if(lookup.some(x=>x!==undefined)){
     if(lookup.some(x=>typeof x!=='string'||!x.trim()))throw Error('External lookup requires --external-id, --scheme and --namespace');

@@ -1,3 +1,5 @@
+import {createMemoryReadView} from '../../server/cognitive-reference.mjs';
+import {validateLearning,cognitiveCapabilities} from '../../server/cognitive-task.mjs';
 import {readApplicationSource,compareSource,managedPaths,mapReader,installPath,sourceMetadata} from '../../server/application-source.mjs';
 import {loadGuidance,guidanceIdentity,assertRetainedGuidance} from '../../server/guidance.mjs';
 import {operationMetrics} from '../../server/operation-metrics.mjs';
@@ -283,8 +285,45 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
       return built;
     }catch(e){rmSync(built.temporary,{recursive:true,force:true});throw e;}
   }
+  async function cognitionView(instance_id,commit=head()) {
+    if(typeof instance_id!=='string'||!instance_id.trim()||instance_id.length>200)throw new AdapterError('Explicit stable instance_id required');
+    const read=readAt(commit),guidance=await loadGuidance(root,{read});
+    const graph=JSON.parse(utf8(blob(commit,'memory/graph.json'))),ledger=JSON.parse(utf8(blob(commit,LEDGER))),queue=JSON.parse(utf8(blob(commit,'questions/queue.json')));
+    const sources={};for(const [path,row] of snapshot(commit))if(/^inbox\/[^/]+\.md$/.test(path)){const source=parseSource(path,utf8(row.bytes));sources[source.id]=source;}
+    const layout=await resolveLayout(root,{read}),hypotheses=JSON.parse(utf8(blob(commit,layout.hypotheses_path)));
+    return createMemoryReadView({binding:{instance_id,snapshot_id:commit,guidance_id:guidanceIdentity(guidance.guidance_version)},state:{graph,ledger,queue,sources,hypotheses},guidance});
+  }
   const api={
-    async status(){const s=state();return {contract_version:1,capabilities:['candidate-validation-v1','purpose-guidance-v2','profile-install-v1','core-policies-v2'],head:s.head,lease:{...s.lease,held:s.held},...scan(s),recovery_required:existsSync(marker)||[LEASE,LEDGER].some(path=>hash(file(path,{optional:true}))!==hash(blob(s.head,path)))};},
+    async openCognition({instance_id}={}){return cognitionView(instance_id);},
+    async publishLearning({task,proposal,authorization}={}){return locked(async()=>{
+      // Authorization is a trusted host decision, never read from model output.
+      if(authorization?.task_id!==task?.task_id||authorization?.proposal_id!==proposal?.proposal_id||authorization?.allowed!==true)throw new AdapterError('Learning publication is not authorized');
+      const s=state(),receiptPath='memory/learning/'+hash(json(proposal?.proposal_id))+'.json';
+      const prior=blob(s.head,receiptPath,true);
+      if(prior){const receipt=JSON.parse(utf8(prior));if(JSON.stringify(receipt.proposal)!==JSON.stringify(proposal)||receipt.task_id!==task.task_id||receipt.instance_id!==task.binding.instance_id)throw new AdapterError('Learning retry differs from receipt');return {status:'already_published',head:s.head,receipt_path:receiptPath};}
+      if(s.held||s.lease.status==='processing')throw new AdapterError('Release processing lease before learning publication');
+      assertLocalProtocol(s);if(scan(s).malformed.length)throw new AdapterError('Processed source changed or missing');
+      const view=await cognitionView(task.binding.instance_id,s.head);
+      const graph=JSON.parse(utf8(blob(s.head,'memory/graph.json')));
+      const errors=validateLearning(proposal,task,{binding:view.binding,claims:graph.claims});if(errors.length)throw new AdapterError(errors.join('; '));
+      const layout=await resolveLayout(root,{read:readAt(s.head)}),path=layout.hypotheses_path;
+      const hypotheses=JSON.parse(utf8(blob(s.head,path))),old=hypotheses.hypotheses.find(h=>h.id===proposal.target_id);
+      if(hypotheses.hypotheses.some(h=>h.id===proposal.hypothesis_id||h.statement===proposal.statement))throw new AdapterError('Duplicate learning hypothesis');
+      if(proposal.operation==='correct_hypothesis'){
+        if(!old||old.status==='withdrawn')throw new AdapterError('Correction target missing or withdrawn');
+        old.status='withdrawn';old.updated_at=stamp();
+      }
+      const h={confidence:null,id:proposal.hypothesis_id,statement:proposal.statement,status:'open',updated_at:stamp(),support:proposal.support,refutation:proposal.refutation,confidence_basis:('Unknown confidence. '+proposal.uncertainty.join('; ')).slice(0,4000)};
+      hypotheses.hypotheses.push(h);hypotheses.updated_at=stamp();
+      const receipt={protocol_version:1,task_id:task.task_id,instance_id:task.binding.instance_id,proposal,published_at:stamp(),authorization_reference:authorization.reference??null};
+      const entries=new Map([[path,json(hypotheses)],[receiptPath,json(receipt)]]);
+      for(const [p]of entries)if(hash(file(p,{optional:true}))!==hash(blob(s.head,p,true)))throw new AdapterError('Preserve local learning changes before publication');
+      assertIndexClean([...entries.keys()],s.head);
+      const built=await validateInstall(s,entries);
+      try{return {status:'published',head:publish(s,entries,[...entries.keys()],'reviewed-learning '+proposal.proposal_id,built.tree),receipt_path:receiptPath};}
+      finally{rmSync(built.temporary,{recursive:true,force:true});}
+    });},
+    async status(){const s=state();return {contract_version:1,capabilities:[...cognitiveCapabilities,'candidate-validation-v1','purpose-guidance-v2','profile-install-v1','core-policies-v2'],head:s.head,lease:{...s.lease,held:s.held},...scan(s),recovery_required:existsSync(marker)||[LEASE,LEDGER].some(path=>hash(file(path,{optional:true}))!==hash(blob(s.head,path)))};},
     async 'profile-status'({source}={}){if(!source)throw new AdapterError('--source is required');return profileStatus(source);},
     async 'profile-install'({source}={}){return locked(async()=>{
       if(!source)throw new AdapterError('--source is required');

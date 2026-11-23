@@ -136,3 +136,14 @@ notification.
 Exclude all runtime state and private history from code distributions. Initialize
 new instances separately. Do not claim automatic execution, scheduling, model
 training, semantic embeddings or external engine activation without verification.
+
+## Question and goal-driven cognition
+
+For user questions/goals over existing memory, follow docs/COGNITIVE_TASKS.md and
+integration/COGNITIVE_TASK.sudo.md. Negotiate cognitive-task/context/result-v1 and
+use host-authorized immutable snapshot reads. Recognize explicit or inferred
+intent (retain uncertainty); intent is not action authorization. Link messages
+by ID/reply_to so questions, answers and Golem's clarification/check questions
+can branch or arrive in any order. Do not require observation intake, a write
+lease or forced role alternation. Keep answers and optional reviewed hypothesis
+proposals separate; preserve provenance, limits and host-owned authorization.

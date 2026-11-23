@@ -212,3 +212,11 @@ They preserve evidence and prompt review; they do not infer truth or merge recor
 For reviewed domain setup, use [scan/wizard onboarding](integration/SETUP.profile.md),
 [application-owned sources and inspection](docs/APPLICATION_PROFILES.md), and
 [transactional profile installation](docs/ADAPTERS.md).
+
+## Memory-backed cognitive tasks
+
+Questions and bounded goals use [cognitive task v1](docs/COGNITIVE_TASKS.md):
+intent-aware linked conversations, immutable bounded evidence, grounded answers
+and separate reviewed hypothesis proposals. No observation batch or named host
+is required. Use the [SudoLang prompt](integration/COGNITIVE_TASK.sudo.md) and
+[conformance/evaluation instructions](docs/COGNITIVE_CONFORMANCE.md).

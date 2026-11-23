@@ -1,0 +1,538 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Cognitive context v1",
+  "type": "object",
+  "properties": {
+    "protocol_version": {
+      "const": 1
+    },
+    "binding": {
+      "type": "object",
+      "properties": {
+        "instance_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "snapshot_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "guidance_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        }
+      },
+      "required": [
+        "instance_id",
+        "snapshot_id",
+        "guidance_id"
+      ],
+      "additionalProperties": false
+    },
+    "request_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/claim"
+      },
+      "maxItems": 100
+    },
+    "entities": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/entity"
+      },
+      "maxItems": 400
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "recorded_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "id",
+          "sha256",
+          "recorded_at"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 3200
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "claim_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "premise_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "maxItems": 128
+          }
+        },
+        "required": [
+          "claim_id",
+          "premise_ids"
+        ],
+        "additionalProperties": false
+      },
+      "maxItems": 100
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 4000
+      },
+      "maxItems": 100
+    },
+    "truncated": {
+      "type": "boolean"
+    },
+    "truncation_reasons": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 4000
+      },
+      "maxItems": 32
+    },
+    "pending_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 10000000
+    },
+    "valid_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "method": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "selection": {
+      "type": "object",
+      "properties": {
+        "current": {
+          "type": "boolean"
+        },
+        "alternatives": {
+          "type": "array",
+          "maxItems": 100,
+          "items": {
+            "type": "object"
+          }
+        },
+        "hidden": {
+          "type": "object"
+        },
+        "knowledge": {
+          "type": "string",
+          "maxLength": 4000
+        }
+      },
+      "required": [
+        "current",
+        "alternatives",
+        "hidden",
+        "knowledge"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "required": [
+    "protocol_version",
+    "binding",
+    "request_id",
+    "claims",
+    "entities",
+    "sources",
+    "dependencies",
+    "warnings",
+    "truncated",
+    "truncation_reasons",
+    "pending_count",
+    "valid_at",
+    "method",
+    "selection"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "source": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "path": {
+          "type": "string",
+          "pattern": "^inbox/[0-9a-f-]{36}\\.md$"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "recorded_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "path",
+        "sha256",
+        "recorded_at"
+      ],
+      "additionalProperties": false
+    },
+    "entity": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]{2,100}$"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "person",
+            "place",
+            "event",
+            "organization",
+            "other"
+          ]
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000
+        },
+        "aliases": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000
+          },
+          "uniqueItems": true
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "uncertainty": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000
+          }
+        },
+        "kind": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]{1,40}$"
+        },
+        "external_ids": {
+          "type": "array",
+          "maxItems": 64,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/external_id"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "type",
+        "label",
+        "aliases",
+        "source_ids",
+        "created_at",
+        "uncertainty"
+      ],
+      "additionalProperties": false
+    },
+    "object": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "entity_id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9_-]{2,100}$"
+            }
+          },
+          "required": [
+            "entity_id"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "value": {
+              "type": [
+                "string",
+                "number",
+                "boolean"
+              ]
+            }
+          },
+          "required": [
+            "value"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "time": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "to": {
+          "anyOf": [
+            {
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "expression": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 4000
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "precision": {
+          "type": "string",
+          "enum": [
+            "unknown",
+            "exact",
+            "partial",
+            "as_reported"
+          ]
+        }
+      },
+      "required": [
+        "from",
+        "to",
+        "expression",
+        "precision"
+      ],
+      "additionalProperties": false
+    },
+    "reference": {
+      "type": "object",
+      "properties": {
+        "observation_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "quote": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000
+        }
+      },
+      "required": [
+        "observation_id",
+        "quote"
+      ],
+      "additionalProperties": false
+    },
+    "claim": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]{2,100}$"
+        },
+        "subject_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]{2,100}$"
+        },
+        "predicate": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_]{1,80}$"
+        },
+        "object": {
+          "$ref": "#/$defs/object"
+        },
+        "classification": {
+          "type": "string",
+          "enum": [
+            "source_assertion",
+            "hypothesis",
+            "corroborated"
+          ]
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/reference"
+          },
+          "minItems": 1,
+          "maxItems": 32
+        },
+        "asserted_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "valid_time": {
+          "$ref": "#/$defs/time"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "superseded",
+            "retracted"
+          ]
+        },
+        "supersedes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_-]{2,100}$"
+          },
+          "uniqueItems": true
+        },
+        "uncertainty": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4000
+          }
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "attributed_to_id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]{2,100}$",
+          "description": "Entity to which the source assertion is attributed: a person, organization, system or account; not necessarily a human speaker."
+        },
+        "depends_on": {
+          "type": "array",
+          "maxItems": 128,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_-]{2,100}$"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "subject_id",
+        "predicate",
+        "object",
+        "classification",
+        "sources",
+        "asserted_at",
+        "valid_time",
+        "status",
+        "supersedes",
+        "uncertainty",
+        "created_at",
+        "attributed_to_id"
+      ],
+      "additionalProperties": false
+    },
+    "external_id": {
+      "type": "object",
+      "properties": {
+        "scheme": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9_-]{1,40}$"
+        },
+        "namespace": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 500
+        },
+        "value": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 1000
+        }
+      },
+      "required": [
+        "scheme",
+        "namespace",
+        "value"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

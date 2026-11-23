@@ -264,3 +264,12 @@ source provenance, then update the host setup record to the fresh location. Do n
 copy old leases, ledgers, graph or processed markers to the fresh instance. Recollect
 observations under the application's authorized intake policy. Never silently
 archive or reset a consuming application's real data.
+
+## Cognitive task read view and reviewed learning
+
+The additive JS `openCognition({instance_id})` method supplies an immutable
+committed read view with binding, guidance, context and exact source ranges. It
+does not acquire a write lease or consume observations. The neutral task contract
+and optional `publishLearning({task,proposal,authorization})` method are specified
+in [COGNITIVE_TASKS.md](COGNITIVE_TASKS.md). These are distinct negotiated
+capabilities, not a reinterpretation of claim/commit or a host's ask API.

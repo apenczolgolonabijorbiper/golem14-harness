@@ -208,3 +208,11 @@ updates, schema-1 hypotheses and chat events in one preview/apply. See
 canonical queue fields, output paths and publication boundaries. Both queues are
 rendered from the same records. Evidence indexing and adapter completion remain
 separate required operations.
+
+## Unknown hypothesis confidence capability
+
+`hypothesis-unknown-confidence-v1` adds explicit `confidence:null` (unknown) with uncertainty retained in `confidence_basis` and the proposal to hypotheses v1. Numeric confidence keeps its meaning.
+Negotiate this capability before using newly generated reviewed-learning records;
+older validators cannot validate null confidence. No source/graph migration is
+needed. Cognitive task proposals and receipts retain rationale, verification and
+correction history; see [COGNITIVE_TASKS.md](COGNITIVE_TASKS.md).

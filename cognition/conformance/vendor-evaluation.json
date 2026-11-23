@@ -1,0 +1,40 @@
+{
+  "kind": "actual-model-evaluation-attempt",
+  "verified": false,
+  "date": "2026-11-23T16:53:48.647924+00:00",
+  "executor": "codex-cli 0.172.0-alpha.2",
+  "configuration": {
+    "sandbox": "read-only",
+    "ephemeral": true,
+    "skip_git_repo_check": true,
+    "output_last_message": true
+  },
+  "model": {
+    "requested": null,
+    "observed": null,
+    "cost": null
+  },
+  "status": "failed_before_inference",
+  "error": "Failed to initialize in-process app-server client: Read-only file system (os error 30). Runtime state database could not be opened.",
+  "case_count": 18,
+  "actual_model_results": 0,
+  "rubric_verdict": "not_run",
+  "base_commit": "bbefd403dcda4b30b0a75d7a27f7e6fad166140a",
+  "input_file_sha256": "dc9ed7ee41bca6777701dd38acf8773706c018d64115517ab3b2da130a4649d4",
+  "tool_hashes": {
+    "server/cognitive-task.mjs": "d0f93f285704505ccd0c77b25a7b9e5fb25b0b9defe7b70707cbcbc63e278ad7",
+    "server/cognitive-reference.mjs": "45408897ecba40df926dab53a7221e4c4ff503b6727aee0ae443ffcefd3294fd",
+    "tools/evaluate-cognition.mjs": "d91ac6222a4d88c87af15d50b8e2b8c8d7d556dcffa366cac81a08834778fed0",
+    "cognition/conformance/cases.mjs": "e29298dfe687e80ea68ad1facac81bde76420caed7875273d540050513b82ebd"
+  },
+  "package_hash": null,
+  "limitations": [
+    "Scripted fixtures are not actual-model verification.",
+    "External executor required; no model credentials changed.",
+    "Platform CI pending."
+  ],
+  "attempts": 2,
+  "retry": "Retry with supported sqlite_home/log_dir paths in scratch also failed before inference with the same read-only app-server initialization error.",
+  "input_path": "cognition/conformance/vendor-input.json",
+  "hash_note": "Tool hashes capture the implementation at the first failed attempt. No harness/model inference ran; later changes are validated separately by deterministic/package checks."
+}

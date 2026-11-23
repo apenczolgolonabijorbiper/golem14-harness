@@ -33,3 +33,14 @@ associated code change as separate observations. The host can retain what the
 issue requested, what the change actually did, and what a later review corrected.
 The same pattern works for other domains with different source types and host
 instructions.
+
+## Question-driven cognition
+
+The application submits a bounded question/goal and linked conversation messages.
+The host binds committed memory and selected guidance, supplies bounded context
+and original source reads, and dispatches the executor/LLM. The model recognizes
+intent, reasons across premises, returns an answer or linked clarification/check
+questions, and may separately propose reviewed hypothesis learning. The Harness
+validates integrity; the host retains results and controls authorization and CAS
+publication. Read-only tasks do not claim observation batches or mutate memory.
+See [the portable protocol](COGNITIVE_TASKS.md).

@@ -1,5 +1,16 @@
 # Golem XIV Harness 0.11.0
 
+## Unreleased — memory-backed cognitive tasks
+
+- Add host-neutral cognitive task/context/result/learning v1 contracts, bounded
+  committed evidence reads, intent classification and branching conversation links.
+- Add read-only answer validation and separately authorized, idempotent hypothesis
+  publication with correction history and unknown-confidence capability.
+- Package SudoLang prompts, independent conformance tests and 18 semantic model
+  evaluation cases. Actual-model verification is pending: the vendor executor
+  failed before inference in this environment. No release or consumer upgrade
+  is claimed by these implementation notes.
+
 - Extend the reference candidate writer to draft questions, hypotheses and chat
   events together with graph/index/journal in one preview/apply (VP-020).
 - Generate matching JSON/Markdown question queues and graph totals; validate

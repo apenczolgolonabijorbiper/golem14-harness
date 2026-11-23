@@ -20,3 +20,12 @@ Historical speaker_id/classification aliases are not supported in graph v2.
 Purpose instructions do not grant permissions or weaken provenance checks.
 Hypotheses use explicit support/refutation, confidence and analyst/model metadata;
 see MEMORY_MODEL.md for required fields, bounds and direct dependency warnings.
+
+## Reviewed cognitive learning receipts
+
+`memory/learning/<proposal-id-sha256>.json` is an optional immutable publication
+receipt created by a conforming learning adapter. It retains task/instance IDs,
+the full reviewed hypothesis proposal, rationale, verification needed and the
+host's authorization reference. It is not a source observation, independent
+evidence or an observation-processing completion marker. Retain existing
+receipts alongside hypothesis correction history; see COGNITIVE_TASKS.md.

@@ -16,3 +16,12 @@ Check that the current sandbox can reach the private instance and adapter.
 Request only the missing access through the host's supported controls. Keep the
 setup pending when access is unavailable. Follow docs/CODEX.md for launch and
 verification examples. The existing Codex login supplies inference in this session.
+
+## Memory-backed questions and goals
+
+Use [the portable cognitive-task protocol](../docs/COGNITIVE_TASKS.md) and
+[the SudoLang task prompt](../integration/COGNITIVE_TASK.sudo.md) for question or
+goal-driven cognition. The host binds committed memory and guidance, schedules
+finite invocations and retains linked conversation messages. User and Golem
+questions can branch; inferred intent never grants action/write authorization.
+This read-only answer path is separate from observation-batch processing.

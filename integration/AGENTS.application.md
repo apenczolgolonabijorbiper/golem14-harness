@@ -51,3 +51,12 @@ Never repair a hash mismatch by regenerating the engine manifest.
 For evidence-based profile onboarding or an absent/null/stub selection, follow
 HARNESS_ROOT/integration/SETUP.profile.md. Use read-only profile-check before
 publication and preserve application-owned profile/purpose sources for fresh setup.
+
+## Memory-backed questions and goals
+
+Use `HARNESS_ROOT/docs/COGNITIVE_TASKS.md` and
+`HARNESS_ROOT/integration/COGNITIVE_TASK.sudo.md` for question or
+goal-driven cognition. The host binds committed memory and guidance, schedules
+finite invocations and retains linked conversation messages. User and Golem
+questions can branch; inferred intent never grants action/write authorization.
+This read-only answer path is separate from observation-batch processing.
