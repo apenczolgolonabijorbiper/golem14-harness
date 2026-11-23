@@ -27,9 +27,19 @@ assets, not scripted model answers or a disposable pilot.
 
 ```sh
 node tools/evaluate-cognition.mjs prepare ../cognitive-input.json
+node tools/evaluate-cognition.mjs request ../cognitive-input.json ../executor-request.json
 node tools/evaluate-cognition.mjs run ../cognitive-input.json ../model-results.json -- EXECUTOR ARGS
 node tools/evaluate-cognition.mjs check ../cognitive-input.json ../model-results.json ../integrity-report.json
 ```
+
+Keep `cognitive-input.json` with the evaluator. `request` exports a standalone
+executor request containing only the instructions, schema, tasks, trusted evidence
+and operational stop controls. It omits semantic rubrics and allowed outcomes.
+`run` applies the same allowlist before dispatching stdin. Supply only
+`executor-request.json` to a fresh ChatGPT Work session; do not attach the
+repository, evaluator input, earlier outputs or review files. Retain the exact
+request and original response bytes before reviewing outcomes. A later review
+of an earlier rubric-visible response does not turn it into a fresh execution.
 
 The external executor reads one JSON request from stdin and returns
 `{results:[{case_id,result}],model:{requested,observed,configuration,cost}}` on
@@ -64,6 +74,11 @@ record and fix/retest actual failures.
 ## Delivery status
 
 Protocol/runtime implementation and deterministic conformance are reviewable.
+The retained ChatGPT Work run has 18 passing integrity checks and now a separate
+case-by-case semantic review in
+`cognition/conformance/chatgpt-work/semantic-review.json`. That review explicitly
+retains the rubric-exposure limitation and does not certify a fresh run.
+
 Vendor actual-model verification remains pending until a functioning external
 executor completes the retained cases and semantic review. Platform CI must also
 pass before release acceptance. No named host release or downstream runtime

@@ -35,3 +35,34 @@ case data to the fresh session. Retain the original response, run the checker
 against the complete prepared input, and record a separate semantic verdict
 with the reason for each case. The earlier Codex CLI startup probe was a
 different execution environment.
+
+## Later semantic review and fresh-session handoff
+
+`semantic-review.json` records a separate verdict and reason for each of the
+18 retained responses, bound to the exact input/results bytes by SHA-256. All
+18 meet their semantic rubrics. This later review does not remove the original
+rubric exposure or certify a fresh-session run. No original output was edited.
+
+`executor-request.json` is the standalone request for the remaining fresh Work
+run. It excludes evaluator rubrics and allowed outcomes. Send only this file to
+a new Work conversation, with the prompt below. Do not attach this repository
+or the earlier results. The fresh executor needs no repository or host install.
+
+```text
+Execute the attached actual-model-executor-request in this ChatGPT Work
+conversation. Follow its instructions and result schema for every case.
+Use only its supplied tasks and pinned evidence. Return the JSON response
+without repository reads, writes, or external actions. Do not look up prior
+evaluation results or rubrics. Leave unobserved model identity and cost null.
+```
+
+Retain its original response as a new results file, then run `check` against
+`input.json` and record a new semantic review with a reason for each case.
+The existing `run` command also strips evaluator fields for external executors.
+The current session has no tool to dispatch a separate ChatGPT Work conversation;
+no local CLI or scripted transport probe substitutes for that acceptance step.
+
+| Additional file | SHA-256 |
+|---|---|
+| executor-request.json | e1cba12cf2f01c53985e9cd0e8b0624c7d6d44bcab813b6afef3d0502516e43f |
+| semantic-review.json | 8d60620214c79b0cc33f1fd04f642870b5f0fd52a338db3ca1eea5450e489f3e |
