@@ -1,0 +1,1103 @@
+{
+  "model": {
+    "requested": null,
+    "observed": null,
+    "configuration": "ChatGPT Work, same-session model-generated responses with visible rubrics; harness metadata serialized mechanically",
+    "cost": null
+  },
+  "results": [
+    {
+      "case_id": "direct-recall",
+      "result": {
+        "protocol_version": 1,
+        "task_id": "direct-recall",
+        "binding": {
+          "instance_id": "synthetic-evaluation",
+          "snapshot_id": "snapshot-direct-recall",
+          "guidance_id": "cognitive-v1-synthetic-guidance"
+        },
+        "outcome": "answer",
+        "answer": "The original report gives a capacity of 12 people.",
+        "findings": [
+          {
+            "id": "f1",
+            "classification": "source_assertion",
+            "text": "The room capacity is 12 people.",
+            "claim_ids": [
+              "clm-1"
+            ],
+            "premise_ids": [],
+            "evidence": [
+              {
+                "source_id": "00000000-0000-4000-8000-000000000001",
+                "sha256": "7f5c6605f56a2dff6f1e95d399423d74ce9ff929dd8eec97dc25cc1d273082bd",
+                "quote": "The room capacity is 12 people.",
+                "start": 0
+              }
+            ],
+            "uncertainty": []
+          }
+        ],
+        "questions": [],
+        "uncertainty": [],
+        "stop_reason": "complete",
+        "coverage": {
+          "truncated": false,
+          "pending_count": 0,
+          "valid_at": null
+        },
+        "usage": {
+          "rounds": 1,
+          "context_requests": 2,
+          "source_bytes": 31,
+          "elapsed_ms": 0
+        },
+        "model": {
+          "requested": null,
+          "observed": null,
+          "configuration": "ChatGPT Work, same-session model-generated responses with visible rubrics; harness metadata serialized mechanically",
+          "cost": null
+        }
+      }
+    },
+    {
+      "case_id": "multi-source-conclusion",
+      "result": {
+        "protocol_version": 1,
+        "task_id": "multi-source-conclusion",
+        "binding": {
+          "instance_id": "synthetic-evaluation",
+          "snapshot_id": "snapshot-multi-source-conclusion",
+          "guidance_id": "cognitive-v1-synthetic-guidance"
+        },
+        "outcome": "answer",
+        "answer": "No. The room holds 12, and 15 registered, so the group exceeds capacity by 3.",
+        "findings": [
+          {
+            "id": "f1",
+            "classification": "source_assertion",
+            "text": "The room capacity is 12 people.",
+            "claim_ids": [
+              "clm-1"
+            ],
+            "premise_ids": [],
+            "evidence": [
+              {
+                "source_id": "00000000-0000-4000-8000-000000000001",
+                "sha256": "7f5c6605f56a2dff6f1e95d399423d74ce9ff929dd8eec97dc25cc1d273082bd",
+                "quote": "The room capacity is 12 people.",
+                "start": 0
+              }
+            ],
+            "uncertainty": []
+          },
+          {
+            "id": "f2",
+            "classification": "source_assertion",
+            "text": "15 people registered for the meeting.",
+            "claim_ids": [
+              "clm-2"
+            ],
+            "premise_ids": [],
+            "evidence": [
+              {
+                "source_id": "00000000-0000-4000-8000-000000000002",
+                "sha256": "fc8e3241390b2f1b93669ba75d27f0f91315bd5bf04a1b5d9013303683348748",
+                "quote": "15 people registered for the meeting.",
+                "start": 0
+              }
+            ],
+            "uncertainty": []
+          },
+          {
+            "id": "derived",
+            "classification": "derived_conclusion",
+            "text": "The registered group exceeds capacity by 3.",
+            "claim_ids": [],
+            "premise_ids": [
+              "f1",
+              "f2"
+            ],
+            "evidence": [],
+            "uncertainty": []
+          }
+        ],
+        "questions": [],
+        "uncertainty": [],
+        "stop_reason": "complete",
+        "coverage": {
+          "truncated": false,
+          "pending_count": 0,
+          "valid_at": null
+        },
+        "usage": {
+          "rounds": 1,
+          "context_requests": 3,
+          "source_bytes": 68,
+          "elapsed_ms": 0
+        },
+        "model": {
+          "requested": null,
+          "observed": null,
+          "configuration": "ChatGPT Work, same-session model-generated responses with visible rubrics; harness metadata serialized mechanically",
+          "cost": null
+        }
+      }
+    },
+    {
+      "case_id": "plausible-unsupported",
+      "result": {
+        "protocol_version": 1,
+        "task_id": "plausible-unsupported",
+        "binding": {
+          "instance_id": "synthetic-evaluation",
+          "snapshot_id": "snapshot-plausible-unsupported",
+          "guidance_id": "cognitive-v1-synthetic-guidance"
+        },
+        "outcome": "insufficient",
+        "answer": "The available source states room capacity and gives no information about a projector.",
+        "findings": [
+          {
+            "id": "f1",
+            "classification": "source_assertion",
+            "text": "The room capacity is 12 people.",
+            "claim_ids": [
+              "clm-1"
+            ],
+            "premise_ids": [],
+            "evidence": [
+              {
+                "source_id": "00000000-0000-4000-8000-000000000001",
+                "sha256": "7f5c6605f56a2dff6f1e95d399423d74ce9ff929dd8eec97dc25cc1d273082bd",
+                "quote": "The room capacity is 12 people.",
+                "start": 0
+              }
+            ],
+            "uncertainty": []
+          }
+        ],
+        "questions": [],
+        "uncertainty": [
+          "The available source states room capacity and gives no information about a projector."
+        ],
+        "stop_reason": "missing_evidence",
+        "coverage": {
+          "truncated": false,
+          "pending_count": 0,
+          "valid_at": null
+        },
+        "usage": {
+          "rounds": 1,
+          "context_requests": 2,
+          "source_bytes": 31,
+          "elapsed_ms": 0
+        },
+        "model": {
+          "requested": null,
+          "observed": null,
+          "configuration": "ChatGPT Work, same-session model-generated responses with visible rubrics; harness metadata serialized mechanically",
+          "cost": null
+        }
+      }
+    },
+    {
+      "case_id": "conflicting-temporal",
+      "result": {
+        "protocol_version": 1,
+        "task_id": "conflicting-temporal",
+        "binding": {
+          "instance_id": "synthetic-evaluation",
+          "snapshot_id": "snapshot-conflicting-temporal",
+          "guidance_id": "cognitive-v1-synthetic-guidance"
+        },
+        "outcome": "answer",
+        "answer": "The January 2 report gives 10 people for the requested date. The earlier January 1 report gives 12 for its date.",
+        "findings": [
+          {
+            "id": "f1",
+            "classification": "source_assertion",
+            "text": "The room capacity is 12 people as of 2026-01-01.",
+            "claim_ids": [
+              "clm-1"
+            ],
+            "premise_ids": [],
+            "evidence": [
+              {
+                "source_id": "00000000-0000-4000-8000-000000000001",
+                "sha256": "3d89427415e272bdef616a2a52c4ec2053a118279151eba6de1f3c5bf157e22d",
+                "quote": "The room capacity is 12 people as of 2026-01-01.",
+                "start": 0
+              }
+            ],
+            "uncertainty": []
+          },
+          {
+            "id": "f2",
+            "classification": "source_assertion",
+            "text": "The room capacity is 10 people as of 2026-01-02.",
+            "claim_ids": [
+              "clm-2"
+            ],
+            "premise_ids": [],
+            "evidence": [
+              {
+                "source_id": "00000000-0000-4000-8000-000000000002",
+                "sha256": "3a577ede60b0c84600a6a143888d8a9470a0289d7cb14c791d3a054ae1b640a9",
+                "quote": "The room capacity is 10 people as of 2026-01-02.",
+                "start": 0
+              }
+            ],
+            "uncertainty": []
+          }
+        ],
+        "questions": [],
+        "uncertainty": [],
+        "stop_reason": "complete",
+        "coverage": {
+          "truncated": false,
+          "pending_count": 0,
+          "valid_at": "2026-01-02T12:00:00Z"
+        },
+        "usage": {
+          "rounds": 1,
+          "context_requests": 3,
+          "source_bytes": 96,
+          "elapsed_ms": 0
+        },
+        "model": {
+          "requested": null,
+          "observed": null,
+          "configuration": "ChatGPT Work, same-session model-generated responses with visible rubrics; harness metadata serialized mechanically",
+          "cost": null
+        }
+      }
+    },
+    {
+      "case_id": "identity-ambiguity",
+      "result": {
+        "protocol_version": 1,
+        "task_id": "identity-ambiguity",
+        "binding": {
+          "instance_id": "synthetic-evaluation",
+          "snapshot_id": "snapshot-identity-ambiguity",
+          "guidance_id": "cognitive-v1-synthetic-guidance"
+        },
+        "outcome": "partial",
+        "answer": "The East building’s Alpha holds 12 and the West building’s Alpha holds 20. A single answer requires the building.",
+        "findings": [
+          {
+            "id": "f1",
+            "classification": "source_assertion",
+            "text": "Room Alpha in Building East has capacity 12.",
+            "claim_ids": [
+              "clm-1"
+            ],
+            "premise_ids": [],
+            "evidence": [
+              {
+                "source_id": "00000000-0000-4000-8000-000000000001",
+                "sha256": "26bc3c06e8b237b3f8b548e395507398937d6d9896ceb6f70f5c8fc432c61400",
+                "quote": "Room Alpha in Building East has capacity 12.",
+                "start": 0
+              }
+            ],
+            "uncertainty": []
+          },
+          {
+            "id": "f2",
+            "classification": "source_assertion",
+            "text": "Room Alpha in Building West has capacity 20.",
+            "claim_ids": [
+              "clm-2"
+            ],
+            "premise_ids": [],
+            "evidence": [
+              {
+                "source_id": "00000000-0000-4000-8000-000000000002",
+                "sha256": "ab5dadd071efdfcddb951299ce6a986b22be96b3879e82400b2fd7ff716aac79",
+                "quote": "Room Alpha in Building West has capacity 20.",
+                "start": 0
+              }
+            ],
+            "uncertainty": []
+          }
+        ],
+        "questions": [
+          {
+            "id": "g1",
+            "kind": "cognitive_question",
+            "origin": "golem",
+            "text": "Which building’s Alpha room do you mean?",
+            "reply_to": [
+              "user-1"
+            ],
+            "premise_ids": [
+              "f1",
+              "f2"
+            ],
+            "intent": {
+              "category": "clarify",
+              "origin": "golem",
+              "basis": "explicit",
+              "description": "Which building’s Alpha room do you mean?",
+              "uncertainty": []
+            }
+          }
+        ],
+        "uncertainty": [
+          "The East building’s Alpha holds 12 and the West building’s Alpha holds 20. A single answer requires the building."
+        ],
+        "stop_reason": "missing_evidence",
+        "coverage": {
+          "truncated": false,
+          "pending_count": 0,
+          "valid_at": null
+        },
+        "usage": {
+          "rounds": 1,
+          "context_requests": 3,
+          "source_bytes": 88,
+          "elapsed_ms": 0
+        },
+        "model": {
+          "requested": null,
+          "observed": null,
+          "configuration": "ChatGPT Work, same-session model-generated responses with visible rubrics; harness metadata serialized mechanically",
+          "cost": null
+        }
+      }
+    },
+    {
+      "case_id": "pending-intake",
+      "result": {
+        "protocol_version": 1,
+        "task_id": "pending-intake",
+        "binding": {
+          "instance_id": "synthetic-evaluation",
+          "snapshot_id": "snapshot-pending-intake",
+          "guidance_id": "cognitive-v1-synthetic-guidance"
+        },
+        "outcome": "insufficient",
+        "answer": "I cannot determine whether capacity changed. One intake item is pending and unprocessed and supplies no committed finding.",
+        "findings": [],
+        "questions": [],
+        "uncertainty": [
+          "I cannot determine whether capacity changed. One intake item is pending and unprocessed and supplies no committed finding."
+        ],
+        "stop_reason": "missing_evidence",
+        "coverage": {
+          "truncated": false,
+          "pending_count": 1,
+          "valid_at": null
+        },
+        "usage": {
+          "rounds": 1,
+          "context_requests": 1,
+          "source_bytes": 0,
+          "elapsed_ms": 0
+        },
+        "model": {
+          "requested": null,
+          "observed": null,
+          "configuration": "ChatGPT Work, same-session model-generated responses with visible rubrics; harness metadata serialized mechanically",
+          "cost": null
+        }
+      }
+    },
+    {
+      "case_id": "empty-inbox",
+      "result": {
+        "protocol_version": 1,
+        "task_id": "empty-inbox",
+        "binding": {
+          "instance_id": "synthetic-evaluation",
+          "snapshot_id": "snapshot-empty-inbox",
+          "guidance_id": "cognitive-v1-synthetic-guidance"
+        },
+        "outcome": "answer",
+        "answer": "Committed memory records a capacity of 12 people, even with no new intake.",
+        "findings": [
+          {
+            "id": "f1",
+            "classification": "source_assertion",
+            "text": "The room capacity is 12 people.",
+            "claim_ids": [
+              "clm-1"
+            ],
+            "premise_ids": [],
+            "evidence": [
+              {
+                "source_id": "00000000-0000-4000-8000-000000000001",
+                "sha256": "7f5c6605f56a2dff6f1e95d399423d74ce9ff929dd8eec97dc25cc1d273082bd",
+                "quote": "The room capacity is 12 people.",
+                "start": 0
+              }
+            ],
+            "uncertainty": []
+          }
+        ],
+        "questions": [],
+        "uncertainty": [],
+        "stop_reason": "complete",
+        "coverage": {
+          "truncated": false,
+          "pending_count": 0,
+          "valid_at": null
+        },
+        "usage": {
+          "rounds": 1,
+          "context_requests": 2,
+          "source_bytes": 31,
+          "elapsed_ms": 0
+        },
+        "model": {
+          "requested": null,
+          "observed": null,
+          "configuration": "ChatGPT Work, same-session model-generated responses with visible rubrics; harness metadata serialized mechanically",
+          "cost": null
+        }
+      }
+    },
+    {
+      "case_id": "missing-source",
+      "result": {
+        "protocol_version": 1,
+        "task_id": "missing-source",
+        "binding": {
+          "instance_id": "synthetic-evaluation",
+          "snapshot_id": "snapshot-missing-source",
+          "guidance_id": "cognitive-v1-synthetic-guidance"
+        },
+        "outcome": "insufficient",
+        "answer": "The original bytes are unavailable, so I cannot verify the recorded capacity against the source.",
+        "findings": [],
+        "questions": [],
+        "uncertainty": [
+          "The original bytes are unavailable, so I cannot verify the recorded capacity against the source."
+        ],
+        "stop_reason": "missing_evidence",
+        "coverage": {
+          "truncated": false,
+          "pending_count": 0,
+          "valid_at": null
+        },
+        "usage": {
+          "rounds": 1,
+          "context_requests": 2,
+          "source_bytes": 0,
+          "elapsed_ms": 0
+        },
+        "model": {
+          "requested": null,
+          "observed": null,
+          "configuration": "ChatGPT Work, same-session model-generated responses with visible rubrics; harness metadata serialized mechanically",
+          "cost": null
+        }
+      }
+    },
+    {
+      "case_id": "truncated-source",
+      "result": {
+        "protocol_version": 1,
+        "task_id": "truncated-source",
+        "binding": {
+          "instance_id": "synthetic-evaluation",
+          "snapshot_id": "snapshot-truncated-source",
+          "guidance_id": "cognitive-v1-synthetic-guidance"
+        },
+        "outcome": "insufficient",
+        "answer": "The truncated excerpt reports capacity only. It cannot establish fire safety.",
+        "findings": [
+          {
+            "id": "f1",
+            "classification": "source_assertion",
+            "text": "Report excerpt: room capacity 12.",
+            "claim_ids": [
+              "clm-1"
+            ],
+            "premise_ids": [],
+            "evidence": [
+              {
+                "source_id": "00000000-0000-4000-8000-000000000001",
+                "sha256": "f220615151db249dc80e0caca01e42b3c1b317309ffc27c3b9bd6dd3f2a9ddf0",
+                "quote": "Report excerpt: room capacity 12.",
+                "start": 0
+              }
+            ],
+            "uncertainty": []
+          }
+        ],
+        "questions": [],
+        "uncertainty": [
+          "The truncated excerpt reports capacity only. It cannot establish fire safety."
+        ],
+        "stop_reason": "missing_evidence",
+        "coverage": {
+          "truncated": true,
+          "pending_count": 0,
+          "valid_at": null
+        },
+        "usage": {
+          "rounds": 1,
+          "context_requests": 2,
+          "source_bytes": 33,
+          "elapsed_ms": 0
+        },
+        "model": {
+          "requested": null,
+          "observed": null,
+          "configuration": "ChatGPT Work, same-session model-generated responses with visible rubrics; harness metadata serialized mechanically",
+          "cost": null
+        }
+      }
+    },
+    {
+      "case_id": "zero-hits",
+      "result": {
+        "protocol_version": 1,
+        "task_id": "zero-hits",
+        "binding": {
+          "instance_id": "synthetic-evaluation",
+          "snapshot_id": "snapshot-zero-hits",
+          "guidance_id": "cognitive-v1-synthetic-guidance"
+        },
+        "outcome": "insufficient",
+        "answer": "The bounded search returned no evidence about accessible rooms. Its coverage does not establish that none exist.",
+        "findings": [],
+        "questions": [],
+        "uncertainty": [
+          "The bounded search returned no evidence about accessible rooms. Its coverage does not establish that none exist."
+        ],
+        "stop_reason": "missing_evidence",
+        "coverage": {
+          "truncated": false,
+          "pending_count": 0,
+          "valid_at": null
+        },
+        "usage": {
+          "rounds": 1,
+          "context_requests": 1,
+          "source_bytes": 0,
+          "elapsed_ms": 0
+        },
+        "model": {
+          "requested": null,
+          "observed": null,
+          "configuration": "ChatGPT Work, same-session model-generated responses with visible rubrics; harness metadata serialized mechanically",
+          "cost": null
+        }
+      }
+    },
+    {
+      "case_id": "repeated-answer",
+      "result": {
+        "protocol_version": 1,
+        "task_id": "repeated-answer",
+        "binding": {
+          "instance_id": "synthetic-evaluation",
+          "snapshot_id": "snapshot-repeated-answer",
+          "guidance_id": "cognitive-v1-synthetic-guidance"
+        },
+        "outcome": "answer",
+        "answer": "Repeated generated answers do not add independent corroboration. The available evidence is one original report giving 12.",
+        "findings": [
+          {
+            "id": "f1",
+            "classification": "source_assertion",
+            "text": "The room capacity is 12 people.",
+            "claim_ids": [
+              "clm-1"
+            ],
+            "premise_ids": [],
+            "evidence": [
+              {
+                "source_id": "00000000-0000-4000-8000-000000000001",
+                "sha256": "7f5c6605f56a2dff6f1e95d399423d74ce9ff929dd8eec97dc25cc1d273082bd",
+                "quote": "The room capacity is 12 people.",
+                "start": 0
+              }
+            ],
+            "uncertainty": []
+          }
+        ],
+        "questions": [],
+        "uncertainty": [],
+        "stop_reason": "complete",
+        "coverage": {
+          "truncated": false,
+          "pending_count": 0,
+          "valid_at": null
+        },
+        "usage": {
+          "rounds": 1,
+          "context_requests": 2,
+          "source_bytes": 31,
+          "elapsed_ms": 0
+        },
+        "model": {
+          "requested": null,
+          "observed": null,
+          "configuration": "ChatGPT Work, same-session model-generated responses with visible rubrics; harness metadata serialized mechanically",
+          "cost": null
+        }
+      }
+    },
+    {
+      "case_id": "changed-premise",
+      "result": {
+        "protocol_version": 1,
+        "task_id": "changed-premise",
+        "binding": {
+          "instance_id": "synthetic-evaluation",
+          "snapshot_id": "snapshot-changed-premise",
+          "guidance_id": "cognitive-v1-synthetic-guidance"
+        },
+        "outcome": "answer",
+        "answer": "No. The old capacity of 20 was superseded. The current capacity is 12 for 15 registrations, a shortfall of 3.",
+        "findings": [
+          {
+            "id": "f1",
+            "classification": "source_assertion",
+            "text": "The earlier capacity claim of 20 is superseded. The current capacity is 12.",
+            "claim_ids": [
+              "clm-1"
+            ],
+            "premise_ids": [],
+            "evidence": [
+              {
+                "source_id": "00000000-0000-4000-8000-000000000001",
+                "sha256": "7c60bace4cc1577cdae23e1da247dbf96d18410b095080f4258dd468d88708e8",
+                "quote": "The earlier capacity claim of 20 is superseded. The current capacity is 12.",
+                "start": 0
+              }
+            ],
+            "uncertainty": []
+          },
+          {
+            "id": "f2",
+            "classification": "source_assertion",
+            "text": "15 people registered.",
+            "claim_ids": [
+              "clm-2"
+            ],
+            "premise_ids": [],
+            "evidence": [
+              {
+                "source_id": "00000000-0000-4000-8000-000000000002",
+                "sha256": "4802ed1417d85325170784757ff10ef79a1108eaa1d62733e0b46a379c8c7aca",
+                "quote": "15 people registered.",
+                "start": 0
+              }
+            ],
+            "uncertainty": []
+          },
+          {
+            "id": "derived",
+            "classification": "derived_conclusion",
+            "text": "The current capacity falls short of the registration count by 3.",
+            "claim_ids": [],
+            "premise_ids": [
+              "f1",
+              "f2"
+            ],
+            "evidence": [],
+            "uncertainty": []
+          }
+        ],
+        "questions": [],
+        "uncertainty": [],
+        "stop_reason": "complete",
+        "coverage": {
+          "truncated": false,
+          "pending_count": 0,
+          "valid_at": null
+        },
+        "usage": {
+          "rounds": 1,
+          "context_requests": 3,
+          "source_bytes": 96,
+          "elapsed_ms": 0
+        },
+        "model": {
+          "requested": null,
+          "observed": null,
+          "configuration": "ChatGPT Work, same-session model-generated responses with visible rubrics; harness metadata serialized mechanically",
+          "cost": null
+        }
+      }
+    },
+    {
+      "case_id": "correction-retraction",
+      "result": {
+        "protocol_version": 1,
+        "task_id": "correction-retraction",
+        "binding": {
+          "instance_id": "synthetic-evaluation",
+          "snapshot_id": "snapshot-correction-retraction",
+          "guidance_id": "cognitive-v1-synthetic-guidance"
+        },
+        "outcome": "answer",
+        "answer": "Yes. The correction says the earlier reported 20 was retracted and records an inspected capacity of 12.",
+        "findings": [
+          {
+            "id": "f1",
+            "classification": "source_assertion",
+            "text": "Correction: the reported capacity 20 was retracted; the inspected capacity is 12.",
+            "claim_ids": [
+              "clm-1"
+            ],
+            "premise_ids": [],
+            "evidence": [
+              {
+                "source_id": "00000000-0000-4000-8000-000000000001",
+                "sha256": "b328e7f0210a3ad724006c7d06c96a708612febafb74989f89e584cc0d1b24ab",
+                "quote": "Correction: the reported capacity 20 was retracted; the inspected capacity is 12.",
+                "start": 0
+              }
+            ],
+            "uncertainty": []
+          }
+        ],
+        "questions": [],
+        "uncertainty": [],
+        "stop_reason": "complete",
+        "coverage": {
+          "truncated": false,
+          "pending_count": 0,
+          "valid_at": null
+        },
+        "usage": {
+          "rounds": 1,
+          "context_requests": 2,
+          "source_bytes": 81,
+          "elapsed_ms": 0
+        },
+        "model": {
+          "requested": null,
+          "observed": null,
+          "configuration": "ChatGPT Work, same-session model-generated responses with visible rubrics; harness metadata serialized mechanically",
+          "cost": null
+        }
+      }
+    },
+    {
+      "case_id": "denied-writeback",
+      "result": {
+        "protocol_version": 1,
+        "task_id": "denied-writeback",
+        "binding": {
+          "instance_id": "synthetic-evaluation",
+          "snapshot_id": "snapshot-denied-writeback",
+          "guidance_id": "cognitive-v1-synthetic-guidance"
+        },
+        "outcome": "answer",
+        "answer": "The original report gives 12. This read-only answer supplies no independent evidence and does not authorize a memory update.",
+        "findings": [
+          {
+            "id": "f1",
+            "classification": "source_assertion",
+            "text": "The room capacity is 12 people.",
+            "claim_ids": [
+              "clm-1"
+            ],
+            "premise_ids": [],
+            "evidence": [
+              {
+                "source_id": "00000000-0000-4000-8000-000000000001",
+                "sha256": "7f5c6605f56a2dff6f1e95d399423d74ce9ff929dd8eec97dc25cc1d273082bd",
+                "quote": "The room capacity is 12 people.",
+                "start": 0
+              }
+            ],
+            "uncertainty": []
+          }
+        ],
+        "questions": [],
+        "uncertainty": [],
+        "stop_reason": "complete",
+        "coverage": {
+          "truncated": false,
+          "pending_count": 0,
+          "valid_at": null
+        },
+        "usage": {
+          "rounds": 1,
+          "context_requests": 2,
+          "source_bytes": 31,
+          "elapsed_ms": 0
+        },
+        "model": {
+          "requested": null,
+          "observed": null,
+          "configuration": "ChatGPT Work, same-session model-generated responses with visible rubrics; harness metadata serialized mechanically",
+          "cost": null
+        }
+      }
+    },
+    {
+      "case_id": "bounded-follow-up",
+      "result": {
+        "protocol_version": 1,
+        "task_id": "bounded-follow-up",
+        "binding": {
+          "instance_id": "synthetic-evaluation",
+          "snapshot_id": "snapshot-bounded-follow-up",
+          "guidance_id": "cognitive-v1-synthetic-guidance"
+        },
+        "outcome": "insufficient",
+        "answer": "There are 15 registrations. I need verified capacity and applicable safety evidence to assess whether the group can fit safely.",
+        "findings": [
+          {
+            "id": "f1",
+            "classification": "source_assertion",
+            "text": "15 people registered.",
+            "claim_ids": [
+              "clm-1"
+            ],
+            "premise_ids": [],
+            "evidence": [
+              {
+                "source_id": "00000000-0000-4000-8000-000000000001",
+                "sha256": "4802ed1417d85325170784757ff10ef79a1108eaa1d62733e0b46a379c8c7aca",
+                "quote": "15 people registered.",
+                "start": 0
+              }
+            ],
+            "uncertainty": []
+          }
+        ],
+        "questions": [
+          {
+            "id": "g1",
+            "kind": "collection_request",
+            "origin": "golem",
+            "text": "What is the verified capacity, and what current safety documentation applies to accommodating 15 attendees?",
+            "reply_to": [
+              "user-1"
+            ],
+            "premise_ids": [
+              "f1"
+            ],
+            "intent": {
+              "category": "verify",
+              "origin": "golem",
+              "basis": "explicit",
+              "description": "What is the verified capacity, and what current safety documentation applies to accommodating 15 attendees?",
+              "uncertainty": []
+            }
+          }
+        ],
+        "uncertainty": [
+          "There are 15 registrations. I need verified capacity and applicable safety evidence to assess whether the group can fit safely."
+        ],
+        "stop_reason": "missing_evidence",
+        "coverage": {
+          "truncated": false,
+          "pending_count": 0,
+          "valid_at": null
+        },
+        "usage": {
+          "rounds": 1,
+          "context_requests": 2,
+          "source_bytes": 21,
+          "elapsed_ms": 0
+        },
+        "model": {
+          "requested": null,
+          "observed": null,
+          "configuration": "ChatGPT Work, same-session model-generated responses with visible rubrics; harness metadata serialized mechanically",
+          "cost": null
+        }
+      }
+    },
+    {
+      "case_id": "cancellation",
+      "result": {
+        "protocol_version": 1,
+        "task_id": "cancellation",
+        "binding": {
+          "instance_id": "synthetic-evaluation",
+          "snapshot_id": "snapshot-cancellation",
+          "guidance_id": "cognitive-v1-synthetic-guidance"
+        },
+        "outcome": "insufficient",
+        "answer": "The invocation was cancelled before the capacity answer could be completed.",
+        "findings": [],
+        "questions": [],
+        "uncertainty": [
+          "The invocation was cancelled before the capacity answer could be completed."
+        ],
+        "stop_reason": "cancelled",
+        "coverage": {
+          "truncated": false,
+          "pending_count": 0,
+          "valid_at": null
+        },
+        "usage": {
+          "rounds": 1,
+          "context_requests": 1,
+          "source_bytes": 0,
+          "elapsed_ms": 0
+        },
+        "model": {
+          "requested": null,
+          "observed": null,
+          "configuration": "ChatGPT Work, same-session model-generated responses with visible rubrics; harness metadata serialized mechanically",
+          "cost": null
+        }
+      }
+    },
+    {
+      "case_id": "budget-exhaustion",
+      "result": {
+        "protocol_version": 1,
+        "task_id": "budget-exhaustion",
+        "binding": {
+          "instance_id": "synthetic-evaluation",
+          "snapshot_id": "snapshot-budget-exhaustion",
+          "guidance_id": "cognitive-v1-synthetic-guidance"
+        },
+        "outcome": "insufficient",
+        "answer": "The finite search budget is exhausted. The available evidence is insufficient to reach certainty.",
+        "findings": [],
+        "questions": [],
+        "uncertainty": [
+          "The finite search budget is exhausted. The available evidence is insufficient to reach certainty."
+        ],
+        "stop_reason": "budget",
+        "coverage": {
+          "truncated": false,
+          "pending_count": 0,
+          "valid_at": null
+        },
+        "usage": {
+          "rounds": 1,
+          "context_requests": 1,
+          "source_bytes": 0,
+          "elapsed_ms": 0
+        },
+        "model": {
+          "requested": null,
+          "observed": null,
+          "configuration": "ChatGPT Work, same-session model-generated responses with visible rubrics; harness metadata serialized mechanically",
+          "cost": null
+        }
+      }
+    },
+    {
+      "case_id": "intent-and-branches",
+      "result": {
+        "protocol_version": 1,
+        "task_id": "intent-and-branches",
+        "binding": {
+          "instance_id": "synthetic-evaluation",
+          "snapshot_id": "snapshot-intent-and-branches",
+          "guidance_id": "cognitive-v1-synthetic-guidance"
+        },
+        "outcome": "partial",
+        "answer": "I need two details before I can compare the rooms and check the assumption.",
+        "findings": [
+          {
+            "id": "f1",
+            "classification": "source_assertion",
+            "text": "Room East has capacity 12.",
+            "claim_ids": [
+              "clm-1"
+            ],
+            "premise_ids": [],
+            "evidence": [
+              {
+                "source_id": "00000000-0000-4000-8000-000000000001",
+                "sha256": "9ff6f712fb88182d6d03128729c768dea15ded4bb159fce55a0ad3752d4136db",
+                "quote": "Room East has capacity 12.",
+                "start": 0
+              }
+            ],
+            "uncertainty": []
+          },
+          {
+            "id": "f2",
+            "classification": "source_assertion",
+            "text": "Room West has capacity 20.",
+            "claim_ids": [
+              "clm-2"
+            ],
+            "premise_ids": [],
+            "evidence": [
+              {
+                "source_id": "00000000-0000-4000-8000-000000000002",
+                "sha256": "0237029f2ce739108e36972573c72acabf39ebbc97f82c7db18b0031072946a2",
+                "quote": "Room West has capacity 20.",
+                "start": 0
+              }
+            ],
+            "uncertainty": []
+          }
+        ],
+        "questions": [
+          {
+            "id": "g1",
+            "kind": "cognitive_question",
+            "origin": "golem",
+            "text": "How many people must the selected room accommodate?",
+            "reply_to": [
+              "user-1"
+            ],
+            "premise_ids": [
+              "f1",
+              "f2"
+            ],
+            "intent": {
+              "category": "clarify",
+              "origin": "golem",
+              "basis": "explicit",
+              "description": "How many people must the selected room accommodate?",
+              "uncertainty": []
+            }
+          },
+          {
+            "id": "g2",
+            "kind": "cognitive_question",
+            "origin": "golem",
+            "text": "What decision criterion should I use to compare the rooms and test your assumption?",
+            "reply_to": [
+              "user-1"
+            ],
+            "premise_ids": [
+              "f1",
+              "f2"
+            ],
+            "intent": {
+              "category": "clarify",
+              "origin": "golem",
+              "basis": "explicit",
+              "description": "What decision criterion should I use to compare the rooms and test your assumption?",
+              "uncertainty": []
+            }
+          }
+        ],
+        "uncertainty": [
+          "I need two details before I can compare the rooms and check the assumption."
+        ],
+        "stop_reason": "missing_evidence",
+        "coverage": {
+          "truncated": false,
+          "pending_count": 0,
+          "valid_at": null
+        },
+        "usage": {
+          "rounds": 1,
+          "context_requests": 3,
+          "source_bytes": 52,
+          "elapsed_ms": 0
+        },
+        "model": {
+          "requested": null,
+          "observed": null,
+          "configuration": "ChatGPT Work, same-session model-generated responses with visible rubrics; harness metadata serialized mechanically",
+          "cost": null
+        }
+      }
+    }
+  ]
+}
