@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {unlinkSync,symlinkSync,mkdirSync,chmodSync,writeFileSync} from 'node:fs';
+import {unlinkSync,symlinkSync,mkdirSync,chmodSync,writeFileSync,readFileSync} from 'node:fs';
 import {join} from 'node:path';
 import {fixture,command,harness} from './test-fixtures.mjs';
 import {sha256} from './application-profile.mjs';
@@ -18,10 +18,42 @@ async function prepared(t,{profile=false}={}){
 
 test('candidate writer previews without writes and completes through the adapter with claimed guidance',async t=>{
   const {f,adapter,claim,changes,original,index}=await prepared(t,{profile:true}),head=f.git('rev-parse','HEAD');
+  const pointer=`Completion record: message of the analysis commit containing this journal; instance ${f.root}; run ${claim.run_id}.`;
+  changes.review+='\n\n'+pointer;
   const preview=await writeCandidate({root:f.root,changes});assert.equal(preview.mode,'preview');assert.equal(f.read('memory/graph.json'),original);assert.equal(f.read('memory/index.md'),index);assert.throws(()=>f.read(`memory/runs/${claim.run_id}.md`));
   const result=await writeCandidate({root:f.root,changes,apply:true});assert.equal(result.mode,'draft-written');assert.equal(f.git('rev-parse','HEAD'),head);assert.equal(JSON.parse(f.read('memory/processed.json')).observations.length,0);assert.equal((await adapter.status()).lease.status,'processing');
   assert.ok(f.read(`memory/runs/${claim.run_id}.md`).includes('guidance_version: '+claim.guidance_identity));
+  const journal=f.read(`memory/runs/${claim.run_id}.md`);
+  assert.ok(journal.includes(pointer));
+  assert.match(journal,/candidate validation, publication and persisted-state verification are pending/);
   await adapter.validate({run:claim.run_id});assert.equal((await adapter.commit({run:claim.run_id})).status,'committed');assert.equal((await adapter.status()).processed,1);
+  assert.equal(f.read(`memory/runs/${claim.run_id}.md`),journal);
+  // This adapter supplies a label, not the application host's verification report.
+  assert.equal(f.git('log','-1','--format=%B'),`complete ${claim.run_id}`);
+});
+
+test('host retains actual validation, publication and saved-state results outside the unchanged journal',async t=>{
+  const {f,adapter,claim,changes}=await prepared(t),journalPath=`memory/runs/${claim.run_id}.md`;
+  const reportPath=join(f.root,'..','verification',`${claim.run_id}.json`);
+  changes.review+=`\n\nCompletion record: ${reportPath}; instance ${f.root}; run ${claim.run_id}.`;
+  const draft=await writeCandidate({root:f.root,changes,apply:true}),journal=f.read(journalPath);
+  assert.ok(journal.includes(reportPath));
+  const validation=await adapter.validate({run:claim.run_id,outputs:draft.files});
+  assert.equal(validation.ok,true);assert.equal(validation.mode,'candidate');
+  assert.equal(f.read(journalPath),journal);
+  const receipt=await adapter.commit({run:claim.run_id,outputs:draft.files});
+  assert.equal(receipt.status,'committed');
+  const persisted=JSON.parse(command(process.execPath,[join(harness,'processor/memory-tool.mjs'),'validate','--root',f.root]));
+  assert.equal(persisted.valid,true);
+  assert.equal(f.git('rev-parse',`${receipt.head}:${journalPath}`),f.git('hash-object',journalPath));
+  const record={instance:f.root,run_id:claim.run_id,head:receipt.head,
+    checks:{candidate_validation:validation,saved_state:persisted,publication:{status:receipt.status}},
+    warnings:receipt.warnings,warning_summary:receipt.warning_summary};
+  mkdirSync(join(f.root,'..','verification'),{recursive:true});
+  writeFileSync(reportPath,JSON.stringify(record,null,2)+'\n');
+  assert.deepEqual(JSON.parse(readFileSync(reportPath,'utf8')),record);
+  assert.equal(f.git('rev-parse','HEAD'),receipt.head);
+  assert.equal(f.read(journalPath),journal);
 });
 
 test('candidate writer refuses stale bases, bad quotations, unknown keys and lost ownership before writes',async t=>{

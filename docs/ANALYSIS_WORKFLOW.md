@@ -53,11 +53,18 @@ Zero hits do not establish absence: inputs may still be pending or unfetched.
    both queues; close only with reviewed source-grounded answered analysis. Optional
    host-owned closure_criteria metadata can guide review but is not a new core rule.
 10. Stage graph, strict hypotheses, ledger, queues and journal in one candidate.
-    Include guidance_version: ID from claim, then validate/commit via the adapter.
+    Include guidance_version: ID from claim. Record completed local checks, mark
+    host checks pending and select a durable completion-record pointer keyed by
+    instance/run before validation (see [the pointer rule](PROCESSING.md#verification-record-and-journal-pointer-vi-019)).
+    Then validate/commit via the adapter.
     On head conflict re-read/merge/revalidate; on committed policy change release
     and reclaim. Do not force another run's lease or mark pending sources processed.
-11. Read back persisted state and journal unresolved alternatives, questions and
-    warnings reviewed. Resume from lease/ledger/run metadata; no reinitialization
+11. Read back persisted state and retain the actual validation/publication/read-back
+    results, snapshot identity and returned warnings at the selected location.
+    Keep unresolved alternatives, questions and warnings reviewed in the staged
+    journal; do not rewrite it after publication to add a verdict. Any candidate
+    edit after validation requires revalidation. Resume from lease/ledger/run
+    metadata; no reinitialization
     during ordinary processing. An incompatible old instance requires an explicit
     fresh setup, not an automatic conversion or deletion.
 

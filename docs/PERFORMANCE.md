@@ -87,6 +87,23 @@ fields fail. The CLI bounds the input change-set file at 8 MiB.
 | claim_statuses | Entries `{id, status}` set retained active claims to superseded or retracted; replacement/history rules still validate |
 | review | Required agent-written semantic review, retained in index and run journal; never synthesized by this helper |
 
+Before preview/apply, include an explicit `Completion record:` pointer in `review`,
+keyed by instance and run ID. Choose the message of the analysis commit containing
+the journal, an exact external report location or retained Git notes, following
+[the verification-pointer rule](PROCESSING.md#verification-record-and-journal-pointer-vi-019).
+For example: `Completion record: message of the analysis commit containing this
+journal; instance INSTANCE; run RUN_ID.` Use this option only when the host retains
+the actual results there; a generic commit title is insufficient.
+
+The generated verification section records only the local structural preflight
+as passed and marks host checks pending. The writer preserves the pointer in
+`review`; it does not choose a report location, create a report or populate a
+commit message. The reference adapter's `complete RUN_ID` message is only a label,
+so its caller must select and retain a separate report unless another host adapter
+supplies the full commit-message record. Retain checks performed after publication
+in a linked durable follow-up when necessary. No change-set or memory schema is
+added; pointer selection is the host/agent's procedural responsibility.
+
 Missing operation arrays mean empty arrays. Duplicate IDs or repeated updates,
 invalid provenance/quotations and invalid history refuse before draft writes.
 Claimed graph sources are assembled from the lease and exact observed bytes.
