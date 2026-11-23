@@ -31,13 +31,23 @@ export function evaluate(input,output){
   for(const c of input.cases)if(!seen.has(c.case_id))reports.push({case_id:c.case_id,integrity_errors:['Missing model result'],semantic_rubric:c.semantic_rubric,semantic_verdict:'not_run'});
   return {kind:'model-evaluation-validation',verified:false,date:new Date().toISOString(),input_sha256:hash(JSON.stringify(input)),output_sha256:hash(JSON.stringify(output)),model:output.model??{requested:null,observed:null,configuration:'unknown',cost:null},reports,limitations:['Integrity validation and allowed outcome checks do not decide semantic truth.','Semantic verdicts require retained review; no scripted fixture certifies cognition.']};
 }
+// Allowlist the executor contract: evaluator rubrics and expected outcomes must
+// never travel to inference, including when new evaluator-only fields are added.
+export function executorRequest(input){
+  return {protocol_version:input.protocol_version,kind:'actual-model-executor-request',
+    instructions:input.instructions.replace('Use docs/COGNITIVE_TASKS.md and the included result schema.',
+      'Use the included result schema and the portable evidence rules below. Answer each supplied task from its pinned evidence only. Respect read_only mode and finite limits; distinguish source assertions, derived conclusions, hypotheses and general model knowledge. Preserve identity, time scope, uncertainty and incomplete coverage.'),
+    result_schema:input.result_schema,
+    cases:input.cases.map(c=>({case_id:c.case_id,task:c.task,trusted:c.trusted,forced_stop_reason:c.forced_stop_reason}))};
+}
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url)){
  const [command,...args]=process.argv.slice(2);
  if(command==='prepare'&&args.length===1)write(args[0],prepare());
+ else if(command==='request'&&args.length===2)write(args[1],executorRequest(JSON.parse(readFileSync(args[0]))));
  else if(command==='check'&&args.length===3){const input=JSON.parse(readFileSync(args[0])),output=JSON.parse(readFileSync(args[1])),report=evaluate(input,output);write(args[2],report);if(report.reports.some(r=>r.integrity_errors.length))process.exitCode=1;}
  else if(command==='run'&&args.length>=4&&args[2]==='--'){
-   const request=readFileSync(args[0]),r=spawnSync(args[3],args.slice(4),{input:request,encoding:'utf8',timeout:300000,maxBuffer:8*1024*1024,shell:false});
+   const request=JSON.stringify(executorRequest(JSON.parse(readFileSync(args[0])))),r=spawnSync(args[3],args.slice(4),{input:request,encoding:'utf8',timeout:300000,maxBuffer:8*1024*1024,shell:false});
    if(r.status!==0)throw Error('External executor failed; no model verification claimed: '+String(r.stderr??r.error).slice(0,2000));
    const output=JSON.parse(r.stdout);write(args[1],output);
- }else throw Error('Usage: prepare INPUT; check INPUT RESULTS REPORT; run INPUT RESULTS -- EXECUTABLE [ARGS...]');
+ }else throw Error('Usage: prepare INPUT; request INPUT REQUEST; check INPUT RESULTS REPORT; run INPUT RESULTS -- EXECUTABLE [ARGS...]');
 }

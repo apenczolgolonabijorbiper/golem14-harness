@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 FILES = (
     'server/cognitive-task.mjs', 'server/cognitive-reference.mjs', 'server/cognitive-task.test.mjs',
     'processor/cognitive-tool.mjs', 'integration/COGNITIVE_TASK.sudo.md',
+    'server/cognitive-evaluation.test.mjs',
     'docs/COGNITIVE_TASKS.md', 'docs/COGNITIVE_CONFORMANCE.md',
     'schemas/cognitive-task.schema.json', 'schemas/cognitive-result.schema.json',
     'schemas/cognitive-learning.schema.json', 'schemas/cognitive-context.schema.json',
@@ -102,7 +103,7 @@ def build(output):
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(data)
         subprocess.run(['node', '--test', 'server/memory-core.test.mjs', 'server/cognitive-task.test.mjs',
-                        'server/application-source.test.mjs',
+                        'server/cognitive-evaluation.test.mjs', 'server/application-source.test.mjs',
                         'server/profile-inspection.test.mjs',
                         'server/software-development-template.test.mjs',
                         'server/purpose-guidance.test.mjs',
