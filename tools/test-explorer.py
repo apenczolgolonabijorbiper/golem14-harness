@@ -31,7 +31,7 @@ class ExplorerTests(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name) / 'checkout'
         self.root.mkdir()
-        for name in ['processor', 'server', 'adapters', 'integration', 'tools', 'schemas', 'docs', 'cognition']:
+        for name in ['processor', 'server', 'adapters', 'integration', 'tools', 'schemas', 'docs', 'cognition', 'profiles']:
             shutil.copytree(ROOT / name, self.root / name,
                             ignore=shutil.ignore_patterns('__pycache__', 'node_modules', 'architecture-explorer.html'))
         for name in ['README.md', 'VERSION', 'LICENSE']:
@@ -116,6 +116,8 @@ class ExplorerTests(unittest.TestCase):
         self.assertEqual(entries['docs/architecture-explorer.html'], self.output.read_bytes())
         self.assertEqual(self.data()[1]['version'], '9.8.7')
         self.assertNotIn('STALE HTML', entries['docs/architecture-explorer.html'].decode())
+        self.assertIn('profiles/templates/software-development-tfs-git/README.md',
+                      {doc['path'] for doc in self.data()[1]['docs']})
         self.assertNotIn('tools/build-explorer.py', entries)
         self.assertFalse(any(name.startswith('tools/explorer/') for name in entries))
 

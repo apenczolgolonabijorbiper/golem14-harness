@@ -51,7 +51,8 @@ def build(output):
                             imports=[x for x in imports if x.startswith('.')], code=code))
     docpaths = [ROOT / 'README.md', ROOT / 'integration/AGENTS.distribution.md',
                 *sorted((ROOT / 'docs').glob('*.md')),
-                *sorted((ROOT / 'integration').glob('SETUP.*.md'))]
+                *sorted((ROOT / 'integration').glob('SETUP.*.md')),
+                *sorted((ROOT / 'profiles/templates').glob('*/README.md'))]
     data = dict(version=(ROOT / 'VERSION').read_text(encoding='utf-8').strip(),
                 commit=revision, source_date=date,
                 release_notes=(ROOT / 'docs/RELEASE_NOTES.md').read_text(encoding='utf-8'),

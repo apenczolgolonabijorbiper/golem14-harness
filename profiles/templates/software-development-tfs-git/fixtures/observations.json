@@ -1,0 +1,61 @@
+{
+  "work": {
+    "kind": "feature_profile",
+    "section": "work-items",
+    "lines": [
+      "scope=demo-org",
+      "id=10 System.WorkItemType=Epic",
+      "id=11 System.WorkItemType=Feature",
+      "id=17 System.WorkItemType=Task",
+      "id=19 System.WorkItemType=Bug",
+      "id=10 System.LinkTypes.Hierarchy-Forward target=11",
+      "id=17 System.LinkTypes.Hierarchy-Reverse target=11",
+      "id=17 System.LinkTypes.Dependency-Forward target=19",
+      "id=19 System.LinkTypes.Dependency-Reverse target=17",
+      "id=17 System.AssignedTo={id:demo-user-1, displayName:Demo A}",
+      "id=17 System.State=New from=2026-01-01T00:00:00Z to=2026-01-02T00:00:00Z",
+      "id=17 System.State=Active from=2026-01-03T00:00:00Z",
+      "historical stored identifier: tracker/demo-org/WI-21",
+      "separate organization demo-other has id=17 System.WorkItemType=Task"
+    ]
+  },
+  "commit": {
+    "kind": "git_commit_digest",
+    "section": "git-history",
+    "lines": [
+      "repository=demo-repo format=sha1 oid=1111111111111111111111111111111111111111",
+      "author=Demo A authorTime=2026-01-03T01:00:00Z",
+      "committer=Demo C committerTime=2026-01-03T02:00:00Z",
+      "message=Fixes WI-19 (demo-org)",
+      "first-parent, rename detection enabled: R100 Old Path.txt -> New Path.txt",
+      "first-parent binary numstat: - - assets/Example.bin"
+    ]
+  },
+  "mirror": {
+    "kind": "git_commit_digest",
+    "section": "git-history",
+    "lines": [
+      "repository=demo-mirror format=sha1 oid=1111111111111111111111111111111111111111",
+      "commit metadata omitted"
+    ]
+  },
+  "sha256": {
+    "kind": "git_commit_digest",
+    "section": "git-history",
+    "lines": [
+      "repository=demo-repo format=sha256 oid=2222222222222222222222222222222222222222222222222222222222222222",
+      "abbreviated second object=abcdef0 (unresolved)",
+      "mismatched candidate format=sha256 oid=1111111111111111111111111111111111111111 (unresolved)"
+    ]
+  },
+  "report": {
+    "kind": "chat_note",
+    "section": "chat",
+    "lines": [
+      "speaker label=Demo A (unlinked chat participant)",
+      "Demo A: WI-17 (demo-org) smoke check passed on demo build A.",
+      "[producer marks remaining data truncated]",
+      "Demo A: WI-19 regression check"
+    ]
+  }
+}

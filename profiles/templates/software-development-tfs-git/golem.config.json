@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "profile": {
+    "path": "profiles/core.md",
+    "vocabulary": "profiles/vocabulary.json",
+    "sections": [
+      {"id": "work-items", "path": "profiles/work-items.md", "kinds": ["feature_profile"]},
+      {"id": "git-history", "path": "profiles/git-history.md", "kinds": ["git_commit_digest"]},
+      {"id": "chat", "path": "profiles/chat.md", "kinds": ["chat_note"]}
+    ]
+  }
+}

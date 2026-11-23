@@ -1,0 +1,437 @@
+{
+  "classification": "source_assertion",
+  "entities": {
+    "tracker-system": {
+      "kind": "system",
+      "observations": [
+        "work"
+      ]
+    },
+    "git-system": {
+      "kind": "system",
+      "observations": [
+        "commit",
+        "mirror",
+        "sha256"
+      ]
+    },
+    "item-10": {
+      "kind": "epic",
+      "observations": [
+        "work"
+      ],
+      "external_id": {
+        "scheme": "tracker",
+        "namespace": "demo-org",
+        "value": "10"
+      }
+    },
+    "item-11": {
+      "kind": "feature",
+      "observations": [
+        "work"
+      ],
+      "external_id": {
+        "scheme": "tracker",
+        "namespace": "demo-org",
+        "value": "11"
+      }
+    },
+    "item-17": {
+      "kind": "work-item",
+      "observations": [
+        "work",
+        "report"
+      ],
+      "external_id": {
+        "scheme": "tracker",
+        "namespace": "demo-org",
+        "value": "17"
+      }
+    },
+    "item-19": {
+      "kind": "defect",
+      "observations": [
+        "work",
+        "commit"
+      ],
+      "external_id": {
+        "scheme": "tracker",
+        "namespace": "demo-org",
+        "value": "19"
+      }
+    },
+    "item-legacy": {
+      "kind": "work-item",
+      "observations": [
+        "work"
+      ],
+      "external_id": {
+        "scheme": "tracker",
+        "namespace": "demo-org",
+        "value": "WI-21"
+      }
+    },
+    "other-item-17": {
+      "kind": "work-item",
+      "observations": [
+        "work"
+      ],
+      "external_id": {
+        "scheme": "tracker",
+        "namespace": "demo-other",
+        "value": "17"
+      }
+    },
+    "tracker-person-a": {
+      "kind": "person",
+      "observations": [
+        "work"
+      ],
+      "external_id": {
+        "scheme": "tracker-person",
+        "namespace": "demo-org",
+        "value": "demo-user-1"
+      }
+    },
+    "git-author-a": {
+      "kind": "person",
+      "observations": [
+        "commit"
+      ]
+    },
+    "chat-speaker-a": {
+      "kind": "person",
+      "observations": [
+        "report"
+      ]
+    },
+    "repo-original": {
+      "kind": "repository",
+      "observations": [
+        "commit",
+        "sha256"
+      ],
+      "external_id": {
+        "scheme": "git-repository",
+        "namespace": "demo-registry",
+        "value": "demo-repo"
+      }
+    },
+    "repo-mirror": {
+      "kind": "repository",
+      "observations": [
+        "mirror"
+      ],
+      "external_id": {
+        "scheme": "git-repository",
+        "namespace": "demo-registry",
+        "value": "demo-mirror"
+      }
+    },
+    "commit-original": {
+      "kind": "commit",
+      "observations": [
+        "commit"
+      ],
+      "external_id": {
+        "scheme": "git-commit",
+        "namespace": "demo-repo:sha1",
+        "value": "1111111111111111111111111111111111111111"
+      }
+    },
+    "commit-mirror": {
+      "kind": "commit",
+      "observations": [
+        "mirror"
+      ],
+      "external_id": {
+        "scheme": "git-commit",
+        "namespace": "demo-mirror:sha1",
+        "value": "1111111111111111111111111111111111111111"
+      }
+    },
+    "commit-sha256": {
+      "kind": "commit",
+      "observations": [
+        "sha256"
+      ],
+      "external_id": {
+        "scheme": "git-commit",
+        "namespace": "demo-repo:sha256",
+        "value": "2222222222222222222222222222222222222222222222222222222222222222"
+      }
+    },
+    "path-old": {
+      "kind": "source-file",
+      "observations": [
+        "commit"
+      ],
+      "external_id": {
+        "scheme": "git-path",
+        "namespace": "demo-repo",
+        "value": "Old Path.txt"
+      }
+    },
+    "path-new": {
+      "kind": "source-file",
+      "observations": [
+        "commit"
+      ],
+      "external_id": {
+        "scheme": "git-path",
+        "namespace": "demo-repo",
+        "value": "New Path.txt"
+      }
+    },
+    "path-binary": {
+      "kind": "source-file",
+      "observations": [
+        "commit"
+      ],
+      "external_id": {
+        "scheme": "git-path",
+        "namespace": "demo-repo",
+        "value": "assets/Example.bin"
+      }
+    }
+  },
+  "claims": {
+    "epic-feature": {
+      "subject": "item-10",
+      "predicate": "parent_of",
+      "object": {
+        "entity_id": "item-11"
+      },
+      "observation": "work",
+      "quote": "id=10 System.LinkTypes.Hierarchy-Forward target=11",
+      "attributed_to": "tracker-system"
+    },
+    "feature-task": {
+      "subject": "item-11",
+      "predicate": "parent_of",
+      "object": {
+        "entity_id": "item-17"
+      },
+      "observation": "work",
+      "quote": "id=17 System.LinkTypes.Hierarchy-Reverse target=11",
+      "attributed_to": "tracker-system"
+    },
+    "dependency": {
+      "subject": "item-17",
+      "predicate": "precedes",
+      "object": {
+        "entity_id": "item-19"
+      },
+      "observation": "work",
+      "quote": "id=17 System.LinkTypes.Dependency-Forward target=19",
+      "attributed_to": "tracker-system"
+    },
+    "assignee": {
+      "subject": "item-17",
+      "predicate": "assigned_to",
+      "object": {
+        "entity_id": "tracker-person-a"
+      },
+      "observation": "work",
+      "quote": "id=17 System.AssignedTo={id:demo-user-1, displayName:Demo A}",
+      "attributed_to": "tracker-system"
+    },
+    "type-10": {
+      "subject": "item-10",
+      "predicate": "has_work_item_type",
+      "object": {
+        "value": "Epic"
+      },
+      "observation": "work",
+      "quote": "id=10 System.WorkItemType=Epic",
+      "attributed_to": "tracker-system"
+    },
+    "type-11": {
+      "subject": "item-11",
+      "predicate": "has_work_item_type",
+      "object": {
+        "value": "Feature"
+      },
+      "observation": "work",
+      "quote": "id=11 System.WorkItemType=Feature",
+      "attributed_to": "tracker-system"
+    },
+    "type-17": {
+      "subject": "item-17",
+      "predicate": "has_work_item_type",
+      "object": {
+        "value": "Task"
+      },
+      "observation": "work",
+      "quote": "id=17 System.WorkItemType=Task",
+      "attributed_to": "tracker-system"
+    },
+    "type-19": {
+      "subject": "item-19",
+      "predicate": "has_work_item_type",
+      "object": {
+        "value": "Bug"
+      },
+      "observation": "work",
+      "quote": "id=19 System.WorkItemType=Bug",
+      "attributed_to": "tracker-system"
+    },
+    "state-new": {
+      "subject": "item-17",
+      "predicate": "has_state",
+      "object": {
+        "value": "New"
+      },
+      "observation": "work",
+      "quote": "id=17 System.State=New from=2026-01-01T00:00:00Z to=2026-01-02T00:00:00Z",
+      "attributed_to": "tracker-system",
+      "interval": [
+        "2026-01-01T00:00:00Z",
+        "2026-01-02T00:00:00Z"
+      ]
+    },
+    "state-active": {
+      "subject": "item-17",
+      "predicate": "has_state",
+      "object": {
+        "value": "Active"
+      },
+      "observation": "work",
+      "quote": "id=17 System.State=Active from=2026-01-03T00:00:00Z",
+      "attributed_to": "tracker-system",
+      "interval": [
+        "2026-01-03T00:00:00Z",
+        null
+      ]
+    },
+    "repo-original": {
+      "subject": "commit-original",
+      "predicate": "in_repository",
+      "object": {
+        "entity_id": "repo-original"
+      },
+      "observation": "commit",
+      "quote": "repository=demo-repo format=sha1 oid=1111111111111111111111111111111111111111",
+      "attributed_to": "git-system"
+    },
+    "repo-mirror": {
+      "subject": "commit-mirror",
+      "predicate": "in_repository",
+      "object": {
+        "entity_id": "repo-mirror"
+      },
+      "observation": "mirror",
+      "quote": "repository=demo-mirror format=sha1 oid=1111111111111111111111111111111111111111",
+      "attributed_to": "git-system"
+    },
+    "repo-sha256": {
+      "subject": "commit-sha256",
+      "predicate": "in_repository",
+      "object": {
+        "entity_id": "repo-original"
+      },
+      "observation": "sha256",
+      "quote": "repository=demo-repo format=sha256 oid=2222222222222222222222222222222222222222222222222222222222222222",
+      "attributed_to": "git-system"
+    },
+    "author": {
+      "subject": "commit-original",
+      "predicate": "authored_by",
+      "object": {
+        "entity_id": "git-author-a"
+      },
+      "observation": "commit",
+      "quote": "author=Demo A authorTime=2026-01-03T01:00:00Z",
+      "attributed_to": "git-system"
+    },
+    "commit-time": {
+      "subject": "commit-original",
+      "predicate": "committed_at",
+      "object": {
+        "value": "2026-01-03T02:00:00Z"
+      },
+      "observation": "commit",
+      "quote": "committer=Demo C committerTime=2026-01-03T02:00:00Z",
+      "attributed_to": "git-system"
+    },
+    "defect-reference": {
+      "subject": "commit-original",
+      "predicate": "references",
+      "object": {
+        "entity_id": "item-19"
+      },
+      "observation": "commit",
+      "quote": "message=Fixes WI-19 (demo-org)",
+      "attributed_to": "git-author-a"
+    },
+    "touch-old": {
+      "subject": "commit-original",
+      "predicate": "touches",
+      "object": {
+        "entity_id": "path-old"
+      },
+      "observation": "commit",
+      "quote": "first-parent, rename detection enabled: R100 Old Path.txt -> New Path.txt",
+      "attributed_to": "git-system"
+    },
+    "touch-new": {
+      "subject": "commit-original",
+      "predicate": "touches",
+      "object": {
+        "entity_id": "path-new"
+      },
+      "observation": "commit",
+      "quote": "first-parent, rename detection enabled: R100 Old Path.txt -> New Path.txt",
+      "attributed_to": "git-system"
+    },
+    "touch-binary": {
+      "subject": "commit-original",
+      "predicate": "touches",
+      "object": {
+        "entity_id": "path-binary"
+      },
+      "observation": "commit",
+      "quote": "first-parent binary numstat: - - assets/Example.bin",
+      "attributed_to": "git-system"
+    },
+    "reported-smoke": {
+      "subject": "item-17",
+      "predicate": "reports_result",
+      "object": {
+        "value": "smoke check passed on demo build A."
+      },
+      "observation": "report",
+      "quote": "Demo A: WI-17 (demo-org) smoke check passed on demo build A.",
+      "attributed_to": "chat-speaker-a"
+    }
+  },
+  "warnings": [
+    {
+      "code": "multiple_active_values",
+      "object_id": "item-17"
+    },
+    {
+      "code": "unused_entity",
+      "object_id": "item-legacy"
+    },
+    {
+      "code": "unused_entity",
+      "object_id": "other-item-17"
+    }
+  ],
+  "overlap_variant": {
+    "observation": "work",
+    "claim": "state-active",
+    "quote": "id=17 System.State=Active from=2026-01-02T00:00:00Z",
+    "from": "2026-01-02T00:00:00Z"
+  },
+  "unsupported_outcomes": [
+    "No implementation, resolved defect, verified test or review from Fixes WI-19.",
+    "No result or additional reference from the unfinished line after the truncation marker.",
+    "No identity merge for the three Demo A labels or for same-number tracker items across scopes.",
+    "No commit entity for abbreviated or mismatched object IDs.",
+    "No line counts for the binary path and no identity merge for the renamed paths.",
+    "No reverse dependency from the Predecessor link. It repeats the same direction."
+  ]
+}
