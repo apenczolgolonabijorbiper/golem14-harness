@@ -1,15 +1,43 @@
-# Golem XIV Harness 0.11.0
+# Golem XIV Harness 0.12.0
 
-## Unreleased — memory-backed cognitive tasks
+Released 2026-11-24.
 
 - Add host-neutral cognitive task/context/result/learning v1 contracts, bounded
-  committed evidence reads, intent classification and branching conversation links.
-- Add read-only answer validation and separately authorized, idempotent hypothesis
-  publication with correction history and unknown-confidence capability.
-- Package SudoLang prompts, independent conformance tests and 18 semantic model
-  evaluation cases. Actual-model verification is pending: the vendor executor
-  failed before inference in this environment. No release or consumer upgrade
-  is claimed by these implementation notes.
+  snapshot-bound evidence retrieval, explicit intent and branching reply links.
+- Support grounded read-only answers without observation consumption or a write
+  lease; keep proposed learning separate and publish authorized hypotheses
+  transactionally with idempotency, premise references and correction history.
+- Include a standalone reference integration, SudoLang task prompts, deterministic
+  conformance tests and an evaluation runner that withholds scoring rubrics from
+  executors. Export standalone requests for ChatGPT Work or external executors.
+- Ship the fresh ChatGPT Work acceptance evidence: all 18 retained responses pass
+  integrity checks and individual semantic review. Exact inputs/outputs, hashes,
+  configuration and limitations remain available with the package. The same
+  agent performed the subsequent review; model identifiers, inference settings,
+  actual token usage and cost were unavailable. Synthetic counters do not measure
+  model performance. Coverage is limited to the retained synthetic cases.
+- Include the inactive software-development TFS/Git profile template with chat,
+  work-item and commit guidance, scoped identities, vocabulary and offline
+  fixtures. Copy and review its placeholders before explicitly selecting it;
+  installation does not activate a domain profile automatically.
+- Resolve the software-development test fixture's temporary path before instance
+  initialization, handling macOS's /var to /private/var alias while preserving
+  the initializer's linked-ancestor rejection.
+- Refresh the packaged offline architecture explorer.
+
+Runtime requirements remain Node 22.12+, Python 3.12+ and Git for the reference
+adapter. Graph v2, hypotheses v1 and vocabulary v2 remain unchanged. The
+hypotheses schema additionally permits unknown confidence where the documented
+capability is supported. Hosts negotiate cognitive and learning capabilities
+before using them; read-only cognition does not imply writeback authorization.
+
+Upgrade an existing canonical instance by pausing executors, draining/releasing
+active leases, verifying the package, replacing the complete engine directory
+and validating before resuming. No instance reset or history rewrite is required.
+Hosts independently pin and validate this package. This release publishes the
+Harness only; it does not upgrade a host, consuming application or private data.
+
+# Golem XIV Harness 0.11.0
 
 - Extend the reference candidate writer to draft questions, hypotheses and chat
   events together with graph/index/journal in one preview/apply (VP-020).
