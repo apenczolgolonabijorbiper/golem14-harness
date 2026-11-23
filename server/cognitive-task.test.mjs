@@ -116,3 +116,37 @@ test('packaged JSON-lines reference host discovers guidance and supports a bound
   const head=f.git('rev-parse','HEAD'),rows=command(process.execPath,[join(harness,'processor/cognitive-tool.mjs'),'--instance',f.root],{input}).split('\n').map(x=>JSON.parse(x));
   assert.deepEqual(rows[0].result.binding,v.binding);assert.ok(rows[0].result.guidance.guidance);assert.equal(rows[3].result.claims.length,0);assert.equal(rows[4].result.usage.context_requests,1);assert.equal(f.git('rev-parse','HEAD'),head);assert.equal(f.git('status','--porcelain'),'');
 });
+
+test('cognitive retrieval keeps ambiguous labels distinct and bounds ordered multi-hop expansion', async () => {
+  const state = referenceState();
+  const {graph} = state;
+  const alpha = graph.entities[0];
+  graph.entities.push(
+    {...alpha, id: 'ent-other-alpha'},
+    {...alpha, id: 'ent-intermediate', label: 'Intermediate'},
+    {...alpha, id: 'ent-destination', label: 'Destination'},
+  );
+  delete graph.claims[0].depends_on;
+  graph.claims[0].object = {entity_id: 'ent-intermediate'};
+  graph.claims[1].subject_id = 'ent-intermediate';
+  graph.claims[1].object = {entity_id: 'ent-destination'};
+  graph.claims[2].subject_id = 'ent-other-alpha';
+  const view = createMemoryReadView({binding, state, guidance: {}});
+  const session = createCognitiveSession(task(), view, {now: () => 0});
+  session.beginRound();
+
+  const ambiguous = await session.context({query: 'Alpha', hops: 1});
+  assert.deepEqual(ambiguous.entities.filter(entity => entity.label === 'Alpha').map(entity => entity.id).sort(),
+    ['ent-one', 'ent-other-alpha']);
+  const scoped = {entity_id: 'ent-one', hops: 2};
+  const oneHop = await session.context({...scoped, hops: 1});
+  assert.deepEqual(oneHop.claims.map(claim => claim.id), ['clm-1']);
+  const twoHops = await session.context(scoped);
+  assert.deepEqual(twoHops.claims.map(claim => claim.id), ['clm-1', 'clm-2']);
+  assert.equal(twoHops.truncated, false);
+
+  const bounded = await session.context({...scoped, limit: 1});
+  assert.deepEqual(bounded.claims.map(claim => claim.id), ['clm-1']);
+  assert.deepEqual(bounded.truncation_reasons, ['claim_limit']);
+  assert.deepEqual(await session.context({...scoped, limit: 1}), bounded);
+});
