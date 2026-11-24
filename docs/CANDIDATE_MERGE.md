@@ -26,6 +26,10 @@ is a responsibility declaration, not proof that those checks were performed.
 The helper rechecks captured input bytes before writing to catch accidental
 mutation, but cannot provide an atomic snapshot of a live directory.
 
+For provider-based processing, use `rebaseChanges` and semantic changes as
+defined in [MEMORY_PROVIDERS.md](MEMORY_PROVIDERS.md). The directory/graph
+merge interface in this document is confined to the JSON reference backend.
+
 ## Merge rules
 
 | State | Result |

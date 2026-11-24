@@ -35,3 +35,31 @@ export function createMemoryReadView({binding,state,guidance}){
     },
   };
 }
+
+// Normal host path: immutable provider handles, bounded context and source reads.
+export async function createProviderReadView(provider,snapshot){
+  const {createMemory}=await import('./provider-memory.mjs');
+  const {records,evidenceBytes}=await import('./memory-contract.mjs');
+  const {parseSource}=await import('./observation.mjs');
+  const memory=createMemory(provider),meta=await memory.open(snapshot);
+  const binding={instance_id:meta.instance_id,snapshot_id:meta.snapshot_id,guidance_id:meta.policy_id};
+  const counts=await provider.counts({snapshot});
+  const pending_count=counts.observations-counts.processed;
+  return {binding,pending_count,guidance:structuredClone(meta.policy),
+    async context(options){
+      const filters={...options},temporalUnavailable=filters.current&&!meta.policy.vocabulary?.single_valued?.length;
+      if(temporalUnavailable)delete filters.current;
+      const c=await memory.context(snapshot,filters),sourceSet=new Set(c.sources.map(s=>s.id));
+      const claims=c.claims.filter(c=>c.sources.every(s=>sourceSet.has(s.observation_id))),ids=new Set(claims.map(c=>c.id));
+      const missing=claims.flatMap(c=>(c.depends_on??[]).filter(id=>!ids.has(id)));
+      return {protocol_version:1,binding,request_id:JSON.stringify(options).slice(0,180)||'context',claims,entities:c.entities,sources:c.sources.map(({id,sha256,recorded_at})=>({id,sha256,recorded_at})),selection:{current:c.temporal?.current??false,alternatives:c.current_selection??[],hidden:c.hidden??{},knowledge:c.temporal?.knowledge??'Snapshot evidence; recency not inferred'},dependencies:claims.map(c=>({claim_id:c.id,premise_ids:c.depends_on??[]})),warnings:[...c.warnings.map(w=>w.message),...(temporalUnavailable?['No single-valued policy selected; temporal recency was not inferred.']:[]),...(missing.length?['Dependencies omitted; retrieve claim_ids before deriving conclusions.']:[]),c.knowledge].slice(0,100),truncated:!!c.truncated||missing.length>0||claims.length<c.claims.length,truncation_reasons:[...(c.truncation_reasons??[]),...(missing.length?['dependencies_omitted']:[]),...(claims.length<c.claims.length?['source_limit']:[])],pending_count,valid_at:options.valid_at??null,method:c.method};
+    },
+    async source(id,{start,length,max_bytes}){
+      const row=await memory.read(snapshot,'processed',id);if(!row)throw Error('Source missing or unprocessed');
+      const descriptor=await memory.read(snapshot,'observations',id);
+      const raw=await evidenceBytes(provider,snapshot,id),s=parseSource(descriptor.path,new TextDecoder('utf-8',{fatal:true}).decode(raw));
+      let text='',bytes=0;for(const cp of s.body.slice(start,start+length)){const n=Buffer.byteLength(cp,'utf8');if(bytes+n>max_bytes)break;text+=cp;bytes+=n;}
+      return {binding,id,sha256:s.sha256,start,text,truncated:start>0||text.length<s.body.length,processed:true};
+    },
+  };
+}

@@ -60,3 +60,11 @@ goal-driven cognition. The host binds committed memory and guidance, schedules
 finite invocations and retains linked conversation messages. User and Golem
 questions can branch; inferred intent never grants action/write authorization.
 This read-only answer path is separate from observation-batch processing.
+
+## Provider-aware host integration
+
+When the selected host advertises memory-provider-v1, follow the unchanged
+engine's docs/MEMORY_PROVIDERS.md and use scoped provider handles, bounded reads
+and semantic change sets. The file-oriented instance procedure applies only to
+the JSON reference backend. Build provider configuration/authorization outside
+the engine; use public Harness modules and its shared conformance suite.

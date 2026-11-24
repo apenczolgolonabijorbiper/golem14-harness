@@ -11,6 +11,13 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 FILES = (
+    'server/memory-contract.mjs', 'server/provider-memory.mjs', 'server/provider-validation.mjs',
+    'server/memory-transfer.mjs', 'server/observation.mjs', 'processor/provider-tool.mjs',
+    'adapters/reference-json/provider.mjs', 'adapters/template/memory-provider.mjs',
+    'adapters/conformance/provider-suite.mjs', 'adapters/conformance/provider.test.mjs',
+    'adapters/conformance/providers/corpus.mjs', 'adapters/conformance/providers/record-provider.mjs',
+    'docs/MEMORY_PROVIDERS.md', 'docs/MEMORY_PROVIDER_ACCEPTANCE.md',
+    'docs/validation/memory-providers-linux-2026-11-24.log',
     'server/cognitive-task.mjs', 'server/cognitive-reference.mjs', 'server/cognitive-task.test.mjs',
     'processor/cognitive-tool.mjs', 'integration/COGNITIVE_TASK.sudo.md',
     'server/cognitive-evaluation.test.mjs',
@@ -120,7 +127,7 @@ def build(output):
 
                         'server/claim-validation.test.mjs', 'server/domain-memory.test.mjs', 'server/candidate-merge.test.mjs',
                         'server/adapter-performance.test.mjs', 'server/candidate-writer.test.mjs', 'server/memory-timings.test.mjs',
-                        'adapters/conformance/adapter.test.mjs', 'server/neutral-core.test.mjs', 'server/subprocess.test.mjs', 'server/core-priorities.test.mjs', 'server/intake.test.mjs'],
+                        'adapters/conformance/adapter.test.mjs', 'adapters/conformance/provider.test.mjs', 'server/neutral-core.test.mjs', 'server/subprocess.test.mjs', 'server/core-priorities.test.mjs', 'server/intake.test.mjs'],
                        cwd=stage, check=True, env={**os.environ, 'GOLEM_PYTHON': os.environ.get('GOLEM_PYTHON', sys.executable)})
         for script in ['processor/test-validation.py', 'processor/test-observation-portability.py',
                        'integration/test-install-cursor.py', 'integration/test-install-codex.py']:

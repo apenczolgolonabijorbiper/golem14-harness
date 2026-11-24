@@ -7,6 +7,17 @@ purpose-guidance-v2 (including selected profiles); adapters without it follow th
 APPLICATION_PROFILES.md. A backend may add result keys but must preserve required
 semantics. Application warnings cannot downgrade mandatory validation errors.
 
+## Public provider integration
+
+New host integrations use [MEMORY_PROVIDERS.md](MEMORY_PROVIDERS.md): provider
+contract 1, logical schema 2 and public host module API 2. `openMemory` returns an
+instance-scoped provider; `createMemory` accepts it directly. Request
+`memory-provider-v1` when claiming a standalone reference cycle. The older
+file-oriented CLI below remains a reference JSON integration utility; its
+physical layout is not a requirement on other providers. The separate
+`adapters/template/memory-provider.mjs` scaffold and shared provider conformance
+suite cover new host implementations.
+
 ## Backend template and packaged reference
 
 adapters/template/adapter.mjs provides one explicit failing backend delegation per

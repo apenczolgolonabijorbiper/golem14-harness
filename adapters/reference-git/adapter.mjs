@@ -1,3 +1,5 @@
+import {createJsonProvider} from '../reference-json/provider.mjs';
+import {createProviderReadView} from '../../server/cognitive-reference.mjs';
 import {createMemoryReadView} from '../../server/cognitive-reference.mjs';
 import {validateLearning,cognitiveCapabilities} from '../../server/cognitive-task.mjs';
 import {readApplicationSource,compareSource,managedPaths,mapReader,installPath,sourceMetadata} from '../../server/application-source.mjs';
@@ -285,15 +287,47 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
       return built;
     }catch(e){rmSync(built.temporary,{recursive:true,force:true});throw e;}
   }
+  function memoryProvider(instance_id) {
+    const load=async commit=>{
+      const current=head(),selected=commit??current;
+      if(!/^(?:[0-9a-f]{40}|[0-9a-f]{64})$/.test(selected)||gitText(['rev-parse',selected+'^{commit}'])!==selected)throw new AdapterError('Snapshot unavailable');
+      exec(['merge-base','--is-ancestor',selected,current]);
+      return {snapshot_id:selected,files:new Map([...snapshot(selected)].map(([path,row])=>[path,Buffer.from(row.bytes)]))};
+    };
+    return createJsonProvider({instance_id,now,store:{load,transaction:action=>locked(async()=>{
+      const s=state();assertLocalProtocol(s);
+      const check=async change=>{
+        if(head()!==s.head)throw new AdapterError('Base snapshot changed');
+        own(state(),change.run_id);sourceCheck(s);
+        if(scan(s).malformed.length)throw new AdapterError('Processed source changed');
+        const kinds=[...new Set(s.lease.sources.map(x=>x.kind).filter(Boolean))];
+        const bound=await profileAt(s.head,kinds),working=await loadGuidance(root,{kinds});
+        if(guidanceIdentity(bound.guidance_version)!==change.policy_id||guidanceIdentity(working.guidance_version)!==change.policy_id)throw new AdapterError('Policy changed');
+      };
+      let change;
+      return action({load:()=>load(s.head),checkBindings:async c=>{change=c;await check(c);},publish:async(files,label)=>{
+        await hooks.beforeMemoryPublish?.({head:s.head});
+        await check(change);assertLocalProtocol(s);
+        const entries=new Map(),original=snapshot(s.head);
+        for(const [path,bytes]of files){instancePath(path);const before=original.get(path)?.bytes??null;
+          if(hash(before)!==hash(bytes)){
+            if(hash(file(path,{optional:true}))!==hash(before))throw new AdapterError('Preserve local changes before provider publication: '+path);
+            entries.set(path,bytes);
+          }
+        }
+        for(const path of original.keys())if(!files.has(path))throw new AdapterError('Provider removed retained state');
+        // No asynchronous callback occurs between these final fences and CAS.
+        own(state(),change.run_id);sourceCheck(s);assertLocalProtocol(s);
+        const next=publish(s,entries,[...entries.keys()],label);
+        return next;
+      }});
+    })}});
+  }
   async function cognitionView(instance_id,commit=head()) {
-    if(typeof instance_id!=='string'||!instance_id.trim()||instance_id.length>200)throw new AdapterError('Explicit stable instance_id required');
-    const read=readAt(commit),guidance=await loadGuidance(root,{read});
-    const graph=JSON.parse(utf8(blob(commit,'memory/graph.json'))),ledger=JSON.parse(utf8(blob(commit,LEDGER))),queue=JSON.parse(utf8(blob(commit,'questions/queue.json')));
-    const sources={};for(const [path,row] of snapshot(commit))if(/^inbox\/[^/]+\.md$/.test(path)){const source=parseSource(path,utf8(row.bytes));sources[source.id]=source;}
-    const layout=await resolveLayout(root,{read}),hypotheses=JSON.parse(utf8(blob(commit,layout.hypotheses_path)));
-    return createMemoryReadView({binding:{instance_id,snapshot_id:commit,guidance_id:guidanceIdentity(guidance.guidance_version)},state:{graph,ledger,queue,sources,hypotheses},guidance});
+    return createProviderReadView(memoryProvider(instance_id),commit);
   }
   const api={
+    async openMemory({instance_id}={}){return memoryProvider(instance_id);},
     async openCognition({instance_id}={}){return cognitionView(instance_id);},
     async publishLearning({task,proposal,authorization}={}){return locked(async()=>{
       // Authorization is a trusted host decision, never read from model output.
@@ -323,7 +357,7 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
       try{return {status:'published',head:publish(s,entries,[...entries.keys()],'reviewed-learning '+proposal.proposal_id,built.tree),receipt_path:receiptPath};}
       finally{rmSync(built.temporary,{recursive:true,force:true});}
     });},
-    async status(){const s=state();return {contract_version:1,capabilities:[...cognitiveCapabilities,'candidate-validation-v1','purpose-guidance-v2','profile-install-v1','core-policies-v2'],head:s.head,lease:{...s.lease,held:s.held},...scan(s),recovery_required:existsSync(marker)||[LEASE,LEDGER].some(path=>hash(file(path,{optional:true}))!==hash(blob(s.head,path)))};},
+    async status(){const s=state();return {contract_version:1,capabilities:[...cognitiveCapabilities,'memory-provider-v1','candidate-validation-v1','purpose-guidance-v2','profile-install-v1','core-policies-v2'],head:s.head,lease:{...s.lease,held:s.held},...scan(s),recovery_required:existsSync(marker)||[LEASE,LEDGER].some(path=>hash(file(path,{optional:true}))!==hash(blob(s.head,path)))};},
     async 'profile-status'({source}={}){if(!source)throw new AdapterError('--source is required');return profileStatus(source);},
     async 'profile-install'({source}={}){return locked(async()=>{
       if(!source)throw new AdapterError('--source is required');
@@ -358,7 +392,7 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
     async claim({max=20,required_capabilities=[]}={}){return locked(async()=>{
       if(!Number.isInteger(Number(max))||Number(max)<1||Number(max)>20)throw new AdapterError('max must be an integer in 1..20');
       const s=state();assertLocalProtocol(s);
-      for(const capability of required_capabilities)if(!['candidate-validation-v1','purpose-guidance-v2','profile-install-v1','core-policies-v2'].includes(capability))throw new AdapterError('Required capability unavailable: '+capability);
+      for(const capability of required_capabilities)if(!['memory-provider-v1','candidate-validation-v1','purpose-guidance-v2','profile-install-v1','core-policies-v2'].includes(capability))throw new AdapterError('Required capability unavailable: '+capability);
       if(sourceGuard){const checked=await profileStatus(sourceGuard);if(checked.state!=='in-sync'||checked.recovery_required)throw new AdapterError('Reviewed source drift; run profile-install for this instance');}
       if(hash(file('instance/purpose.md'))!==hash(blob(s.head,'instance/purpose.md')))throw new AdapterError('Commit instance purpose before claiming');
       const layout=await resolveLayout(root),committedLayout=await resolveLayout(root,{read:readAt(s.head)});
@@ -375,6 +409,7 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
       if(!sources.length)return {status:'no-work'};
       const run=randomUUID(),lease={schema_version:1,run_id:run,status:'processing',claimed_at:stamp(),expires_at:new Date(now()+900000).toISOString(),observation_ids:sources.map(s=>s.id),sources,...(profile?{guidance_version:profile.guidance_version}:{})};
       const entries=new Map([[LEASE,json(lease)]]),writes=[LEASE];
+      if(required_capabilities.includes('memory-provider-v1'))for(const source of sources)entries.set(source.path,file(source.path));
       if(profile){const path=`memory/runs/${run}.guidance.json`;entries.set(path,json(profile));writes.push(path);}
       const next=publish(s,entries,writes,`claim ${run}`);
       return {status:'claimed',run_id:run,head:next,expires_at:lease.expires_at,sources,...(profile?{guidance:profile.guidance,guidance_version:profile.guidance_version,guidance_boundary:profile.guidance_boundary,guidance_identity:guidanceIdentity(profile.guidance_version),guidance_path:`memory/runs/${run}.guidance.json`}:{})};
