@@ -4,6 +4,21 @@ The host must provide an LLM agent, authorized read/write tools and atomic stora
 The bundled code indexes, validates, retrieves and counts; it does not infer claims.
 An external schedule may invoke the agent but is not included or enabled.
 
+## Provider processing path
+
+Use [MEMORY_PROVIDERS.md](MEMORY_PROVIDERS.md) when the host advertises
+`memory-provider-v1`. The host supplies a snapshot/policy binding and a scoped
+provider. Retrieve logical context and exact sources, then return a semantic
+change set with journal/verification pointers. The host prepares an isolated
+candidate, runs Harness validation and atomically publishes after rechecking
+lease, source, policy and freshness fences. No graph-file edit, workspace graph
+or previous-graph path is required on this path. Cognition remains external.
+
+The named files and commands in the remaining sections describe the reference
+JSON/Git procedure. Other providers implement the same logical meanings and
+publication guarantees using their own storage. They do not reproduce this
+layout or call the JSON utilities. Unsupported versions refuse explicitly.
+
 ## Inputs and readiness
 
 Read a consistent fresh snapshot of the instance. List inbox directly, not through

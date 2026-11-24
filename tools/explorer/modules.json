@@ -153,5 +153,43 @@
     "Maintenance",
     "Synthetic realistic-size 5/10/20-source cycle probes using fresh adapters. Measures deterministic operations, not LLM inference.",
     []
+  ],
+  "server/provider-memory.mjs": [
+    "Logical memory API",
+    "Core",
+    "Provider-neutral context, semantic changes, candidate lifecycle and semantic rebasing.",
+    [
+      "Hosts supply an authorized provider handle; no physical graph argument is required."
+    ]
+  ],
+  "server/provider-validation.mjs": [
+    "Paged logical validation",
+    "Core",
+    "Snapshot-bound provenance, history and global dependency audits; exact candidate digests.",
+    []
+  ],
+  "server/memory-contract.mjs": [
+    "Provider contract",
+    "Core",
+    "Independent versions, physical selectors, canonical hashes and paged record/evidence helpers.",
+    []
+  ],
+  "server/memory-transfer.mjs": [
+    "Portable memory transfer",
+    "Integration",
+    "Checksummed logical export/import with isolated validation and host-owned atomic archive publication.",
+    []
+  ],
+  "adapters/reference-json/provider.mjs": [
+    "JSON reference provider",
+    "Integration",
+    "Converts existing JSON instances to the logical contract; keeps full-file costs inside the backend.",
+    []
+  ],
+  "processor/provider-tool.mjs": [
+    "Standalone provider launcher",
+    "Interface",
+    "Explicit JSON/Git selection and logical claim/context/apply/recover/export commands.",
+    []
   ]
 }

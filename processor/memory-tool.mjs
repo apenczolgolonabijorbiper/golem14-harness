@@ -6,16 +6,11 @@ import {resolveLayout} from '../server/instance-layout.mjs';
 import {readFile,readdir,lstat} from 'node:fs/promises';
 import {resolve,dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {createHash} from 'node:crypto';
 import {loadProfile,utf8,readInstanceFile} from '../server/application-profile.mjs';
 import {schemaErrors,validateMemory,retrieveContext,memoryStats,collectWarnings} from '../server/memory-model.mjs';
 
-export function parseSource(path,text){
-  const match=text.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);if(!match)throw Error('Incomplete source: '+path);
-  const fields=Object.create(null);for(const line of match[1].split('\n')){const m=line.match(/^([a-z_]+):\s*(.*?)\s*$/);if(!m)throw Error('Invalid source header: '+path);if(Object.hasOwn(fields,m[1]))throw Error('Duplicate source field: '+path);let value=m[2];if(value.startsWith('"')){try{value=JSON.parse(value);}catch{throw Error('Invalid quoted header: '+path);}}fields[m[1]]=value;}
-  if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(fields.id)||path!==`inbox/${fields.id}.md`||!match[2].trim()||!Number.isFinite(Date.parse(fields.recorded_at)))throw Error('Invalid source: '+path);
-  return {...fields,path,body:match[2],sha256:createHash('sha256').update(text,'utf8').digest('hex')};
-}
+export {parseSource} from '../server/observation.mjs';
+import {parseSource} from '../server/observation.mjs';
 export async function inboxNames(root){
   try{const stat=await lstat(resolve(root,'inbox'));if(stat.isSymbolicLink()||!stat.isDirectory())throw Error('Unsafe inbox directory');return await readdir(resolve(root,'inbox'));}catch(e){if(e.code==='ENOENT')return [];throw e;}
 }

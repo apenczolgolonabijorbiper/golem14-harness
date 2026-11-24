@@ -71,6 +71,17 @@ use of adapters/template as application-owned scaffolding outside the engine.
 This does not authorize modifying installed reference code or copying modified
 validation internals. Report missing capabilities for upstream maintenance.
 
+## Provider-based memory
+
+For a host advertising `memory-provider-v1`, follow docs/MEMORY_PROVIDERS.md
+and use its authorized provider handle. Read immutable guidance and bounded
+logical context, request cited source ranges, and submit semantic changes. The
+host validates/publishes them atomically. Do not request full graph edits or
+backend paths. The named instance files in the reference procedure below apply
+to JSON/Git only. Other providers keep the same identity, evidence, history,
+question/hypothesis and verification rules through the public logical API.
+Never select a different provider or migrate/reset knowledge implicitly.
+
 ## Cognition contract
 
 Resolve the layout using docs/INSTANCE_LAYOUT.md (also reported by memory-tool

@@ -20,6 +20,12 @@ research goals.
 | Metacognition | Xemantic describes reflection on earlier cognition and self-improvement loops. | Run journals, unresolved questions, and retained corrections give the host material for reviewing earlier runs. The packaged runtime has no autonomous self-improvement loop. |
 | Execution and concurrency | Xemantic describes parallel autonomous cognitions. | The host schedules runs and supplies the storage adapter. The protocol specifies leases and atomic completion. The bundled CLI validates the candidate snapshot. |
 
+The storage-independent boundary is specified in
+[MEMORY_PROVIDERS.md](MEMORY_PROVIDERS.md). Harness owns logical validity and
+retrieval meaning; the host selects/authorizes its provider and coordinates
+publication. JSON/Git is one reference backend. The independent record-provider
+conformance fixture exercises this boundary without any particular host product.
+
 ## Where an application plugs in
 
 An application writes finalized observations to a private instance. The host

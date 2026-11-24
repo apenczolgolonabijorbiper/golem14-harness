@@ -17,6 +17,15 @@ No credentials or instance data ship.
 See [the architecture mapping](docs/ARCHITECTURE_MAPPING.md) for the connection
 to Xemantic’s Golem XIV.
 
+## Logical memory integration
+
+Hosts can use the [public memory-provider contract](docs/MEMORY_PROVIDERS.md)
+for snapshot-bound record reads, bounded context and semantic changes. The
+standalone JSON/Git launcher is `processor/provider-tool.mjs`; a conforming host
+can supply another provider without changing Harness cognition. JSON remains a
+full-file reference backend with the existing capacity limits. No migration or
+release is performed by this API.
+
 ## Choose the application and data folders
 
 `--repo` selects your application's root. The installer places the engine at
