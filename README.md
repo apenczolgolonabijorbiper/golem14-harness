@@ -1,4 +1,4 @@
-# Golem native cognitive harness — 0.12.0
+# Golem native cognitive harness — 0.13.0
 
 A host-independent cognitive harness inspired by Stanisław Lem’s Golem XIV and Xemantic’s work on metacognitive AI. The host LLM performs
 interpretation by following AGENTS.md and docs/PROCESSING.md; the executable core

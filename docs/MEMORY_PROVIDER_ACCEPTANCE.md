@@ -13,7 +13,7 @@ Environment: Linux x86_64, Node v24.22.3, Python 3.12.14, Git reference backend.
 | Extended provider suite | 49/49 passed |
 | Final packaged builder / installer checks | Passed: 182/182 packaged Node tests, Python validation/portability and both installer suites |
 | Explorer / CI scope / Markdown rendering | Passed: 5 explorer checks, 4 routing checks, offline Markdown/table/Mermaid/sanitization tests |
-| Windows / macOS package checks | Pending CI on this implementation branch |
+| Windows / macOS package checks | Passed in [platform run 45351338804](https://github.com/apenczolgolonabijorbiper/golem14-harness/actions/runs/45351338804) at merged source `00aba14b49641c3deb9d17d7cc327f6f8578f503`; release commit validation remains separately observable |
 | Actual LLM evaluation | Not performed by these deterministic tests; separate cognition evidence applies |
 
 ## Acceptance mapping
@@ -25,7 +25,7 @@ Environment: Linux x86_64, Node v24.22.3, Python 3.12.14, Git reference backend.
 | Exact publication, source/policy/base/lease fences, seals and recovery (#70–#72) | Same shared suite against JSON/Git and independent record host; pre/post-commit interruption and fresh-host recovery tests |
 | No graph/file/Git dependency for the neutral core (#69/#71/#72) | Independent record host refuses ordinary whole-store reads; static boundary test; provider-backed cognition view test |
 | Preservation and portable import/export (#69/#70/#72) | Two-snapshot transfer retains source hashes/bytes, stable IDs, claim history, pinned guidance/artifacts and durable receipt/verification pointers; JSON → record → JSON fixture; corruption/truncation abort tests |
-| Supported platforms and packaging (#69/#71/#72) | Local builder must pass; Windows/macOS observed CI still required before claiming tracker acceptance complete |
+| Supported platforms and packaging (#69/#71/#72) | Local builder passed; merged-source Windows/macOS/Linux platform and capacity jobs passed in run 45351338804 |
 
 Reference JSON remains subject to full-file costs, current graph schema limits
 and the 64 MiB reference Git child-output envelope. Normal broad queries,
