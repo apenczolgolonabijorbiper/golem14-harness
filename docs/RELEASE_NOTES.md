@@ -1,3 +1,24 @@
+# Golem XIV Harness 0.13.0
+
+Released 2026-11-24.
+
+- Publish the host-neutral memory-provider v1 and public integration API v2.
+  Hosts own provider selection, physical storage, leases and atomic publication;
+  Harness owns logical records, evidence rules and semantic validation.
+- Add snapshot-bound bounded reads, semantic change sets, provider-aware cognition,
+  correction/history preservation, portable checksummed transfer and receipt recovery.
+- Include JSON/Git reference integration and an independent record-based host with
+  shared conformance cases, transactional fences and interruption/retry coverage.
+- Preserve graph v2, hypotheses v1, vocabulary v2 and existing canonical knowledge.
+  JSON still has whole-file costs and the 64 MiB reference Git output envelope;
+  this release does not add SQLite or claim support for 100 MB graphs.
+
+Node 22.12+, Python 3.12+ and Git requirements remain unchanged. Pause executors,
+drain leases and verify the complete replacement engine before resuming. Provider
+selection is a separate host-owned administrative action; no automatic migration,
+instance reset, downstream package upgrade or database enablement is performed.
+Hosts must pin this published archive and negotiate the new public contracts.
+
 # Golem XIV Harness 0.12.0
 
 Released 2026-11-24.
