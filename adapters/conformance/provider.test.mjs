@@ -133,3 +133,15 @@ test('semantic merge refuses conflicting entity changes and publication never re
   const c=await m.prepare(change);await assert.rejects(()=>m.publish(c),/lease/);
   h.advance({editEntity:true});await assert.rejects(async()=>rebaseChanges(h.provider,change,(await m.open()).snapshot_id),/Merge conflict/);
 });
+
+test('provider audit distinguishes duplicate processed IDs from integrity failures',async()=>{
+  const initial=corpus(),id=initial.rows.processed[0].id;
+  const good=recordHost(initial);assert.deepEqual(await createMemory(good.provider).audit(initial.meta.snapshot_id),[]);
+  const duplicate=structuredClone(initial);duplicate.rows.processed.push(structuredClone(duplicate.rows.processed[0]));
+  const errors=await createMemory(recordHost(duplicate).provider).audit(duplicate.meta.snapshot_id);
+  assert.deepEqual(errors,['processed: duplicate/invalid ID']);
+  for(const [field,value]of [['status','pending'],['source_file','inbox/wrong.md'],['source_sha256','b'.repeat(64)]]){
+    const bad=structuredClone(initial);bad.rows.processed[0][field]=value;
+    assert.deepEqual(await createMemory(recordHost(bad).provider).audit(bad.meta.snapshot_id),['Ledger source mismatch: '+id]);
+  }
+});

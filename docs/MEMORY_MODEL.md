@@ -126,6 +126,13 @@ lease ownership and compare-and-swap; re-read/revalidate after concurrent change
 Do not manually rewrite RELEASE.json or bypass checks in a consuming application.
 The schema checker accepts only its bundled bounded keyword vocabulary.
 
+Completion rows have one writer: the host candidate assembler (the adapter/backend
+when it owns assembly). Cognition agents do not also append rows on adapter or
+provider paths. Direct staged-file validation requires the host to supply all
+rows first; it does not generate them. Logical providers use processed records,
+not a mandatory `processed.json` file. See the
+[responsibility table](PROCESSING.md#completion-row-ownership).
+
 ## Validation rules
 
 Schema diagnostics include the failing graph path and describe shape, type, value
@@ -143,7 +150,8 @@ contains each question's ID and text.
 | `Question analysis source missing` | Every observation referenced by question analysis must exist. |
 | `Closed question needs an analyzed answer` | A closed question requires answered analysis with source observations. |
 | `Invalid processed ledger` | Supply a version 1 ledger with an observations array. |
-| `Ledger source mismatch` | Each processed row needs a unique ID and matching source path and hash. |
+| `Duplicate processed row` | Exactly one completion row is allowed per observation ID; fix the candidate assembler, never silently deduplicate. |
+| `Ledger source mismatch` | Each row must have status `processed`, an existing source and matching source path and hash. |
 | `Processed source missing from graph` | Each ledger source must be represented in the graph. |
 | `Graph source mismatch` | The graph source path, hash and timestamp must match the inbox observation. |
 | `Graph source is not processed` | Stage a matching processed ledger row for every graph source. |
@@ -176,6 +184,11 @@ contains each question's ID and text.
 | `Invalid claim dependency` | Every dependency exists and differs from the claim itself. |
 | `Claim dependency cycle` | Dependency edges must be acyclic; cyclic IDs are named. |
 | `Readable queue missing question` | Include the question ID and text in the Markdown queue. |
+
+Provider validation independently enforces unique IDs in each logical collection:
+`processed: duplicate/invalid ID` rejects repeated completion IDs before checking
+source integrity. It does not accept or silently deduplicate malformed records.
+The JSON duplicate diagnostic above is specific to `validateMemory`.
 
 ## Validation warnings
 

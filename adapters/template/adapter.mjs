@@ -21,3 +21,7 @@ export function createAdapter(backend) {
 // atomic lease acquisition/renewal, isolated candidate capture, prior-graph validation,
 // expected-version completion, persistence verification and owned-lease error release.
 // Do not substitute independent file writes for a transaction or ignore an absent hook.
+
+// Exactly one backend candidate assembler writes completion rows from the current
+// committed snapshot and claimed sources, before validation. Agents supply semantic
+// artifacts and must not also append rows or edit reserved ledger/lease state.

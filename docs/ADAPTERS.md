@@ -88,6 +88,23 @@ Ref conflicts retain the lease and require reread, merge and revalidation. Expir
 owners cannot complete or renew; an error release may clear its own expired lease
 only if it has not been replaced. Never clear another run's ownership.
 
+## Completion-row ownership
+
+The reference adapter is the sole completion-row writer for its candidate.
+`validate --run` and `commit --run` derive one new row per claimed source from
+committed HEAD, preserving prior rows. The cognition agent writes semantic
+artifacts only; it must not append to `memory/processed.json`, edit the lease or
+include either reserved file in `--outputs`. Manual protocol edits are refused
+without substituting them into the candidate. Candidate validation leaves the
+working ledger/lease and HEAD unchanged; completion publishes them atomically.
+
+For custom backends, designate exactly one host assembly component as the row
+writer. A host using direct staged-file validation must assemble its own complete
+ledger first; the standalone validator never generates rows. Logical providers
+instead derive processed/source records from semantic changes, without requiring
+physical `processed.json` files. See
+[completion responsibilities](PROCESSING.md#completion-row-ownership).
+
 ## Snapshot and concurrency guarantees
 
 Committed HEAD is authoritative for lease and ledger. Local edits to these files

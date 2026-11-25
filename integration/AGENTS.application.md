@@ -41,6 +41,11 @@ staging, prior-graph validation and atomic completion protocol. If this environm
 cannot supply its required transactional guarantees, report the missing adapter
 and do not mark observations processed. Never bypass the integrity gate.
 
+Exactly one host candidate assembler writes completion rows. On adapter/provider
+paths, agents supply semantic artifacts/changes and do not also edit the ledger
+or lease. Direct staged-file validation requires the host to assemble the complete
+ledger first; the validator does not generate rows. See PROCESSING.md in the engine.
+
 ## Verification
 
 Run relevant application tests, invoke documented harness validation against the

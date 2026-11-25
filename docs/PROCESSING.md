@@ -110,10 +110,34 @@ memory/events/ and a readable summary in memory/index.md. Keep JSON and Markdown
 questions consistent; saving alone never closes a question. Preserve any linked
 historical question text in evidence and analysis. Document the semantic review.
 
+### Completion-row ownership
+
+Exactly one host candidate assembly component writes completion rows. When the
+adapter/backend assembles candidates, cognition agents supply semantic artifacts
+and never also append ledger rows. Validation must see the complete candidate,
+including proposed completion, before anything is published.
+
+| Integration | Completion-row writer | Agent/caller responsibility |
+|---|---|---|
+| Reference Git CLI `validate --run` / `commit --run` | Adapter derives rows from committed HEAD plus claimed sources in its private candidate | Write graph, queues, hypotheses, index, journal and declared artifacts; exclude reserved ledger/lease files from `--outputs`; never edit those files |
+| Direct `memory-tool.mjs validate --root STAGED_INSTANCE` | Host manually assembling the isolated snapshot | Stage one row per claimed source, preserving prior rows, before calling validation; this validator does not synthesize rows |
+| Logical provider/change set | Host transaction's assembly component uses `semanticWrites` to derive processed/source records | Submit semantic operations and claimed source identities; no agent-written processed flag, ledger file or filesystem staging is required |
+
+The reference CLI refuses manual working-tree ledger/lease edits; HEAD remains
+authoritative. Its candidate validation does not change the working ledger or
+lease. Commit atomically publishes the same assembled/validated completion.
+See [ADAPTERS.md](ADAPTERS.md) and [MEMORY_PROVIDERS.md](MEMORY_PROVIDERS.md).
+
 ### Validate before committing
 
-1. Create an isolated candidate snapshot. In its `memory/processed.json`, preserve
-   prior rows and add one row for each claimed source. The ledger has
+These steps describe the complete JSON candidate, not instructions for an agent
+to edit adapter-owned protocol files. For the reference CLI, its assembler performs
+the ledger/lease staging internally; invoke candidate `validate --run` and
+`commit --run` as documented in ADAPTERS.md. For direct staged-file validation,
+the host performs all staging below itself.
+
+1. Create an isolated candidate snapshot. Its sole completion-row writer preserves
+   prior rows in `memory/processed.json` and adds one row for each claimed source. The ledger has
    `schema_version: 1`, `updated_at` and `observations`. Each new row has `id`,
    `source_file`, `source_sha256`, `status: processed`, `processed_at`,
    `outputs` (paths) and `run` (journal path). These rows record proposed

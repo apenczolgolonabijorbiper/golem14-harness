@@ -79,3 +79,18 @@ test('integrity diagnostics have a documented explanation', () => {
     assert.ok(prefix && reference.includes('`' + prefix + '`'), `Undocumented diagnostic: ${expression}`);
   }
 });
+
+test('processed row duplicates are distinct from source integrity failures', () => {
+  const state = fixture(), row = state.ledger.observations[0];
+  assert.deepEqual(validateMemory(state.graph, state), []);
+  state.ledger.observations.push(structuredClone(row));
+  assert.deepEqual(validateMemory(state.graph, state), ['Duplicate processed row: ' + row.id]);
+  state.ledger.observations.pop();
+  for (const [field, value] of [['status','pending'], ['source_file','inbox/wrong.md'], ['source_sha256','b'.repeat(64)]]) {
+    const bad = structuredClone(state);
+    bad.ledger.observations[0][field] = value;
+    assert.deepEqual(validateMemory(bad.graph, bad), ['Ledger source mismatch: ' + row.id]);
+  }
+  delete state.sources[row.id];
+  assert.ok(validateMemory(state.graph, state).includes('Ledger source mismatch: ' + row.id));
+});

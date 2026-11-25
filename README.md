@@ -148,8 +148,10 @@ Then give an authorized LLM agent this package's AGENTS.md and processing protoc
 read/write access to ONLY the new instance, and a storage adapter capable of the
 protocol's lease/atomic completion guarantees. Tell it explicitly which instance
 to analyze. Manual analysis is the default; nothing starts by running the indexer.
-Stage the processed ledger rows before validating the complete candidate against
-the prior committed graph. See docs/PROCESSING.md for the transaction order.
+The host candidate assembler supplies completion rows before validation. With the
+reference adapter/provider, agents do not edit the ledger/lease; with direct
+staged-file validation, the host stages the rows itself. Validate the complete
+candidate against the prior committed graph. See docs/PROCESSING.md for the transaction order.
 
 ```sh
 node processor/memory-tool.mjs context --root ../my-instance --query "Test City"
