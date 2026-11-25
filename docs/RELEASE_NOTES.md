@@ -1,4 +1,6 @@
-# Unreleased — app-owner findings (#90)
+# Golem XIV Harness 0.13.1
+
+Released 2026-11-25.
 
 - VI-017 / #87: serialize local JSON indexer invocations and atomically publish
   evidence files, with synchronized contention, reader, failure and interruption
@@ -10,9 +12,19 @@
 - VI-013 / #89: align current guidance with canonical JSON layout/attribution and
   logical provider boundaries. Mark historical release material superseded for
   current setup, check documentation consistency and regenerate embedded content.
-- No schema migration, compatibility alias, application runtime reset or release
-  publication. Manual review and published-package verification remain separate.
-  See [implementation evidence](https://github.com/apenczolgolonabijorbiper/golem14-harness/blob/master/docs/verification/app-owner-plan-90.md).
+
+Runtime requirements remain Node 22.12+, Python 3.12+ and Git for the reference
+adapter. Canonical schemas and public integration contracts remain unchanged.
+The indexer guarantee covers participating local processes sharing one instance
+on supported local filesystems; it does not cover network filesystems, separate
+clones/machines, nonparticipating writers or hardware power-loss durability.
+Atomic evidence-file visibility does not imply whole-instance/cognition completion.
+
+Pause executors, drain active leases, verify the published package, replace the
+complete engine directory and validate before resuming. No instance reset,
+history rewrite, schema migration or consuming application upgrade is performed.
+Hosts independently declare compatibility and pin the verified published archive.
+See [implementation and release evidence](https://github.com/apenczolgolonabijorbiper/golem14-harness/blob/master/docs/verification/app-owner-plan-90.md).
 
 # Golem XIV Harness 0.13.0
 

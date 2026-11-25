@@ -4,8 +4,9 @@ Scope: upstream VI-017 / #87, VI-015 / #88 and VI-013 / #89, implemented in that
 order from master f3248e17de50646484a525c951cf7e48c59efcd0 (0.13.0).
 This uses synthetic fixtures; it does not rerun the consuming application's custom
 adapter reproducer, alter an installed engine/private instance, or establish
-app-owner acceptance. Publication is a separate gate after manual maintainer
-review/merge. VERSION remains unchanged until an authorized release.
+app-owner acceptance. PR #91 was merged on 2026-11-25. The authorized 0.13.1
+release finalization is tracked by #87; actual published-package verification
+remains a separate gate from implementation and CI.
 
 ## Implementation
 
@@ -66,10 +67,34 @@ must include, in the same release as their executable counterparts:
 Do not replace Git or require MCP, a distributed service or a named application.
 No schema migration or backward compatibility was added.
 
-## Remaining completion gates
+## Release finalization (2026-11-25)
 
-- Manual maintainer review/merge of the implementation PR.
-- Observe successful supported-platform CI for the reviewed head.
-- Select the patch version against current master and publish only when authorized.
-- Inspect the actual published ZIP/manifest and record which release resolves each VI.
-- Obtain consuming app-owner verification separately; upstream tests do not imply it.
+Implementation PR [#91](https://github.com/apenczolgolonabijorbiper/golem14-harness/pull/91)
+was merged as `a1aae8e1f9c6153db5c781281debb19c9f17e75f`.
+[Post-merge platform validation](https://github.com/apenczolgolonabijorbiper/golem14-harness/actions/runs/45527137859)
+passed Linux, macOS, Windows Python 3.12/3.14, capacity, explorer and routing checks.
+The earlier [release run](https://github.com/apenczolgolonabijorbiper/golem14-harness/actions/runs/45527137977)
+built successfully but skipped publication because VERSION was still 0.13.0 and
+that release already existed. PR #91's title/body claimed preparation of 0.13.1;
+its actual diff did not include a VERSION update.
+
+The finalization sets VERSION to 0.13.1, dates the release notes, regenerates the
+shipped explorer and reruns the required release builder. It changes no runtime
+code. Release 0.13.1 delivers VI-017 (#87), VI-015 (#88) and VI-013 (#89) together.
+The finalization PR records local package checks and supported-platform CI;
+issue #87 and parent #90 record the actual published ZIP checksum, manifest hash
+verification, packaged regression results and final release link after publication.
+Those publication checks must pass before upstream closure.
+
+Local release finalization on Linux (Python 3.12.14, Node 24.22.3) passed the
+staged builder: 187 Node tests, 11 Python unittest cases and both installer suites.
+The regenerated local 0.13.1 ZIP passed integrity, all 131 manifest file hashes
+and an exact archive-entry check. The build log is retained in
+[release-0.13.1-linux.log](../validation/release-0.13.1-linux.log).
+The repository-only explorer generation/persistence (5) and CI routing (4)
+tests also passed. The release workflow regenerates and persists the explorer
+from the merged release sources before publication.
+
+Consuming app-owner verification is separate from upstream completion; synthetic
+tests and publication do not claim it. Portable-script parity remains recorded
+above for #74–#77; no affected portable script specifications have shipped.
