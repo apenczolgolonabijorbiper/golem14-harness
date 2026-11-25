@@ -244,3 +244,14 @@ intent-aware linked conversations, immutable bounded evidence, grounded answers
 and separate reviewed hypothesis proposals. No observation batch or named host
 is required. Use the [SudoLang prompt](integration/COGNITIVE_TASK.sudo.md) and
 [conformance/evaluation instructions](docs/COGNITIVE_CONFORMANCE.md).
+
+## Language-neutral local core
+
+[The portable contract](portability/README.md) specifies local deterministic
+operations in versioned SudoLang, with JSON schemas, retained fixtures and exact
+reference traceability. Generate implementations for already-available target
+languages without installing Python/Node on that target. Git remains assumed for
+the Git binding. Provider APIs and deterministic cognitive bookkeeping are covered;
+inference, MCP and distributed workers are outside this contract. Generated ports
+must declare their verified coverage; generation does not certify compatibility.
+Core specifications and fixtures evolve in the same PR/release as core behavior.

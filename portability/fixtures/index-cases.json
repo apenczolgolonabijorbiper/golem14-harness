@@ -1,0 +1,20 @@
+[
+  {
+    "id": "lf",
+    "source_utf8": "---\nid: 22222222-2222-4222-8222-222222222222\nrecorded_at: 2026-01-02T00:00:00.000Z\nkind: note\n---\nBeta ships.\n",
+    "expected_evidence_utf8": "{\n  \"id\": \"22222222-2222-4222-8222-222222222222\",\n  \"source_file\": \"inbox/22222222-2222-4222-8222-222222222222.md\",\n  \"sha256\": \"810162b1e7e50a3a0b4d3e129a1fbcbe914aafaebb8120a94566790dc9a0f2a1\",\n  \"recorded_at\": \"2026-01-02T00:00:00.000Z\",\n  \"event_date\": null,\n  \"kind\": \"note\",\n  \"text\": \"Beta ships.\",\n  \"interpretation\": \"not_inferred\"\n}\n",
+    "expected_stdout": "Indexed: 22222222-2222-4222-8222-222222222222\n"
+  },
+  {
+    "id": "crlf",
+    "source_utf8": "---\r\nid: 22222222-2222-4222-8222-222222222222\r\nrecorded_at: 2026-01-02T00:00:00.000Z\r\nkind: note\r\n---\r\nBeta ships.\r\n",
+    "expected_evidence_utf8": "{\n  \"id\": \"22222222-2222-4222-8222-222222222222\",\n  \"source_file\": \"inbox/22222222-2222-4222-8222-222222222222.md\",\n  \"sha256\": \"b2ec566a5dda47a310b435b80d419d3e5b5aa1abdd35cf3289eb573aeea02b39\",\n  \"recorded_at\": \"2026-01-02T00:00:00.000Z\",\n  \"event_date\": null,\n  \"kind\": \"note\",\n  \"text\": \"Beta ships.\",\n  \"interpretation\": \"not_inferred\"\n}\n",
+    "expected_stdout": "Indexed: 22222222-2222-4222-8222-222222222222\n"
+  },
+  {
+    "id": "cr",
+    "source_utf8": "---\rid: 22222222-2222-4222-8222-222222222222\rrecorded_at: 2026-01-02T00:00:00.000Z\rkind: note\r---\rBeta ships.\r",
+    "expected_evidence_utf8": "{\n  \"id\": \"22222222-2222-4222-8222-222222222222\",\n  \"source_file\": \"inbox/22222222-2222-4222-8222-222222222222.md\",\n  \"sha256\": \"d7b505fcd757f905e4b5c9938880acabddceff36f20420a1e793326ceb00cc07\",\n  \"recorded_at\": \"2026-01-02T00:00:00.000Z\",\n  \"event_date\": null,\n  \"kind\": \"note\",\n  \"text\": \"Beta ships.\",\n  \"interpretation\": \"not_inferred\"\n}\n",
+    "expected_stdout": "Indexed: 22222222-2222-4222-8222-222222222222\n"
+  }
+]

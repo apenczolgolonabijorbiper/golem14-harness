@@ -1,0 +1,64 @@
+{
+  "schema_version": 2,
+  "updated_at": "2026-01-01T00:00:00.000Z",
+  "sources": [
+    {
+      "id": "11111111-1111-4111-8111-111111111111",
+      "path": "inbox/11111111-1111-4111-8111-111111111111.md",
+      "sha256": "6218d2e3d609c7264824354c98af06f25a8bc85f4dc6c22e0297c38e5a9dea27",
+      "recorded_at": "2026-01-01T00:00:00.000Z"
+    }
+  ],
+  "entities": [
+    {
+      "id": "team-alpha",
+      "type": "organization",
+      "label": "Łódź team",
+      "aliases": [
+        "Alpha"
+      ],
+      "source_ids": [
+        "11111111-1111-4111-8111-111111111111"
+      ],
+      "created_at": "2026-01-01T00:00:00.000Z",
+      "uncertainty": [],
+      "kind": "team",
+      "external_ids": [
+        {
+          "scheme": "ticket",
+          "namespace": "demo",
+          "value": "74"
+        }
+      ]
+    }
+  ],
+  "claims": [
+    {
+      "id": "claim-alpha",
+      "subject_id": "team-alpha",
+      "predicate": "ships",
+      "object": {
+        "value": "alpha"
+      },
+      "classification": "source_assertion",
+      "sources": [
+        {
+          "observation_id": "11111111-1111-4111-8111-111111111111",
+          "quote": "ships alpha"
+        }
+      ],
+      "asserted_at": "2026-01-01T00:00:00.000Z",
+      "valid_time": {
+        "from": "2026-01-01T00:00:00.000Z",
+        "to": null,
+        "expression": null,
+        "precision": "exact"
+      },
+      "status": "active",
+      "supersedes": [],
+      "uncertainty": [],
+      "created_at": "2026-01-01T00:00:00.000Z",
+      "attributed_to_id": "team-alpha"
+    }
+  ]
+}

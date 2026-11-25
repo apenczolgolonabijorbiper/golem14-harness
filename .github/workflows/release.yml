@@ -46,6 +46,12 @@ jobs:
           version=$(cat VERSION)
           [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
           archive="golem-cognitive-harness-${version}.zip"
+          previous=$(git describe --tags --abbrev=0 2>/dev/null || true)
+          if [ -n "$previous" ]; then
+            python3 tools/portability/check-parity.py --base "$previous"
+          else
+            python3 tools/portability/check-parity.py
+          fi
           python3 tools/build-release.py --output "$archive"
           sha256sum -c "$archive.sha256"
           if gh release view "v$version" >/dev/null 2>&1; then
