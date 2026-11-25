@@ -1,0 +1,465 @@
+5039692d377cfc148b7984fad250f306a7428a92f2eb1e816ce0c1e2334f02c2  /workspace/scratch/f8f60a2ee51b/golem14-harness/docs/architecture-explorer.html
+✔ CLI conformance: no work, age gating, claim/owner checks, renew and error release (1976.104952ms)
+✔ CLI conformance: exact candidate, successful completion, scope and no-op retry (1837.072245ms)
+✔ CLI conformance: invalid graph and changed sources keep inputs pending (1375.489078ms)
+✔ CLI conformance: unsafe output paths are rejected without releasing the lease (1217.051694ms)
+✔ CLI conformance: selected guidance, scoped sections, journal enforcement and immutable version (992.085253ms)
+✔ reference: expiry reclaim and changed processed source intervention (361.882377ms)
+✔ reference: ref movement between validation and publication retains lease and drafts (261.458322ms)
+✔ reference: source mutation after candidate validation prevents completion (322.048366ms)
+✔ reference: interrupted post-CAS completion is recovered without duplicate commit or draft loss (323.916514ms)
+✔ reference: autocrlf and attributes cannot transform candidate source bytes (516.514904ms)
+✔ reference: staged candidate changes and stale protocol files are refused (166.744204ms)
+✔ CLI conformance: warning-only completion is valid and integrity errors retain their first diagnostic (1047.316473ms)
+✔ CLI conformance: malformed sources and unavailable configured profiles write no lease (288.507455ms)
+✔ reference: post-CAS recovery preserves local protocol edits and unrelated staged work (282.344367ms)
+✔ reference: profile-guidance identity and snapshot cannot be replaced by mutable files (554.644821ms)
+✔ CLI conformance: expired lease is reclaimed and changed processed bytes are malformed (894.152115ms)
+✔ CLI conformance: concurrent claims cannot both acquire ownership (292.475566ms)
+✔ CLI optional profile-install-v1: install/status/unchanged with source and stale paths (1341.110938ms)
+✔ CLI optional purpose-guidance-v2: purpose-only immutable delivery and dirty refusal (729.506362ms)
+✔ reference: candidate assembler alone owns completion rows and reserved state (1448.894373ms)
+✔ independent record host: record reads, missing IDs, evidence paging, exact and scoped lookup (32.321679ms)
+✔ independent record host: cursors bind snapshot, selector and collection; deterministic pages (1.627223ms)
+✔ independent record host: identical prepared retries, conflicting keys and cross-snapshot cursors (21.517352ms)
+✔ independent record host: complete isolated cycle, history, artifacts, receipt recovery and idempotency (20.688453ms)
+✔ independent record host: refuses source changed without partial completion (5.907066ms)
+✔ independent record host: refuses policy changed without partial completion (4.305751ms)
+✔ independent record host: refuses lease expiry without partial completion (12.404596ms)
+✔ independent record host: refuses base changed without partial completion (6.172196ms)
+✔ independent record host: refuses interruption before publish without partial completion (10.431004ms)
+✔ independent record host: response loss recovers durable receipt and does not process twice (14.163978ms)
+✔ independent record host: candidate mutation and forged writes cannot publish (10.5402ms)
+✔ independent record host: semantic validator rejects exact quotes (4.180136ms)
+✔ independent record host: semantic validator rejects attribution (2.74715ms)
+✔ independent record host: semantic validator rejects dependency cycle (8.703019ms)
+✔ independent record host: semantic validator rejects missing replacement (3.351809ms)
+✔ independent record host: semantic validator rejects question closure (3.335044ms)
+✔ independent record host: semantic validator rejects hypothesis evidence (4.352591ms)
+✔ independent record host: semantic validator rejects verification pointer (0.738466ms)
+✔ independent record host: semantic rebase and abort retain the committed snapshot (5.475035ms)
+✔ independent record host: logical transfer preserves two snapshots, byte identities and receipts (19.686159ms)
+✔ JSON/Git reference host: record reads, missing IDs, evidence paging, exact and scoped lookup (174.600789ms)
+✔ JSON/Git reference host: cursors bind snapshot, selector and collection; deterministic pages (162.529328ms)
+✔ JSON/Git reference host: identical prepared retries, conflicting keys and cross-snapshot cursors (205.196886ms)
+✔ JSON/Git reference host: complete isolated cycle, history, artifacts, receipt recovery and idempotency (462.467105ms)
+✔ JSON/Git reference host: refuses source changed without partial completion (247.639731ms)
+✔ JSON/Git reference host: refuses policy changed without partial completion (268.017879ms)
+✔ JSON/Git reference host: refuses lease expiry without partial completion (208.181851ms)
+✔ JSON/Git reference host: refuses base changed without partial completion (217.298487ms)
+✔ JSON/Git reference host: refuses interruption before publish without partial completion (240.436544ms)
+✔ JSON/Git reference host: response loss recovers durable receipt and does not process twice (385.943616ms)
+✔ JSON/Git reference host: candidate mutation and forged writes cannot publish (279.226381ms)
+✔ JSON/Git reference host: semantic validator rejects exact quotes (167.125941ms)
+✔ JSON/Git reference host: semantic validator rejects attribution (172.522746ms)
+✔ JSON/Git reference host: semantic validator rejects dependency cycle (164.478232ms)
+✔ JSON/Git reference host: semantic validator rejects missing replacement (163.970785ms)
+✔ JSON/Git reference host: semantic validator rejects question closure (162.021925ms)
+✔ JSON/Git reference host: semantic validator rejects hypothesis evidence (171.080265ms)
+✔ JSON/Git reference host: semantic validator rejects verification pointer (147.084618ms)
+✔ JSON/Git reference host: semantic rebase and abort retain the committed snapshot (175.596983ms)
+✔ JSON/Git reference host: logical transfer preserves two snapshots, byte identities and receipts (304.535996ms)
+✔ independent ordinary lookup never enumerates unfiltered collections (1.239793ms)
+✔ missing retained evidence is unavailable, never an empty successful source (1.037335ms)
+✔ standalone public cycle starts with a provider-capable claim and no graph edits (398.388008ms)
+✔ record export imports into JSON with exact sources, history, policy and pointers (244.586774ms)
+✔ normal provider modules have no filesystem, process, adapter or host dependency (0.914155ms)
+✔ record provider preserves current ties, ambiguity, warnings and exact historical reads before output bounds (3.423344ms)
+✔ paged provider results match the established JSON semantics for unchanged memory (109.921322ms)
+✔ independent provider supplies the cognition read view using bounded host counts (1.397946ms)
+✔ semantic merge refuses conflicting entity changes and publication never reuses a read lease (4.918413ms)
+✔ provider audit distinguishes duplicate processed IDs from integrity failures (2.493677ms)
+✔ adapter metrics are opt-in, cover initialization and errors, and contain only fixed labels (476.699255ms)
+✔ tree/index metadata and recovery use bounded Git calls for twenty-source completion (902.683957ms)
+✔ recovery refuses staged mode changes and preserves the published completion (450.494593ms)
+✔ source initialization captures bytes, purpose, all section selectors and identity (610.37936ms)
+✔ source errors and conflicting options expose no partial destination (1494.462999ms)
+✔ purpose-only initialization leaves profile unselected; omitted purpose retains stub (413.889212ms)
+✔ comparison reports stale, missing and drift independently and preserves omitted purpose (99.582928ms)
+✔ selected source links and ancestor links fail closed (3.640955ms)
+✔ disjoint completed branches retain inherited ledger, exact bytes and distinct entities (354.169443ms)
+✔ identical newly processed source is refused, inherited overlap is valid (221.128639ms)
+✔ divergent concurrent claim change names the claim (124.045167ms)
+✔ claim removal and retained immutable claim mutation are refused (188.847654ms)
+✔ queue and hypotheses merge by ID and incomplete readable queue requires regeneration (286.411042ms)
+✔ queue and hypothesis concurrent edits report keyed conflicts (135.634905ms)
+✔ both changed Markdown keeps ours and requires review (241.242153ms)
+✔ run collision, evidence collision and immutable pending input edit are refused (137.47384ms)
+✔ ledger history and guidance changes are refused (116.3087ms)
+✔ existing, nested, ancestor and engine output paths never clobber files (147.074528ms)
+✔ symlink input and output parent are refused (132.268796ms)
+✔ invalid hypothesis and missing canonical layout refuse output (206.608797ms)
+✔ CLI emits parseable conflict report with failure exit; successful fast-forward validates (467.213224ms)
+✔ individually valid branches cannot introduce an entity/claim ID collision (160.286241ms)
+✔ base question closure and disjoint hypothesis changes preserve metadata (325.769948ms)
+✔ portable file/directory collisions are refused before creating output (272.761418ms)
+✔ candidate writer previews without writes and completes through the adapter with claimed guidance (1034.714505ms)
+✔ host retains actual validation, publication and saved-state results outside the unchanged journal (870.658703ms)
+✔ candidate writer refuses stale bases, bad quotations, unknown keys and lost ownership before writes (418.310053ms)
+✔ candidate writer retains old claims while extending entity provenance and applying corrections (923.70409ms)
+✔ candidate writer preserves existing journals and rejects symlink destinations (261.329833ms)
+✔ candidate writer CLI is packaged, previews by default and rejects invalid apply flags (449.337743ms)
+✔ candidate writer refuses mutated source bytes without changing drafts or the lease (220.748159ms)
+✔ candidate writer blocks unreadable selected guidance before writing drafts (192.274158ms)
+✔ complete cycle renders queues, hypotheses and chat event and publishes every declared output (648.530473ms)
+✔ complete writer aggregates invalid references/hypotheses and refuses stale auxiliary bases without writes (199.330915ms)
+✔ failed late artifact write restores the earlier draft bytes and leaves the lease owned (177.117917ms)
+✔ any existing entity type can be a speaker (10.723399ms)
+✔ missing claim references identify their fields without cascading provenance errors (5.050232ms)
+✔ each referenced entity must include every cited source (1.797874ms)
+✔ asserted_at copies the exact timestamp from any cited source (1.571732ms)
+✔ integrity diagnostics have a documented explanation (1.564361ms)
+✔ processed row duplicates are distinct from source integrity failures (4.351159ms)
+✔ executor request withholds evaluator fields while preserving all task/evidence controls (6.14053ms)
+✔ run strips rubrics at dispatch and request exports the same standalone payload (486.491339ms)
+✔ independent record host supports grounded answer, no state mutation and zero hits (6.244684ms)
+✔ messages allow question-question-answer-answer and Golem clarification with explicit links (4.424296ms)
+✔ integrity rejects forged identity, quote, premise cycles and lost coverage (2.677067ms)
+✔ budgets, cancellation, mixed snapshots, missing sources and hostile options fail closed (2.056655ms)
+✔ learning remains separate; read-only and dangling premises rejected (1.223108ms)
+✔ reference snapshot ignores dirty files and read-only operations preserve instance tree and HEAD (241.594165ms)
+✔ reviewed learning is transactional, idempotent, preserves correction history and rejects stale tasks (662.459121ms)
+✔ JSON reference reuses exact IDs, dependency follow-up, scoped/as-of retrieval and immutable UTF-8 ranges (21.446999ms)
+✔ context schema preserves canonical record definitions and evaluation cannot certify missing model results (3.006661ms)
+✔ committed reference answer path retains exact sources and separates pending intake without consuming it (467.273578ms)
+✔ multiple independent premises remain distinct in a derived finding and result questions carry Golem intent (1.027201ms)
+✔ Golem can propose a hypothesis-driven check without an initial user question (0.229227ms)
+✔ packaged JSON-lines reference host discovers guidance and supports a bound read-only invocation (322.95318ms)
+✔ cognitive retrieval keeps ambiguous labels distinct and bounds ordered multi-hop expansion (5.403141ms)
+✔ capacity uses schema limits and has exact warning and failure boundaries (693.122318ms)
+✔ target policy vocabulary is bounded, strict and independent of JSON field order (0.633803ms)
+✔ scoped identifiers are exact, append-only and query aliases require declared prefixes (3.906975ms)
+✔ scoped duplicate warnings name both entities and do not equate another namespace (8.634989ms)
+✔ current selection precedes truncation and graph-hop expansion (10.86639ms)
+✔ as-of selection covers inclusive overlap, open intervals and unknown-time exclusion (1.205813ms)
+✔ current ties and uncertain imported snapshots remain visible without overriding effective time (0.67996ms)
+✔ supersession clears active-value conflicts; equal active values are not contradictions (0.918891ms)
+✔ hypotheses require a version, bounded confidence and existing support/refutation/source IDs (1.379198ms)
+✔ claim dependencies reject missing/self/cyclic links and retained mutation (1.670356ms)
+✔ changed support and refutation flag dependents without altering status/confidence (0.757354ms)
+✔ deep shared dependency chains are stack safe and do not expand paths (90.467729ms)
+✔ CLI validates hypotheses strictly and refuses malformed candidate without publication (557.203542ms)
+✔ policy selection is snapshot-versioned and committed policy changes require a new claim (247.075225ms)
+✔ policy-aware scaffold rejects missing capabilities before backend claim (1.242697ms)
+✔ capacity failure does not publish a graph or processed ledger (673.439669ms)
+✔ CLI wires scoped lookup and policy-driven temporal retrieval to persisted data (676.667811ms)
+✔ bad profile version refuses acquisition without changing HEAD or lease (131.224415ms)
+✔ partial times are labelled uncertain and are not silently promoted over exact evidence (0.581125ms)
+✔ profile is explicitly selected, supports sudo Markdown, and hashes exact bytes (111.378695ms)
+✔ profile selects only approved sections, validates vocabulary and forbids unsafe paths (91.435707ms)
+✔ initializer opt-in never resets or overwrites an existing instance (116.926384ms)
+✔ kind can be added once and then is protected by previous graph validation (5.534449ms)
+✔ filters preserve defaults, separate hidden records from truncation, and close endpoints (10.786803ms)
+✔ traversal is bounded, deterministic on cycles and keeps metadata separate from claims (1.424665ms)
+✔ warnings are deterministic, advisory, documented and account for speaker references (3.030336ms)
+✔ retrieval reports actual output and expansion limits independently of filtering (1.676565ms)
+✔ profile configuration rejects invalid vocabulary, duplicate selectors and all unreadable sections (96.695768ms)
+✔ template fails closed until storage operations are implemented (1.43557ms)
+✔ compound filters and query/source seeds have deterministic endpoint closure (0.857881ms)
+✔ breadth-first traversal handles equal-length branches and cycles with stable parents (0.472915ms)
+✔ incremental intake preserves upstream context, exact bytes and source identity (4.993804ms)
+✔ producer refuses lost upstream identity and mid-record splitting (2.140558ms)
+✔ synthetic full-history vs incremental experiment is reproducible (0.575616ms)
+✔ schema and provenance reject corruption and dangling references (11.623593ms)
+✔ corrections preserve old claims and entity identities (3.965781ms)
+✔ context resolves aliases and graph neighbors with bounded, cited results (2.908227ms)
+✔ stats distinguish observations, claims, relations and true creation dates (9.192538ms)
+✔ timings preserve default bytes/results and cover real validation/query/stats stages (2022.957898ms)
+✔ new instances have neutral purpose, hypothesis and selected profile defaults (126.954941ms)
+✔ unsupported graph formats and historical field aliases fail clearly (510.90366ms)
+✔ Python launcher selection is explicit, portable and reports the attempted executable (23.072349ms)
+✔ historical persona paths cannot substitute for required canonical JSON files (115.199358ms)
+✔ legacy classification aliases and coexisting speaker_id fail canonical graph schema (474.755897ms)
+✔ profile diagnostics survive invalid graph and identify only exact initializer stub (198.665526ms)
+✔ survey distinguishes inclusive overlap, history, open values and uncertain precision (11.500943ms)
+✔ install lifecycle handles empty Git inbox, drift, restoration and scoped deletion (1125.352923ms)
+✔ installation refuses lease, invalid source, staged target and CAS movement (516.451813ms)
+✔ post-CAS installation deletion recovery is read-only in status and preserves local edits (530.777418ms)
+✔ recovery refuses divergent HEAD and leaves operator edits intact (277.719164ms)
+✔ per-instance source guard checks purpose under operation lock without affecting other instances (538.910207ms)
+✔ identical purpose and profile bytes give identity independent of repository revision (521.759633ms)
+✔ CLI honors selected Git executable across child operations (236.23862ms)
+✔ captured install bytes remain consistent when the reviewed source changes before publication (289.082173ms)
+✔ malformed and linked inboxes are refused rather than treated as empty (146.007873ms)
+✔ purpose-only guidance binds identity, rejects dirty purpose and changed committed guidance (237.785991ms)
+✔ retained snapshot corruption and unsupported identity format fail without rewriting history (245.965073ms)
+✔ copied software development template loads offline and validates both fixture graphs (655.317535ms)
+✔ children time out with command and partial stderr instead of blocking (1511.44005ms)
+✔ children receive EOF, noninteractive Git environment and exact input bytes (131.253713ms)
+ℹ tests 187
+ℹ suites 0
+ℹ pass 187
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 16392.114642
+{
+  "schema_version": 1,
+  "baseline": "0.13.2",
+  "fixture_sha256": "85eead85abc277073be7c2f7baa2dbd7b72c03bc4f95e87259540bd6bd3a37a3",
+  "runtime": {
+    "node": "v24.22.3",
+    "platform": "linux"
+  },
+  "results": {
+    "29": {
+      "decision": "retain_existing_fields",
+      "queries": [
+        {
+          "representation": "revision",
+          "valid_at": "2026-01-15T00:00:00Z",
+          "current_values": [
+            "open"
+          ],
+          "all_status_values": [
+            "open"
+          ],
+          "knowledge": "current correction/retraction knowledge; not a past transaction snapshot"
+        },
+        {
+          "representation": "digest",
+          "valid_at": "2026-01-15T00:00:00Z",
+          "current_values": [
+            "open"
+          ],
+          "all_status_values": [
+            "open"
+          ],
+          "knowledge": "current correction/retraction knowledge; not a past transaction snapshot"
+        },
+        {
+          "representation": "revision",
+          "valid_at": "2026-02-02T00:00:00Z",
+          "current_values": [
+            "open"
+          ],
+          "all_status_values": [
+            "open",
+            "closed"
+          ],
+          "knowledge": "current correction/retraction knowledge; not a past transaction snapshot"
+        },
+        {
+          "representation": "digest",
+          "valid_at": "2026-02-02T00:00:00Z",
+          "current_values": [
+            "open"
+          ],
+          "all_status_values": [
+            "open",
+            "closed"
+          ],
+          "knowledge": "current correction/retraction knowledge; not a past transaction snapshot"
+        },
+        {
+          "representation": "revision",
+          "valid_at": "2026-03-01T00:00:00Z",
+          "current_values": [
+            "repaired"
+          ],
+          "all_status_values": [
+            "open",
+            "closed",
+            "repaired"
+          ],
+          "knowledge": "current correction/retraction knowledge; not a past transaction snapshot"
+        },
+        {
+          "representation": "digest",
+          "valid_at": "2026-03-01T00:00:00Z",
+          "current_values": [
+            "repaired"
+          ],
+          "all_status_values": [
+            "open",
+            "closed",
+            "repaired"
+          ],
+          "knowledge": "current correction/retraction knowledge; not a past transaction snapshot"
+        }
+      ],
+      "current": [
+        "repaired"
+      ],
+      "uncertain_alternative": "clm-r3",
+      "per_revision_ingestion_times": [
+        "2026-05-03T00:00:00.000Z",
+        "2026-05-02T00:00:00.000Z",
+        "2026-05-04T00:00:00.000Z",
+        "2026-05-05T00:00:00.000Z"
+      ],
+      "digest_ingestion_times": [
+        "2026-05-06T00:00:00.000Z",
+        "2026-05-06T00:00:00.000Z",
+        "2026-05-06T00:00:00.000Z",
+        "2026-05-06T00:00:00.000Z"
+      ],
+      "limitation": "Upstream dates remain quoted source data; no typed upstream-time filter or past-knowledge reconstruction. Digest intake loses per-revision ingestion identities/times."
+    },
+    "30": {
+      "decision": "defer_core_group_metadata",
+      "all_input_present": 31,
+      "ready_before": 31,
+      "first_batch": 20,
+      "processed_after_first": 20,
+      "remaining_after_first": 11,
+      "second_batch": 11,
+      "final_processed": 31,
+      "semantic_records": 3,
+      "repeated_intake_emitted": 0,
+      "context": {
+        "included": 2,
+        "omitted": 29,
+        "bytes": 106,
+        "byte_limit": 240,
+        "item_limit": 2
+      },
+      "limitation": "Input manifest/completeness belongs to the producer/host; readiness is not completion. No group scheduler, metadata validation or whole-group atomicity is added."
+    },
+    "31": {
+      "decision": "retain_change_entities",
+      "operations": [
+        "add",
+        "modify",
+        "rename",
+        "reparent",
+        "test"
+      ],
+      "entities": 9,
+      "claims": 23,
+      "query": {
+        "hops": 2,
+        "returned": 23,
+        "truncated": false,
+        "round_trip_fields_equal": true
+      },
+      "compact_graph_bytes": 18708,
+      "design_only_edge_bytes": 2170,
+      "canonical_validation_median_ms": 0.569,
+      "host_warnings": [
+        {
+          "code": "host.reported_test_only",
+          "change_id": "test",
+          "message": "A reported test result is not independent verification of code intent."
+        }
+      ],
+      "limitation": "The edge sketch omits canonical entity/history machinery and fails current schema; byte counts are illustrative, not equivalent implementation/performance claims. Source-reported tests do not prove code correctness."
+    },
+    "32": {
+      "decision": "retain_scalar_entity_values",
+      "unit_values": [
+        "hour",
+        "point"
+      ],
+      "amounts": [
+        8,
+        8
+      ],
+      "unit_bearing_tie": 1,
+      "states": [
+        "missing",
+        "removed",
+        "unknown",
+        "explicit_null"
+      ],
+      "rejected": [
+        {
+          "object": {},
+          "errors": [
+            "graph.claims[0].object: no allowed shape"
+          ]
+        },
+        {
+          "object": {
+            "value": null
+          },
+          "errors": [
+            "graph.claims[0].object: no allowed shape"
+          ]
+        },
+        {
+          "object": {
+            "value": {
+              "field": "owner",
+              "from": "a",
+              "to": "b"
+            }
+          },
+          "errors": [
+            "graph.claims[0].object: no allowed shape"
+          ]
+        },
+        {
+          "object": {
+            "value": 8,
+            "unit": "hour"
+          },
+          "errors": [
+            "graph.claims[0].object: no allowed shape"
+          ]
+        },
+        {
+          "object": {
+            "entity_id": "ent-missing",
+            "revision": "r1"
+          },
+          "errors": [
+            "graph.claims[0].object: no allowed shape"
+          ]
+        }
+      ],
+      "limitation": "Units and explicit value states are profile conventions represented by ordinary claims/entities. No automatic conversion, unit arithmetic, structured endpoint object or first-class null is added."
+    },
+    "33": {
+      "decision": "retain_explicit_relation_claims",
+      "scoped_lookup": [
+        "ent-beta"
+      ],
+      "ambiguous_lookup": [
+        "ent-alpha",
+        "ent-reused"
+      ],
+      "warnings": [
+        "Shared scoped identifier [\"record\",\"catalog-a\",\"42\"]: ent-alpha, ent-reused"
+      ],
+      "contradictory_claims": [
+        "clm-chain",
+        "clm-distinction",
+        "clm-equivalence"
+      ],
+      "after_retraction": [
+        "clm-distinction"
+      ],
+      "preserved_entity_ids": [
+        "ent-alpha",
+        "ent-beta",
+        "ent-reused",
+        "ent-reviewer"
+      ],
+      "limitation": "No equivalence closure, unique-identifier enforcement or canonical merge is implied. Contradictions remain explicit claims; the host/model must review them. Traversal is graph context, not identity inference."
+    }
+  }
+}
+....
+----------------------------------------------------------------------
+Ran 4 tests in 0.089s
+
+OK
+..
+----------------------------------------------------------------------
+Ran 2 tests in 0.455s
+
+OK
+..
+----------------------------------------------------------------------
+Ran 2 tests in 0.453s
+
+OK
+....
+----------------------------------------------------------------------
+Ran 4 tests in 0.737s
+
+OK
+PASS: Cursor install, instruction preservation, rule creation, idempotency, conflict refusal, engine integrity, no runtime initialization
+PASS: Codex installation, both host orders, legacy migration, no-op reruns, conflicts, discovery warnings, integrity, boundary checks and source preservation

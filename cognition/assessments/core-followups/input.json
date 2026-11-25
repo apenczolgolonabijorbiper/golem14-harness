@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "baseline": "0.13.2",
+  "time": {
+    "revisions": [
+      {"revision":"r1","author":"reviewer_a","ingested":"2026-05-03T00:00:00.000Z","upstream":"2026-01-01T09:00:00Z","effective":"2026-01-01T00:00:00Z","value":"open"},
+      {"revision":"r2","author":"reviewer_b","ingested":"2026-05-02T00:00:00.000Z","upstream":"2026-02-01T09:00:00Z","effective":"2026-02-01T00:00:00Z","value":"closed"},
+      {"revision":"r3","author":"reviewer_a","ingested":"2026-05-04T00:00:00.000Z","upstream":"March 2026; day and zone unknown","effective":null,"value":"disputed"},
+      {"revision":"r4","author":"reviewer_b","ingested":"2026-05-05T00:00:00.000Z","upstream":"2026-02-03T09:00:00Z","effective":"2026-02-03T00:00:00Z","value":"repaired","corrects":"r2"}
+    ],
+    "queries": [
+      {"at":"2026-01-15T00:00:00Z","value":"open","current_value":"open"},
+      {"at":"2026-02-02T00:00:00Z","value":"closed","current_value":"open"},
+      {"at":"2026-03-01T00:00:00Z","value":"repaired","current_value":"repaired"}
+    ],
+    "current":"repaired",
+    "unknown_alternative":"clm-r3"
+  },
+  "groups": {"parts":31,"max_claim":20,"byte_budget":240,"item_budget":2,"semantic_records":3},
+  "history": [
+    {"id":"add","operation":"add","revision":"r1","name":"alpha.txt"},
+    {"id":"modify","operation":"modify","revision":"r2","description":"replace literal A with B"},
+    {"id":"rename","operation":"rename","revision":"r3","before_name":"alpha.txt","after_name":"beta.txt"},
+    {"id":"parent","operation":"reparent","revision":"r4","before_parent":{"entity_id":"ent-parent-a"},"after_parent":{"entity_id":"ent-parent-b"}},
+    {"id":"test","operation":"test","revision":"r4","result":"passed","scope":"synthetic assertion only"}
+  ],
+  "values": {"amount":8,"units":["hour","point"],"assignment":"ent-person","states":["removed","unknown"]},
+  "identity": {
+    "entities":[
+      {"id":"ent-alpha","namespace":"catalog-a","value":"42"},
+      {"id":"ent-beta","namespace":"catalog-b","value":"42"},
+      {"id":"ent-reused","namespace":"catalog-a","value":"42"}
+    ],
+    "ambiguous_lookup":["ent-alpha","ent-reused"],
+    "scoped_lookup":["ent-beta"]
+  }
+}

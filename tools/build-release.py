@@ -11,6 +11,9 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 FILES = (
+    'tools/assess-core-followups.mjs', 'docs/CORE_FOLLOWUP_DECISIONS.md',
+    'cognition/assessments/core-followups/input.json',
+    'cognition/assessments/core-followups/results-linux.json',
     'server/memory-contract.mjs', 'server/provider-memory.mjs', 'server/provider-validation.mjs',
     'server/memory-transfer.mjs', 'server/observation.mjs', 'processor/provider-tool.mjs',
     'adapters/reference-json/provider.mjs', 'adapters/template/memory-provider.mjs',
@@ -129,6 +132,8 @@ def build(output):
                         'server/adapter-performance.test.mjs', 'server/candidate-writer.test.mjs', 'server/memory-timings.test.mjs',
                         'adapters/conformance/adapter.test.mjs', 'adapters/conformance/provider.test.mjs', 'server/neutral-core.test.mjs', 'server/subprocess.test.mjs', 'server/core-priorities.test.mjs', 'server/intake.test.mjs'],
                        cwd=stage, check=True, env={**os.environ, 'GOLEM_PYTHON': os.environ.get('GOLEM_PYTHON', sys.executable)})
+        subprocess.run(['node', 'tools/assess-core-followups.mjs'], cwd=stage, check=True,
+                       env={**os.environ, 'GOLEM_PYTHON': os.environ.get('GOLEM_PYTHON', sys.executable)})
         for script in ['tools/test-doc-contracts.py', 'processor/test-validation.py', 'processor/test-observation-portability.py', 'processor/test-indexer.py',
                        'integration/test-install-cursor.py', 'integration/test-install-codex.py']:
             subprocess.run([sys.executable, script], cwd=stage, check=True)
