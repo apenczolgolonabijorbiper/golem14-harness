@@ -105,7 +105,8 @@ A smaller retrieval budget reports truncation. Retained claim mutation fails.
 
 The retained Linux run records the compact canonical graph size, a seven-sample
 median validation duration and a design-only edge projection size. The projection
-keeps operation fields and source references, but omits equivalent canonical
+uses flat scalar attributes (including explicit parent ID strings) and source
+references, but omits equivalent canonical
 entity/history machinery; it fails the current schema at `attributes`. It has no
 implemented validator/retrieval path, so these byte counts are not a like-for-like
 storage or speed comparison. Its compactness alone does not demonstrate a missing

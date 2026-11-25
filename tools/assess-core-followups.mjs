@@ -150,7 +150,7 @@ export function assessHistory(input) {
   const bounded=retrieveContext(s.graph,{entity_id:'ent-artifact',hops:2,limit:2,expansion_budget:3});
   assert.equal(bounded.truncated,true);assert.ok(bounded.claims.length<=2);
   // Design-only comparison, not an accepted graph or a new execution path.
-  const proposal=input.map((row,n)=>({id:'edge-'+row.id,subject_id:'ent-reviewer',predicate:'changes',object:{entity_id:'ent-artifact'},attributes:Object.fromEntries(Object.entries(row).filter(([key])=>key!=='id')),sources:s.graph.claims.find(c=>c.subject_id==='ent-change-'+row.id).sources}));
+  const proposal=input.map((row,n)=>({id:'edge-'+row.id,subject_id:'ent-reviewer',predicate:'changes',object:{entity_id:'ent-artifact'},attributes:Object.fromEntries(Object.entries(row).filter(([key])=>key!=='id').map(([key,value])=>value?.entity_id?[key+'_id',value.entity_id]:[key,value])),sources:s.graph.claims.find(c=>c.subject_id==='ent-change-'+row.id).sources}));
   const proposed=clone(s.graph);proposed.claims[0].attributes=proposal[0].attributes;
   assert.ok(schemaErrors(proposed).some(e=>e.includes('attributes: unexpected field')));
   // Example profile/host policy; deliberately outside core warnings and validation.
