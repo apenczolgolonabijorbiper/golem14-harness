@@ -1,4 +1,4 @@
-# Generate a local implementation from contract 1.0.0
+# Generate a local implementation from contract 1.1.0
 
 ```sudolang
 GenerateHarnessAlternative(targetLanguage, availableRuntime, requiredOperations) {

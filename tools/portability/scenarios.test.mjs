@@ -166,3 +166,17 @@ scenario('cognition-and-learning',async t=>{
   const budget=createCognitiveSession({...task,limits:{...task.limits,rounds:1}},view,{now:()=>0});budget.beginRound();assert.throws(()=>budget.beginRound(),/budget/);
 });
 test('all scenario descriptions execute',()=>assert.deepEqual([...executed].sort(),[...ids].sort()));
+
+scenario('processed-transfer',async t=>{
+  const {exportProcessed,inspectProcessed}=await import('../../server/processed-transfer.mjs');
+  const {validateSnapshot}=await import('../../server/provider-validation.mjs');
+  const a=setup(t,'instance'),b=setup(t),source=await createAdapter({instance:a.root}).openMemory({instance_id:'portable-A'}),destination=await createAdapter({instance:b.root}).openMemory({instance_id:'portable-B'});
+  const origin=await source.open(),base=await destination.open(),original=a.git('rev-parse','HEAD'),sourceId='11111111-1111-4111-8111-111111111111';
+  const bundle=await exportProcessed(source,origin.snapshot_id,[sourceId]);await inspectProcessed(bundle);
+  const request={bundle,base_snapshot:base.snapshot_id,id:'portable-transfer',at:'2026-01-02T00:00:00.000Z'};
+  const receipt=await destination.importProcessed(request);assert.equal(receipt.included[0],sourceId);
+  const current=await destination.open();assert.deepEqual(await validateSnapshot(destination,current.snapshot_id,{previous:base.snapshot_id}),[]);
+  assert.deepEqual(await destination.recoverTransfer({id:request.id}),await destination.importProcessed(request));
+  await assert.rejects(()=>destination.importProcessed({...request,id:'duplicate',base_snapshot:current.snapshot_id}),new RegExp(sourceId));
+  assert.equal(b.git('rev-parse','HEAD'),current.snapshot_id);assert.equal(a.git('rev-parse','HEAD'),original);assert.equal(a.git('status','--porcelain'),'');
+});

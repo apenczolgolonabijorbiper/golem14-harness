@@ -16,6 +16,7 @@ FILES = (
     'cognition/assessments/core-followups/input.json',
     'cognition/assessments/core-followups/results-linux.json',
     'server/memory-contract.mjs', 'server/provider-memory.mjs', 'server/provider-validation.mjs',
+    'docs/validation/processed-transfer-linux-2026-11-25.log', 'schemas/processed-transfer.schema.json', 'server/processed-transfer.mjs', 'server/processed-transfer.test.mjs', 'docs/PROCESSED_TRANSFER.md',
     'server/memory-transfer.mjs', 'server/observation.mjs', 'processor/provider-tool.mjs',
     'adapters/reference-json/provider.mjs', 'adapters/template/memory-provider.mjs',
     'adapters/conformance/provider-suite.mjs', 'adapters/conformance/provider.test.mjs',
@@ -114,6 +115,10 @@ def build(output):
     checksum = output.with_suffix(output.suffix + '.sha256')
     if output.exists() or checksum.exists():
         raise FileExistsError('Choose an unused output filename')
+    metadata = runpy.run_path(str(ROOT / 'tools/test-doc-contracts.py'))
+    metadata['validate_release_metadata']((ROOT / 'VERSION').read_text().strip(),
+        (ROOT / 'README.md').read_text(encoding='utf-8'),
+        (ROOT / 'docs/RELEASE_NOTES.md').read_text(encoding='utf-8'))
     parity = runpy.run_path(str(ROOT / 'tools/portability/check-parity.py'))
     parity_status = parity['check']()
     entries = release_entries()
@@ -140,7 +145,7 @@ def build(output):
         subprocess.run(['node', '--test', 'tools/portability/scenarios.test.mjs'], cwd=stage, check=True,
                        env={**os.environ, 'GOLEM_PYTHON': os.environ.get('GOLEM_PYTHON', sys.executable)})
         subprocess.run(['node', '--test', 'server/memory-core.test.mjs', 'server/cognitive-task.test.mjs',
-                        'server/cognitive-evaluation.test.mjs', 'server/application-source.test.mjs',
+                        'server/cognitive-evaluation.test.mjs', 'server/application-source.test.mjs', 'server/processed-transfer.test.mjs',
                         'server/profile-inspection.test.mjs',
                         'server/software-development-template.test.mjs',
                         'server/purpose-guidance.test.mjs',

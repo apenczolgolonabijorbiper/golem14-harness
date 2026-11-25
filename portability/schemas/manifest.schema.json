@@ -6,7 +6,7 @@
       "const": 1
     },
     "contract_version": {
-      "const": "1.0.0"
+      "const": "1.1.0"
     },
     "reference_harness_version": {
       "type": "string",

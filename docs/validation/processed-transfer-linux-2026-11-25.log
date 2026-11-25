@@ -1,0 +1,24 @@
+✔ select two processed sources into nonempty B; retain exact analysis, history and source A (1118.167173ms)
+✔ closure follows corrections, entity provenance, hypotheses, questions and typed journals (22.715164ms)
+✔ bundle corruption, edited bytes, absent journal and duplicate records refuse without writes (764.171557ms)
+✔ refuses entity ID collision, even identical records (678.453972ms)
+✔ refuses claim ID collision, even identical records (730.048089ms)
+✔ refuses cross ID collision, even identical records (650.103312ms)
+✔ active lease, dirty source/policy, staged changes and incompatible guidance refuse (897.705972ms)
+✔ final candidate validation refuses preexisting invalid destination without publication (706.137823ms)
+✔ publication fence / interruption recovery: head (740.811625ms)
+✔ publication fence / interruption recovery: bytes (675.417783ms)
+✔ publication fence / interruption recovery: before (751.367018ms)
+✔ publication fence / interruption recovery: after (780.964196ms)
+✔ source selection refuses unprocessed dependencies and preserves opaque artifact bytes (810.518482ms)
+✔ processed transfer can be exported again without losing archived journal resolution (943.539367ms)
+✔ staged destination changes and untracked target collisions survive rejection (702.167803ms)
+✔ standalone CLI exports, inspects, imports and recovers the same transfer (874.656314ms)
+ℹ tests 16
+ℹ suites 0
+ℹ pass 16
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 11948.708894

@@ -1,4 +1,4 @@
-# Local core portability contract 1.0.0
+# Local core portability contract 1.1.0
 
 This directory is the vendor-maintained specification for deterministic local
 Harness operations. Read `manifest.json`, `specs/COMMON.sudo.md` and the selected

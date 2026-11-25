@@ -5,10 +5,11 @@ import {resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createAdapter} from '../adapters/reference-git/adapter.mjs';
 import {createMemory,rebaseChanges} from '../server/provider-memory.mjs';
+import {exportProcessed,inspectProcessed} from '../server/processed-transfer.mjs';
 import {exportMemory} from '../server/memory-transfer.mjs';
 export async function run(args=process.argv.slice(2)){
   const command=args.shift(),options={};
-  if(!['claim','open','context','stats','warnings','audit','apply','recover','rebase','export'].includes(command))throw Error('Expected claim|open|context|stats|warnings|audit|apply|recover|rebase|export');
+  if(!['claim','open','context','stats','warnings','audit','apply','recover','rebase','export','export-processed','inspect-processed','import-processed','recover-transfer'].includes(command))throw Error('Expected claim|open|context|stats|warnings|audit|apply|recover|rebase|export|export-processed|inspect-processed|import-processed|recover-transfer');
   for(let i=0;i<args.length;i+=2){const key=args[i]?.slice(2);if(!args[i]?.startsWith('--')||!['instance','instance-id','snapshot','request','key','snapshots'].includes(key)||args[i+1]===undefined||Object.hasOwn(options,key))throw Error('Unknown/duplicate/incomplete option');options[key]=args[i+1];}
   if(!options.instance||!options['instance-id'])throw Error('Explicit --instance and --instance-id required');
   const adapter=createAdapter({instance:resolve(options.instance)});
@@ -18,6 +19,10 @@ export async function run(args=process.argv.slice(2)){
   }
   const provider=await adapter.openMemory({instance_id:options['instance-id']}),memory=createMemory(provider),meta=await memory.open(options.snapshot);
   const request=options.request?JSON.parse(await readFile(resolve(options.request),'utf8')):undefined;
+  if(command==='export-processed')return exportProcessed(provider,meta.snapshot_id,request?.observation_ids);
+  if(command==='inspect-processed'){const s=await inspectProcessed(request);return {sha256:request.sha256,selected:request.selected,included:s.rows.observations.map(r=>r.id),counts:Object.fromEntries(Object.entries(s.rows).map(([c,rows])=>[c,rows.length]))};}
+  if(command==='import-processed'){if(!request)throw Error('--request required');return provider.importProcessed(request);}
+  if(command==='recover-transfer'){if(!options.key)throw Error('--key required');return provider.recoverTransfer({id:options.key});}
   if(command==='open')return meta;
   if(command==='context')return memory.context(meta.snapshot_id,request??{});
   if(command==='stats')return memory.stats(meta.snapshot_id);
