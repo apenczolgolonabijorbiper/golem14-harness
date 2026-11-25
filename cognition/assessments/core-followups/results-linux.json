@@ -1,0 +1,247 @@
+{
+  "schema_version": 1,
+  "baseline": "0.13.2",
+  "fixture_sha256": "85eead85abc277073be7c2f7baa2dbd7b72c03bc4f95e87259540bd6bd3a37a3",
+  "runtime": {
+    "node": "v24.22.3",
+    "platform": "linux"
+  },
+  "results": {
+    "29": {
+      "decision": "retain_existing_fields",
+      "queries": [
+        {
+          "representation": "revision",
+          "valid_at": "2026-01-15T00:00:00Z",
+          "current_values": [
+            "open"
+          ],
+          "all_status_values": [
+            "open"
+          ],
+          "knowledge": "current correction/retraction knowledge; not a past transaction snapshot"
+        },
+        {
+          "representation": "digest",
+          "valid_at": "2026-01-15T00:00:00Z",
+          "current_values": [
+            "open"
+          ],
+          "all_status_values": [
+            "open"
+          ],
+          "knowledge": "current correction/retraction knowledge; not a past transaction snapshot"
+        },
+        {
+          "representation": "revision",
+          "valid_at": "2026-02-02T00:00:00Z",
+          "current_values": [
+            "open"
+          ],
+          "all_status_values": [
+            "open",
+            "closed"
+          ],
+          "knowledge": "current correction/retraction knowledge; not a past transaction snapshot"
+        },
+        {
+          "representation": "digest",
+          "valid_at": "2026-02-02T00:00:00Z",
+          "current_values": [
+            "open"
+          ],
+          "all_status_values": [
+            "open",
+            "closed"
+          ],
+          "knowledge": "current correction/retraction knowledge; not a past transaction snapshot"
+        },
+        {
+          "representation": "revision",
+          "valid_at": "2026-03-01T00:00:00Z",
+          "current_values": [
+            "repaired"
+          ],
+          "all_status_values": [
+            "open",
+            "closed",
+            "repaired"
+          ],
+          "knowledge": "current correction/retraction knowledge; not a past transaction snapshot"
+        },
+        {
+          "representation": "digest",
+          "valid_at": "2026-03-01T00:00:00Z",
+          "current_values": [
+            "repaired"
+          ],
+          "all_status_values": [
+            "open",
+            "closed",
+            "repaired"
+          ],
+          "knowledge": "current correction/retraction knowledge; not a past transaction snapshot"
+        }
+      ],
+      "current": [
+        "repaired"
+      ],
+      "uncertain_alternative": "clm-r3",
+      "per_revision_ingestion_times": [
+        "2026-05-03T00:00:00.000Z",
+        "2026-05-02T00:00:00.000Z",
+        "2026-05-04T00:00:00.000Z",
+        "2026-05-05T00:00:00.000Z"
+      ],
+      "digest_ingestion_times": [
+        "2026-05-06T00:00:00.000Z",
+        "2026-05-06T00:00:00.000Z",
+        "2026-05-06T00:00:00.000Z",
+        "2026-05-06T00:00:00.000Z"
+      ],
+      "limitation": "Upstream dates remain quoted source data; no typed upstream-time filter or past-knowledge reconstruction. Digest intake loses per-revision ingestion identities/times."
+    },
+    "30": {
+      "decision": "defer_core_group_metadata",
+      "all_input_present": 31,
+      "ready_before": 31,
+      "first_batch": 20,
+      "processed_after_first": 20,
+      "remaining_after_first": 11,
+      "second_batch": 11,
+      "final_processed": 31,
+      "semantic_records": 3,
+      "repeated_intake_emitted": 0,
+      "context": {
+        "included": 2,
+        "omitted": 29,
+        "bytes": 106,
+        "byte_limit": 240,
+        "item_limit": 2
+      },
+      "limitation": "Input manifest/completeness belongs to the producer/host; readiness is not completion. No group scheduler, metadata validation or whole-group atomicity is added."
+    },
+    "31": {
+      "decision": "retain_change_entities",
+      "operations": [
+        "add",
+        "modify",
+        "rename",
+        "reparent",
+        "test"
+      ],
+      "entities": 9,
+      "claims": 23,
+      "query": {
+        "hops": 2,
+        "returned": 23,
+        "truncated": false,
+        "round_trip_fields_equal": true
+      },
+      "compact_graph_bytes": 18708,
+      "design_only_edge_bytes": 2148,
+      "canonical_validation_median_ms": 0.725,
+      "host_warnings": [
+        {
+          "code": "host.reported_test_only",
+          "change_id": "test",
+          "message": "A reported test result is not independent verification of code intent."
+        }
+      ],
+      "limitation": "The edge sketch omits canonical entity/history machinery and fails current schema; byte counts are illustrative, not equivalent implementation/performance claims. Source-reported tests do not prove code correctness."
+    },
+    "32": {
+      "decision": "retain_scalar_entity_values",
+      "unit_values": [
+        "hour",
+        "point"
+      ],
+      "amounts": [
+        8,
+        8
+      ],
+      "unit_bearing_tie": 1,
+      "states": [
+        "missing",
+        "removed",
+        "unknown",
+        "explicit_null"
+      ],
+      "rejected": [
+        {
+          "object": {},
+          "errors": [
+            "graph.claims[0].object: no allowed shape"
+          ]
+        },
+        {
+          "object": {
+            "value": null
+          },
+          "errors": [
+            "graph.claims[0].object: no allowed shape"
+          ]
+        },
+        {
+          "object": {
+            "value": {
+              "field": "owner",
+              "from": "a",
+              "to": "b"
+            }
+          },
+          "errors": [
+            "graph.claims[0].object: no allowed shape"
+          ]
+        },
+        {
+          "object": {
+            "value": 8,
+            "unit": "hour"
+          },
+          "errors": [
+            "graph.claims[0].object: no allowed shape"
+          ]
+        },
+        {
+          "object": {
+            "entity_id": "ent-missing",
+            "revision": "r1"
+          },
+          "errors": [
+            "graph.claims[0].object: no allowed shape"
+          ]
+        }
+      ],
+      "limitation": "Units and explicit value states are profile conventions represented by ordinary claims/entities. No automatic conversion, unit arithmetic, structured endpoint object or first-class null is added."
+    },
+    "33": {
+      "decision": "retain_explicit_relation_claims",
+      "scoped_lookup": [
+        "ent-beta"
+      ],
+      "ambiguous_lookup": [
+        "ent-alpha",
+        "ent-reused"
+      ],
+      "warnings": [
+        "Shared scoped identifier [\"record\",\"catalog-a\",\"42\"]: ent-alpha, ent-reused"
+      ],
+      "contradictory_claims": [
+        "clm-chain",
+        "clm-distinction",
+        "clm-equivalence"
+      ],
+      "after_retraction": [
+        "clm-distinction"
+      ],
+      "preserved_entity_ids": [
+        "ent-alpha",
+        "ent-beta",
+        "ent-reused",
+        "ent-reviewer"
+      ],
+      "limitation": "No equivalence closure, unique-identifier enforcement or canonical merge is implied. Contradictions remain explicit claims; the host/model must review them. Traversal is graph context, not identity inference."
+    }
+  }
+}

@@ -1,4 +1,4 @@
-# Golem native cognitive harness — 0.13.0
+# Golem native cognitive harness — 0.13.3
 
 A host-independent cognitive harness inspired by Stanisław Lem’s Golem XIV and Xemantic’s work on metacognitive AI. The host LLM performs
 interpretation by following AGENTS.md and docs/PROCESSING.md; the executable core
@@ -224,6 +224,10 @@ No backward compatibility or migration is promised. The canonical paths and clai
 fields are in docs/INSTANCE_LAYOUT.md. See docs/ANALYSIS_WORKFLOW.md for a synthetic
 producer/profile/retrieval recipe, docs/INTAKE_PROVENANCE.md for intake measurements,
 and docs/CAPACITY_BENCHMARKS.md for the measured resource envelope.
+
+The [P3 follow-up decisions](docs/CORE_FOLLOWUP_DECISIONS.md) retain the current
+time, change-entity, value and identity models and defer core group metadata.
+Run `node tools/assess-core-followups.mjs` for the shipped synthetic evidence.
 
 New tools include strict hypotheses validation, direct dependency review warnings,
 scoped identifiers, capacity usage and conflict-aware --current/--valid-at retrieval.

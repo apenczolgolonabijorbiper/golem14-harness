@@ -1,3 +1,20 @@
+# Golem XIV Harness 0.13.3
+
+Released 2026-11-25.
+
+- Complete tracker #20's P3 assessments (#29–#33) with synthetic inputs,
+  an executable assertion runner, observed Linux results and explicit decisions.
+- Retain current time fields, change entities, scalar/entity values and explicit
+  identity relations; defer core group metadata/scheduling based on the tested
+  producer/host boundary. Record limits and conditions for future proposals.
+- Run all five assessments from the staged release on each supported platform
+  and include the decision record in the regenerated offline explorer.
+
+No production runtime, schema, provider contract or cognitive SudoLang protocol
+changes. Node 22.12+, Python 3.12+ and Git requirements remain unchanged. No
+application/private instance upgrade or reset is performed. See
+[the decisions and reproduction procedure](CORE_FOLLOWUP_DECISIONS.md).
+
 # Golem XIV Harness 0.13.2
 
 Released 2026-11-25.
