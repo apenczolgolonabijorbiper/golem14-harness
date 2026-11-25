@@ -87,11 +87,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        python: ['3.12']
         include:
-          - os: windows-latest
-            python: '3.14'
+          - os: ubuntu-latest
+            node: '22.12.0'
+          - os: ubuntu-latest
+            node: '24'
+          - os: macos-latest
+            node: '24'
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v7.0.1
@@ -99,10 +101,10 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-node@v7.1.0
         with:
-          node-version: '24'
+          node-version: ${{ matrix.node }}
       - uses: actions/setup-python@v7.1.0
         with:
-          python-version: ${{ matrix.python }}
+          python-version: '3.12'
       - name: Platform-default fixture initialization
         run: >-
           node --input-type=module -e "import {fixture} from './server/test-fixtures.mjs';
@@ -111,17 +113,26 @@ jobs:
       - name: Packaged release and installer checks
         env:
           GOLEM_TRACE_COMMANDS: '1'
-        run: python tools/build-release.py --output ../platform-release.zip
+        run: python tools/build-release.py --output "$RUNNER_TEMP/platform-release.zip"
+
+      - uses: actions/upload-artifact@v7.0.2
+        if: matrix.os == 'ubuntu-latest' && matrix.node == '24'
+        with:
+          name: harness-validation-package
+          path: ${{ runner.temp }}/platform-release.zip*
+          if-no-files-found: error
+
+  windows:
+    needs: validate
+    uses: ./.github/workflows/windows-package.yml
+    with:
+      artifact: harness-validation-package
 
   capacity:
     needs: changes
     if: needs.changes.outputs.platforms == 'true'
     timeout-minutes: 20
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7.0.1
         with:
@@ -141,7 +152,7 @@ jobs:
 
   validation-result:
     if: always()
-    needs: [changes, explorer, portability, validate, capacity]
+    needs: [changes, explorer, portability, validate, windows, capacity]
     runs-on: ubuntu-latest
     steps:
       - name: Require successful selected checks
@@ -150,6 +161,7 @@ jobs:
           EXPLORER: ${{ needs.explorer.result }}
           PORTABILITY: ${{ needs.portability.result }}
           VALIDATE: ${{ needs.validate.result }}
+          WINDOWS: ${{ needs.windows.result }}
           CAPACITY: ${{ needs.capacity.result }}
           PLATFORMS: ${{ needs.changes.outputs.platforms }}
         run: |
@@ -158,8 +170,10 @@ jobs:
           test "$PORTABILITY" = success
           if [ "$PLATFORMS" = true ]; then
             test "$VALIDATE" = success
+            test "$WINDOWS" = success
             test "$CAPACITY" = success
           else
             test "$VALIDATE" = skipped
+            test "$WINDOWS" = skipped
             test "$CAPACITY" = skipped
           fi
