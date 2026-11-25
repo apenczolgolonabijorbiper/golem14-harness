@@ -64,7 +64,7 @@ def assess_impact(base, current, evidence):
 
 
 def check(root=ROOT, base=None):
-    manifest = json.loads((root / 'portability/manifest.json').read_text())
+    manifest = json.loads((root / 'portability/manifest.json').read_text(encoding='utf-8'))
     if manifest['schema_version'] != 1 or manifest['contract_version'] != '1.0.0':
         raise ValueError('Unsupported portability manifest version')
     inventory = manifest['inventory']
@@ -95,8 +95,8 @@ def check(root=ROOT, base=None):
     for path, expected in pinned.items():
         if sha((root / path).read_bytes()) != expected:
             raise ValueError('Specification/fixture drift: ' + path)
-    cases = json.loads((root / 'portability/fixtures/cases.json').read_text())['cases']
-    scenarios = json.loads((root / 'portability/fixtures/scenarios.json').read_text())['scenarios']
+    cases = json.loads((root / 'portability/fixtures/cases.json').read_text(encoding='utf-8'))['cases']
+    scenarios = json.loads((root / 'portability/fixtures/scenarios.json').read_text(encoding='utf-8'))['scenarios']
     case_ids = {c['id'] for c in cases}
     scenario_ids = {s['id'] for s in scenarios}
     if len(case_ids) != len(cases) or len(scenario_ids) != len(scenarios):
@@ -104,7 +104,7 @@ def check(root=ROOT, base=None):
     for case in cases:
         if ('expected' in case) == ('error' in case):
             raise ValueError('Fixture needs exactly one golden result/error: ' + case['id'])
-    evidence = json.loads((root / 'portability/evidence/parity.json').read_text())
+    evidence = json.loads((root / 'portability/evidence/parity.json').read_text(encoding='utf-8'))
     if evidence['contract_version'] != manifest['contract_version']:
         raise ValueError('Evidence contract version mismatch')
     decisions = {e['operation']: e for e in evidence['assessments']}
@@ -143,13 +143,13 @@ def check(root=ROOT, base=None):
     import re
     for path in core:
         if path.endswith(('.mjs', '.js')):
-            for relative in re.findall(r'''(?:from\s*|import\s*\()\s*['"](\.[^'"]+)['"]''', (root / path).read_text()):
+            for relative in re.findall(r'''(?:from\s*|import\s*\()\s*['"](\.[^'"]+)['"]''', (root / path).read_text(encoding='utf-8')):
                 dependency = (root / path).parent.joinpath(relative).resolve().relative_to(root.resolve()).as_posix()
                 if dependency.endswith(('.mjs', '.js')) and dependency not in core:
                     raise ValueError('Unmapped transitive runtime import: ' + path + ' -> ' + dependency)
     impacted = []
     if base:
-        previous = subprocess.run(['git', 'show', base + ':portability/manifest.json'], cwd=root, capture_output=True, text=True)
+        previous = subprocess.run(['git', 'show', base + ':portability/manifest.json'], cwd=root, capture_output=True, text=True, encoding='utf-8')
         if previous.returncode == 0:
             impacted = assess_impact(json.loads(previous.stdout), manifest, decisions)
         else:

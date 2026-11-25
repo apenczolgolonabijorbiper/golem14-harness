@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {cpSync,mkdtempSync,mkdirSync,readFileSync,writeFileSync,rmSync,existsSync} from 'node:fs';
+import {cpSync,mkdtempSync,mkdirSync,readFileSync,writeFileSync,rmSync,existsSync,realpathSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join,resolve,dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -24,7 +24,7 @@ const json=v=>JSON.stringify(v,null,2)+'\n',hash=v=>createHash('sha256').update(
 function template(path,bindings){let text=readFileSync(join(base,path),'utf8');for(const [key,value]of Object.entries(bindings))text=text.replaceAll('{{'+key+'}}',value);return JSON.parse(text);}
 const sourceId='22222222-2222-4222-8222-222222222222';
 function setup(t,mode='empty'){
-  const temporary=mkdtempSync(join(tmpdir(),'golem-portable-')),root=join(temporary,'instance');
+  const temporary=realpathSync(mkdtempSync(join(tmpdir(),'golem-portable-'))),root=join(temporary,'instance');
   t.after(()=>rmSync(temporary,{recursive:true,force:true,maxRetries:10,retryDelay:100}));
   cpSync(join(base,mode),root,{recursive:true});
   for(const p of ['inbox','evidence','memory/runs','memory/events','profiles'])mkdirSync(join(root,p),{recursive:true});
