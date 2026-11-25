@@ -29,6 +29,34 @@ jobs:
           SCOPE_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
         run: python tools/ci/validation-scope.py
 
+  portability:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@v7.1.0
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+      - name: Core specification parity and retained conformance
+        env:
+          PARITY_BASE: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          if [ -n "$PARITY_BASE" ] && [ "$PARITY_BASE" != 0000000000000000000000000000000000000000 ]; then
+            python tools/portability/check-parity.py --base "$PARITY_BASE"
+          else
+            python tools/portability/check-parity.py
+          fi
+          python tools/portability/test-parity.py
+          node tools/portability/conformance.mjs
+          node --test tools/portability/scenarios.test.mjs
+          node tools/portability/conformance.mjs --command '["perl","portability/examples/stats.pl"]' --operations stats
+
   explorer:
     runs-on: ubuntu-latest
     timeout-minutes: 5
@@ -113,19 +141,21 @@ jobs:
 
   validation-result:
     if: always()
-    needs: [changes, explorer, validate, capacity]
+    needs: [changes, explorer, portability, validate, capacity]
     runs-on: ubuntu-latest
     steps:
       - name: Require successful selected checks
         env:
           CHANGES: ${{ needs.changes.result }}
           EXPLORER: ${{ needs.explorer.result }}
+          PORTABILITY: ${{ needs.portability.result }}
           VALIDATE: ${{ needs.validate.result }}
           CAPACITY: ${{ needs.capacity.result }}
           PLATFORMS: ${{ needs.changes.outputs.platforms }}
         run: |
           test "$CHANGES" = success
           test "$EXPLORER" = success
+          test "$PORTABILITY" = success
           if [ "$PLATFORMS" = true ]; then
             test "$VALIDATE" = success
             test "$CAPACITY" = success

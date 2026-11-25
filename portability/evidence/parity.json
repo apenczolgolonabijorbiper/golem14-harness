@@ -1,0 +1,501 @@
+{
+  "contract_version": "1.0.0",
+  "assessments": [
+    {
+      "operation": "init",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "3062e5bb6c564f2fa55f8bde4ed8d2f06320d04f4e1e2cf829210025d532c724",
+      "spec_digest": "8007f22847c8b5d6fbcdc4870d6aef8fe0b2e897125d01c04c26ee6d2367aa46",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "index",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "a74c86ce09b4ecb14bad857cbbb891d7538e86358c40b26ca063116d26f3b590",
+      "spec_digest": "8007f22847c8b5d6fbcdc4870d6aef8fe0b2e897125d01c04c26ee6d2367aa46",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "parse-source",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "ba62e9e4ea44e519689759fa7aa34d57144c7f2e049859a69f1605a4360007c0",
+      "spec_digest": "8007f22847c8b5d6fbcdc4870d6aef8fe0b2e897125d01c04c26ee6d2367aa46",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "schema",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "5921d669c531fdd6fb151f2d5b30cbe1c34a477d0f400d8de91ba7025a44653c",
+      "spec_digest": "ac30971de87df588034381958d5a410b90dbd6ea42a92619f17f664c3ce70da0",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "validate",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "5921d669c531fdd6fb151f2d5b30cbe1c34a477d0f400d8de91ba7025a44653c",
+      "spec_digest": "ac30971de87df588034381958d5a410b90dbd6ea42a92619f17f664c3ce70da0",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "context",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "5921d669c531fdd6fb151f2d5b30cbe1c34a477d0f400d8de91ba7025a44653c",
+      "spec_digest": "ac30971de87df588034381958d5a410b90dbd6ea42a92619f17f664c3ce70da0",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "stats",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "5921d669c531fdd6fb151f2d5b30cbe1c34a477d0f400d8de91ba7025a44653c",
+      "spec_digest": "ac30971de87df588034381958d5a410b90dbd6ea42a92619f17f664c3ce70da0",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "warnings",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "5921d669c531fdd6fb151f2d5b30cbe1c34a477d0f400d8de91ba7025a44653c",
+      "spec_digest": "ac30971de87df588034381958d5a410b90dbd6ea42a92619f17f664c3ce70da0",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "dependencies",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "5921d669c531fdd6fb151f2d5b30cbe1c34a477d0f400d8de91ba7025a44653c",
+      "spec_digest": "ac30971de87df588034381958d5a410b90dbd6ea42a92619f17f664c3ce70da0",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "capabilities",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "5921d669c531fdd6fb151f2d5b30cbe1c34a477d0f400d8de91ba7025a44653c",
+      "spec_digest": "ac30971de87df588034381958d5a410b90dbd6ea42a92619f17f664c3ce70da0",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "hypotheses",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "34686c0de0874cf7f7fa93dc39ef979049d4c2ca6c554c13f080eda976e4bed7",
+      "spec_digest": "ac30971de87df588034381958d5a410b90dbd6ea42a92619f17f664c3ce70da0",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "vocabulary",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "d5449334f954d4610a588ba5e73497d29878b504e3d684eec9b7300d97ee1f3a",
+      "spec_digest": "1dd31ac82076ae0a353bb4deef292716fdd46db058bc3bfcc636a92ffdce6ce5",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "guidance",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "19b38536461f2665bf09aa6a5cf2e29754165875edd401dadc12765c53dd252e",
+      "spec_digest": "1dd31ac82076ae0a353bb4deef292716fdd46db058bc3bfcc636a92ffdce6ce5",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "path",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "215306a5853554847c7f7a43e5bd461769121e57b669d96ad24c41a0c07e5525",
+      "spec_digest": "1dd31ac82076ae0a353bb4deef292716fdd46db058bc3bfcc636a92ffdce6ce5",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "profile-check",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "913baed782c93146e97943d188cd2c05e100656ed46bc12216449f0f4e0f8c24",
+      "spec_digest": "1dd31ac82076ae0a353bb4deef292716fdd46db058bc3bfcc636a92ffdce6ce5",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "vocabulary-survey",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "913baed782c93146e97943d188cd2c05e100656ed46bc12216449f0f4e0f8c24",
+      "spec_digest": "1dd31ac82076ae0a353bb4deef292716fdd46db058bc3bfcc636a92ffdce6ce5",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "source-bundle",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "a3fa0730113e06cd18f76c871639cf26e82a5486570458fbc62789a89f2b6258",
+      "spec_digest": "1dd31ac82076ae0a353bb4deef292716fdd46db058bc3bfcc636a92ffdce6ce5",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "write-candidate",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "dd3037141ece56cac63937d4d365158ea0caae5b716a50a36f7aec438f16ca87",
+      "spec_digest": "764c3d6d91edea31526ade1dcccbb2ebddfaf6239187820b88e32fbb2ef18d6f",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "render-queue",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "eef4dbcd313f35d75a113714214bbc4ee9a77833d71fd368bec60a86fbd656cf",
+      "spec_digest": "764c3d6d91edea31526ade1dcccbb2ebddfaf6239187820b88e32fbb2ef18d6f",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "cycle-artifacts",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "eef4dbcd313f35d75a113714214bbc4ee9a77833d71fd368bec60a86fbd656cf",
+      "spec_digest": "764c3d6d91edea31526ade1dcccbb2ebddfaf6239187820b88e32fbb2ef18d6f",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "merge",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "5921d669c531fdd6fb151f2d5b30cbe1c34a477d0f400d8de91ba7025a44653c",
+      "spec_digest": "764c3d6d91edea31526ade1dcccbb2ebddfaf6239187820b88e32fbb2ef18d6f",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "adapter-status",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
+      "spec_digest": "a6ee4f778722a152de238c3cfb2a12def97fabd0be29c0c43fe1b93ba23e39bc",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "adapter-claim",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
+      "spec_digest": "a6ee4f778722a152de238c3cfb2a12def97fabd0be29c0c43fe1b93ba23e39bc",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "adapter-renew",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
+      "spec_digest": "a6ee4f778722a152de238c3cfb2a12def97fabd0be29c0c43fe1b93ba23e39bc",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "adapter-release-error",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
+      "spec_digest": "a6ee4f778722a152de238c3cfb2a12def97fabd0be29c0c43fe1b93ba23e39bc",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "adapter-validate",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
+      "spec_digest": "a6ee4f778722a152de238c3cfb2a12def97fabd0be29c0c43fe1b93ba23e39bc",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "adapter-commit",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
+      "spec_digest": "a6ee4f778722a152de238c3cfb2a12def97fabd0be29c0c43fe1b93ba23e39bc",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "adapter-profile-status",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
+      "spec_digest": "a6ee4f778722a152de238c3cfb2a12def97fabd0be29c0c43fe1b93ba23e39bc",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "adapter-profile-install",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
+      "spec_digest": "a6ee4f778722a152de238c3cfb2a12def97fabd0be29c0c43fe1b93ba23e39bc",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "adapter-recovery",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
+      "spec_digest": "a6ee4f778722a152de238c3cfb2a12def97fabd0be29c0c43fe1b93ba23e39bc",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "adapter-concurrency",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
+      "spec_digest": "a6ee4f778722a152de238c3cfb2a12def97fabd0be29c0c43fe1b93ba23e39bc",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "provider-open",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
+      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "provider-read",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
+      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "provider-scan",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
+      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "provider-counts",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
+      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "provider-evidence",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
+      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "provider-context",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
+      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "provider-stats",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
+      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "provider-warnings",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
+      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "provider-audit",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
+      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "provider-prepare",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
+      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "provider-publish",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
+      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "provider-abort",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
+      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "provider-recover",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
+      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "provider-rebase",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
+      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "provider-export",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
+      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "provider-import",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
+      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "canonical",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "e553136418e14a9ec1c3c5b2f7fc3cc683de43adf3c1472049d971648eced6a7",
+      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "selector",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "e553136418e14a9ec1c3c5b2f7fc3cc683de43adf3c1472049d971648eced6a7",
+      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "page",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "e553136418e14a9ec1c3c5b2f7fc3cc683de43adf3c1472049d971648eced6a7",
+      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "change-identity",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "e553136418e14a9ec1c3c5b2f7fc3cc683de43adf3c1472049d971648eced6a7",
+      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "cognition-open",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "9ca24e73a2d4abe74363cc09607323a21008023dddb2c26958d1209edf1a8692",
+      "spec_digest": "5a41feee5a9bf06b2c301c08b3e87ad9906e868e6c39bd9524dbd6f056660e79",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "cognition-round",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "9ca24e73a2d4abe74363cc09607323a21008023dddb2c26958d1209edf1a8692",
+      "spec_digest": "5a41feee5a9bf06b2c301c08b3e87ad9906e868e6c39bd9524dbd6f056660e79",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "cognition-context",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "9ca24e73a2d4abe74363cc09607323a21008023dddb2c26958d1209edf1a8692",
+      "spec_digest": "5a41feee5a9bf06b2c301c08b3e87ad9906e868e6c39bd9524dbd6f056660e79",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "cognition-source",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "9ca24e73a2d4abe74363cc09607323a21008023dddb2c26958d1209edf1a8692",
+      "spec_digest": "5a41feee5a9bf06b2c301c08b3e87ad9906e868e6c39bd9524dbd6f056660e79",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "cognition-receipt",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "9ca24e73a2d4abe74363cc09607323a21008023dddb2c26958d1209edf1a8692",
+      "spec_digest": "5a41feee5a9bf06b2c301c08b3e87ad9906e868e6c39bd9524dbd6f056660e79",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "cognition-finish",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "9ca24e73a2d4abe74363cc09607323a21008023dddb2c26958d1209edf1a8692",
+      "spec_digest": "5a41feee5a9bf06b2c301c08b3e87ad9906e868e6c39bd9524dbd6f056660e79",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "validate-task",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "692f470a3285b1b10ba8b217d248ee7dad35969d95fe45e355ed0b2dbe342c1a",
+      "spec_digest": "5a41feee5a9bf06b2c301c08b3e87ad9906e868e6c39bd9524dbd6f056660e79",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "validate-context",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "692f470a3285b1b10ba8b217d248ee7dad35969d95fe45e355ed0b2dbe342c1a",
+      "spec_digest": "5a41feee5a9bf06b2c301c08b3e87ad9906e868e6c39bd9524dbd6f056660e79",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "validate-result",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "692f470a3285b1b10ba8b217d248ee7dad35969d95fe45e355ed0b2dbe342c1a",
+      "spec_digest": "5a41feee5a9bf06b2c301c08b3e87ad9906e868e6c39bd9524dbd6f056660e79",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "validate-learning",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "692f470a3285b1b10ba8b217d248ee7dad35969d95fe45e355ed0b2dbe342c1a",
+      "spec_digest": "5a41feee5a9bf06b2c301c08b3e87ad9906e868e6c39bd9524dbd6f056660e79",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    },
+    {
+      "operation": "learning-publish",
+      "decision": "bootstrap",
+      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
+      "reference_digest": "daa98cd2fa6410c51b6539001ec98b8cf766a4bb2a35eb014c540d93e3edcddb",
+      "spec_digest": "a6ee4f778722a152de238c3cfb2a12def97fabd0be29c0c43fe1b93ba23e39bc",
+      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+    }
+  ]
+}

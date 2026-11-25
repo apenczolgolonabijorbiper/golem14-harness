@@ -1,3 +1,20 @@
+# Golem XIV Harness 0.14.0
+
+Released 2026-11-25.
+
+- #74 / #75–#77: add local core portability contract 1.0.0 with 62 operation
+  mappings, normative SudoLang specifications, interchange/implementation schemas,
+  byte-preserved fixtures, 49 retained golden cases and nine conformance scenarios.
+- Cover initialization/indexing, memory validation/retrieval/stats, profile/purpose,
+  candidate writing/merge, Git transactions, provider/transfer and deterministic
+  cognitive-session APIs. Keep Git assumed; exclude inference, MCP, remote workers
+  and installers from target-runtime portability.
+- Add fail-closed source/spec/fixture parity checks to PR CI and release packaging,
+  including same-change review evidence and complete packaged contract hashes.
+- Include an independently implemented Perl statistics example and differential
+  verification protocol. This is partial implementation evidence, not certification
+  of a complete alternate-language runtime. Reference runtime behavior is unchanged.
+
 # Golem XIV Harness 0.13.3
 
 Released 2026-11-25.

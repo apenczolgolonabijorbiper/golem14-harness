@@ -8,6 +8,7 @@ import subprocess
 import sys
 import tempfile
 import zipfile
+import runpy
 
 ROOT = Path(__file__).resolve().parents[1]
 FILES = (
@@ -99,6 +100,12 @@ def release_entries():
     # stay repository-only; only the output enters the integrity manifest.
     subprocess.run([sys.executable, str(ROOT / 'tools/build-explorer.py')], check=True)
     entries = {name: (ROOT / name).read_bytes() for name in FILES}
+    # Ship the complete portable contract and its verifier; hashes cover every
+    # normative input and the checks run again from the extracted package.
+    for directory in ['portability', 'tools/portability']:
+        for path in sorted((ROOT / directory).rglob('*')):
+            if path.is_file() and '__pycache__' not in path.parts:
+                entries[path.relative_to(ROOT).as_posix()] = path.read_bytes()
     entries['AGENTS.md'] = (ROOT / 'integration/AGENTS.distribution.md').read_bytes()
     return entries
 
@@ -107,11 +114,17 @@ def build(output):
     checksum = output.with_suffix(output.suffix + '.sha256')
     if output.exists() or checksum.exists():
         raise FileExistsError('Choose an unused output filename')
+    parity = runpy.run_path(str(ROOT / 'tools/portability/check-parity.py'))
+    parity_status = parity['check']()
     entries = release_entries()
     manifest = {
         'version': entries['VERSION'].decode().strip(),
         'schema_version': 1,
         'provenance': 'docs/PROVENANCE.md',
+        'portability': {**parity_status, 'conformance': 'passed-before-archive-publication',
+                        'evidence': 'portability/evidence/parity.json',
+                        'goldens': 'portability/fixtures/cases.json',
+                        'stateful': 'portability/fixtures/scenarios.json'},
         'files': {name: digest(data) for name, data in entries.items()},
     }
     entries['RELEASE.json'] = (json.dumps(manifest, indent=2, sort_keys=True) + '\n').encode()
@@ -121,6 +134,11 @@ def build(output):
             path = stage / name
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_bytes(data)
+        subprocess.run([sys.executable, 'tools/portability/check-parity.py'], cwd=stage, check=True)
+        subprocess.run([sys.executable, 'tools/portability/test-parity.py'], cwd=stage, check=True)
+        subprocess.run(['node', 'tools/portability/conformance.mjs'], cwd=stage, check=True)
+        subprocess.run(['node', '--test', 'tools/portability/scenarios.test.mjs'], cwd=stage, check=True,
+                       env={**os.environ, 'GOLEM_PYTHON': os.environ.get('GOLEM_PYTHON', sys.executable)})
         subprocess.run(['node', '--test', 'server/memory-core.test.mjs', 'server/cognitive-task.test.mjs',
                         'server/cognitive-evaluation.test.mjs', 'server/application-source.test.mjs',
                         'server/profile-inspection.test.mjs',

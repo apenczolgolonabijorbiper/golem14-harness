@@ -1,0 +1,278 @@
+{
+  "contract_version": "1.0.0",
+  "scenarios": [
+    {
+      "id": "portable-goldens",
+      "operations": [
+        "schema",
+        "parse-source",
+        "validate",
+        "context",
+        "stats",
+        "warnings",
+        "hypotheses",
+        "vocabulary",
+        "vocabulary-survey",
+        "canonical",
+        "guidance",
+        "render-queue",
+        "cycle-artifacts",
+        "dependencies",
+        "path",
+        "capabilities",
+        "selector",
+        "page",
+        "validate-task",
+        "validate-context",
+        "validate-result",
+        "validate-learning",
+        "change-identity"
+      ],
+      "initial_fixture": "empty",
+      "steps_and_invariants": [
+        "Run each cases.json input",
+        "Compare retained results/errors exactly; no golden regeneration"
+      ],
+      "dynamic_fields": [
+        "temporary absolute paths",
+        "Git snapshot IDs",
+        "run UUID",
+        "clock timestamps; relationships must remain exact"
+      ],
+      "additional_fault_suites": []
+    },
+    {
+      "id": "init-index",
+      "operations": [
+        "init",
+        "index"
+      ],
+      "initial_fixture": "empty",
+      "steps_and_invariants": [
+        "Initialize absent destination; second init refuses",
+        "Index CRLF raw source; evidence text normalized, sha256 binds raw bytes",
+        "Retry preserves evidence bytes; next owner removes orphan temp",
+        "Ledger and cognition lease remain byte-identical"
+      ],
+      "dynamic_fields": [
+        "temporary absolute paths",
+        "Git snapshot IDs",
+        "run UUID",
+        "clock timestamps; relationships must remain exact"
+      ],
+      "additional_fault_suites": [
+        "processor/test-indexer.py",
+        "adapters/conformance/adapter.test.mjs",
+        "adapters/conformance/provider.test.mjs"
+      ],
+      "input_vectors": "index-cases.json"
+    },
+    {
+      "id": "draft-transaction",
+      "operations": [
+        "adapter-status",
+        "adapter-claim",
+        "adapter-renew",
+        "write-candidate",
+        "adapter-validate",
+        "adapter-commit"
+      ],
+      "initial_fixture": "empty",
+      "steps_and_invariants": [
+        "Copy empty fixture, Git init and initial commit; add old Beta observation",
+        "Claim and renew; writer preview has no draft effects",
+        "Apply explicit empty semantic set; validate candidate leaves HEAD/lease/ledger unchanged",
+        "Commit marks exactly one source processed; subsequent claim no-work"
+      ],
+      "dynamic_fields": [
+        "temporary absolute paths",
+        "Git snapshot IDs",
+        "run UUID",
+        "clock timestamps; relationships must remain exact"
+      ],
+      "additional_fault_suites": [],
+      "input_templates": [
+        "writer/change.json.tpl",
+        "pending/22222222-2222-4222-8222-222222222222.md"
+      ],
+      "byte_goldens": [
+        "writer/graph.json",
+        "writer/index.md.tpl",
+        "writer/journal.md.tpl"
+      ]
+    },
+    {
+      "id": "recovery-and-ownership",
+      "operations": [
+        "adapter-release-error",
+        "adapter-recovery"
+      ],
+      "initial_fixture": "empty",
+      "steps_and_invariants": [
+        "Wrong-owner renew refuses",
+        "Inject lost response AFTER successful completion CAS before local reconciliation",
+        "New adapter status recovery_required; next claim reconciles, no duplicate commit/completion",
+        "Separate error-release leaves source ready"
+      ],
+      "dynamic_fields": [
+        "temporary absolute paths",
+        "Git snapshot IDs",
+        "run UUID",
+        "clock timestamps; relationships must remain exact"
+      ],
+      "additional_fault_suites": [
+        "processor/test-indexer.py",
+        "adapters/conformance/adapter.test.mjs",
+        "adapters/conformance/provider.test.mjs"
+      ],
+      "input_templates": [
+        "writer/change.json.tpl",
+        "pending/22222222-2222-4222-8222-222222222222.md"
+      ],
+      "byte_goldens": [
+        "writer/graph.json",
+        "writer/index.md.tpl",
+        "writer/journal.md.tpl"
+      ]
+    },
+    {
+      "id": "concurrent-claim",
+      "operations": [
+        "adapter-concurrency"
+      ],
+      "initial_fixture": "empty",
+      "steps_and_invariants": [
+        "Hold first claimant at post-CAS gate while operation mutex is still owned",
+        "Start a second process only after first reports READY; it must refuse the actual mutex as busy",
+        "Release owner gate; exactly one lease remains; a subsequent claim refuses the unexpired lease"
+      ],
+      "dynamic_fields": [
+        "temporary absolute paths",
+        "Git snapshot IDs",
+        "run UUID",
+        "clock timestamps; relationships must remain exact"
+      ],
+      "additional_fault_suites": [
+        "processor/test-indexer.py",
+        "adapters/conformance/adapter.test.mjs",
+        "adapters/conformance/provider.test.mjs"
+      ]
+    },
+    {
+      "id": "profile-and-source",
+      "operations": [
+        "adapter-profile-status",
+        "adapter-profile-install",
+        "profile-check",
+        "source-bundle"
+      ],
+      "initial_fixture": "empty",
+      "steps_and_invariants": [
+        "Explicit synthetic source config, profile and purpose",
+        "Not-installed -> installed -> in-sync; repeat unchanged",
+        "Profile check selected; source bundle preserves exact reviewed purpose bytes"
+      ],
+      "dynamic_fields": [
+        "temporary absolute paths",
+        "Git snapshot IDs",
+        "run UUID",
+        "clock timestamps; relationships must remain exact"
+      ],
+      "additional_fault_suites": []
+    },
+    {
+      "id": "merge-snapshots",
+      "operations": [
+        "merge"
+      ],
+      "initial_fixture": "instance",
+      "steps_and_invariants": [
+        "Merge identical completed fixture snapshots into absent output",
+        "No conflicts, one retained claim, exact raw observation bytes",
+        "Lease excluded; reuse existing output refuses without mutation"
+      ],
+      "dynamic_fields": [
+        "temporary absolute paths",
+        "Git snapshot IDs",
+        "run UUID",
+        "clock timestamps; relationships must remain exact"
+      ],
+      "additional_fault_suites": []
+    },
+    {
+      "id": "provider-cycle-transfer",
+      "operations": [
+        "provider-open",
+        "provider-read",
+        "provider-scan",
+        "provider-counts",
+        "provider-evidence",
+        "provider-context",
+        "provider-stats",
+        "provider-warnings",
+        "provider-audit",
+        "provider-prepare",
+        "provider-publish",
+        "provider-abort",
+        "provider-recover",
+        "provider-rebase",
+        "provider-export",
+        "provider-import"
+      ],
+      "initial_fixture": "instance",
+      "steps_and_invariants": [
+        "Copy completed fixture, add Beta and claim provider capability",
+        "Point reads, pages/cursor mismatch, exact evidence bytes and pending stats",
+        "Prepare semantic journal+verification and abort; no receipt",
+        "Prepare/publish once, recover same durable receipt, history audit passes",
+        "Export/import complete stream has logical equality; corrupt checksum aborts all staging"
+      ],
+      "dynamic_fields": [
+        "temporary absolute paths",
+        "Git snapshot IDs",
+        "run UUID",
+        "clock timestamps; relationships must remain exact"
+      ],
+      "additional_fault_suites": [
+        "processor/test-indexer.py",
+        "adapters/conformance/adapter.test.mjs",
+        "adapters/conformance/provider.test.mjs"
+      ],
+      "input_templates": [
+        "provider/change.json.tpl",
+        "pending/22222222-2222-4222-8222-222222222222.md"
+      ],
+      "bindings": {
+        "RUN": "claimed run ID",
+        "SNAPSHOT": "provider open snapshot_id after claim",
+        "POLICY": "provider open policy_id after claim"
+      }
+    },
+    {
+      "id": "cognition-and-learning",
+      "operations": [
+        "cognition-open",
+        "cognition-round",
+        "cognition-context",
+        "cognition-source",
+        "cognition-receipt",
+        "cognition-finish",
+        "learning-publish"
+      ],
+      "initial_fixture": "instance",
+      "steps_and_invariants": [
+        "Open immutable completed fixture view; bind task to snapshot/guidance",
+        "Retrieve claim and exact source; valid result matches trusted usage/coverage",
+        "Exhausted round budget refuses",
+        "Unauthorized learning refuses; authorized proposal published once; same retry already_published"
+      ],
+      "dynamic_fields": [
+        "temporary absolute paths",
+        "Git snapshot IDs",
+        "run UUID",
+        "clock timestamps; relationships must remain exact"
+      ],
+      "additional_fault_suites": []
+    }
+  ]
+}
