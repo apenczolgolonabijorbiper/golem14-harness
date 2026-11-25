@@ -1,5 +1,13 @@
 # Upgrading to 0.5.0
 
+> Historical release material — superseded for current setup. The version-scoped
+> behavior below records earlier releases, not current compatibility promises.
+> Since 0.7.0, historical persona layouts and claim aliases are unsupported.
+> Use [current layout](INSTANCE_LAYOUT.md), [processing](PROCESSING.md) and
+> [memory-provider contracts](MEMORY_PROVIDERS.md) for the current release.
+
+<!-- historical-release-material: begin -->
+
 This series implements VP-001 through VP-006. It does not initialize, migrate or
 replace any existing instance automatically. Install the verified 0.5.0 release and retain the existing external instance.
 The source implements the six work packages reviewed in PR #14.
@@ -32,3 +40,5 @@ The source implements the six work packages reviewed in PR #14.
 
 All reusable functionality is application-agnostic. Domain rules and vocabularies
 belong to selected external profiles; synthetic fixtures do not prescribe a product.
+
+<!-- historical-release-material: end -->

@@ -57,7 +57,7 @@ FILES = (
     'profiles/templates/software-development-tfs-git/fixtures/observations.json',
     'profiles/templates/software-development-tfs-git/fixtures/expected.json',
 
-    'README.md', 'VERSION', 'LICENSE', 'docs/RELEASE_NOTES.md',
+    'README.md', 'VERSION', 'LICENSE', 'docs/RELEASE_NOTES.md', 'tools/test-doc-contracts.py',
     'docs/architecture-explorer.html',
     'docs/EXTRACTION.md', 'docs/MEMORY_MODEL.md', 'docs/PROCESSING.md',
     'docs/PROVENANCE.md', 'docs/ARCHITECTURE_MAPPING.md',
@@ -129,7 +129,7 @@ def build(output):
                         'server/adapter-performance.test.mjs', 'server/candidate-writer.test.mjs', 'server/memory-timings.test.mjs',
                         'adapters/conformance/adapter.test.mjs', 'adapters/conformance/provider.test.mjs', 'server/neutral-core.test.mjs', 'server/subprocess.test.mjs', 'server/core-priorities.test.mjs', 'server/intake.test.mjs'],
                        cwd=stage, check=True, env={**os.environ, 'GOLEM_PYTHON': os.environ.get('GOLEM_PYTHON', sys.executable)})
-        for script in ['processor/test-validation.py', 'processor/test-observation-portability.py', 'processor/test-indexer.py',
+        for script in ['tools/test-doc-contracts.py', 'processor/test-validation.py', 'processor/test-observation-portability.py', 'processor/test-indexer.py',
                        'integration/test-install-cursor.py', 'integration/test-install-codex.py']:
             subprocess.run([sys.executable, script], cwd=stage, check=True)
     with zipfile.ZipFile(output, 'x') as archive:

@@ -84,8 +84,9 @@ Never select a different provider or migrate/reset knowledge implicitly.
 
 ## Cognition contract
 
-Resolve the layout using docs/INSTANCE_LAYOUT.md (also reported by memory-tool
-validate). New instances use instance/purpose.md and memory/hypotheses.json.
+For the JSON reference only, resolve the canonical layout using
+docs/INSTANCE_LAYOUT.md (also reported by memory-tool validate).
+Required files are instance/purpose.md and memory/hypotheses.json.
 Graph v2 and hypotheses v1 are required. Historical layouts/claim aliases are not
 supported. Incompatible previous instances may be scrapped and recreated after
 an explicit setup instruction; do not auto-delete or convert user data.

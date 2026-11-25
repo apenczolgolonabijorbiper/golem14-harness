@@ -1,5 +1,13 @@
 # Upgrading to 0.6.0
 
+> Historical release material — superseded for current setup. The version-scoped
+> behavior below records earlier releases, not current compatibility promises.
+> Since 0.7.0, historical persona layouts and claim aliases are unsupported.
+> Use [current layout](INSTANCE_LAYOUT.md), [processing](PROCESSING.md) and
+> [memory-provider contracts](MEMORY_PROVIDERS.md) for the current release.
+
+<!-- historical-release-material: begin -->
+
 Replace the verified installed engine and preserve the external instance. An
 upgrade is a complete directory replacement, not an extraction over the old tree:
 
@@ -43,3 +51,5 @@ macOS validation; actual results are recorded in the PR/release evidence.
 Windows CI also exposed a textual repository-root comparison failure. The reference
 adapter now compares resolved directory identity (device/inode), accepting equivalent
 Windows path spellings while still refusing a data subdirectory of another Git root.
+
+<!-- historical-release-material: end -->

@@ -111,8 +111,9 @@ For a new instance, save the user's approved purpose, language and initial domai
 guidance in its instance/purpose.md after initialization. Clearly identify these
 as setup instructions, outside observed evidence. For an existing instance,
 propose purpose/instruction changes only when the user requests them. Resolve the
-existing purpose path via memory-tool validate / docs/INSTANCE_LAYOUT.md; never
-create a new purpose file alongside a historical one.
+canonical JSON purpose path via memory-tool validate / docs/INSTANCE_LAYOUT.md.
+Historical persona paths are not supported; if canonical files are missing, stop
+and report the incompatible instance without creating replacement role files.
 
 Save a concise reusable setup record at the selected location. Include:
 

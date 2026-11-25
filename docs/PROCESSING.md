@@ -89,10 +89,14 @@ The CLI and initializer do not implement these storage transactions.
 
 ## Cognition and completion
 
-Resolve purpose/hypothesis paths as described in docs/INSTANCE_LAYOUT.md. Neutral
-and historical layouts are supported without mutation; duplicate role paths fail
-closed. Use attributed_to_id and source_assertion/hypothesis/corroborated for new
-claims. Preserve all original fields/classification spellings in retained claims.
+For the JSON reference, use only `instance/purpose.md` and
+`memory/hypotheses.json` as specified in [INSTANCE_LAYOUT.md](INSTANCE_LAYOUT.md).
+Historical persona paths and claim aliases are not supported. Graph v2 claims use
+`attributed_to_id` and `source_assertion` / `hypothesis` / `corroborated`.
+Retain valid historical events and claims under the supported canonical schemas;
+preserving history does not authorize unsupported fields or classification names.
+Other memory providers use the logical contracts in MEMORY_PROVIDERS.md, without
+requiring these physical files.
 
 After the harness contract and before reasoning, load this instance's explicitly
 selected application profile on every cycle. Follow docs/APPLICATION_PROFILES.md.

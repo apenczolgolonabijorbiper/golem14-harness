@@ -1,5 +1,13 @@
 # Release history
 
+> Historical release material — superseded for current setup. The version-scoped
+> behavior below records earlier releases, not current compatibility promises.
+> Since 0.7.0, historical persona layouts and claim aliases are unsupported.
+> Use [current layout](INSTANCE_LAYOUT.md), [processing](PROCESSING.md) and
+> [memory-provider contracts](MEMORY_PROVIDERS.md) for the current release.
+
+<!-- historical-release-material: begin -->
+
 ## 0.8.0 — Completed candidate merge
 
 - VP-013 (#35): keyed three-way graph, ledger, queue and hypotheses merging.
@@ -145,3 +153,5 @@ claimed. Rules are agent guidance, not filesystem access controls. Official Curs
 documentation retrieval failed during this task; no version-specific discovery
 guarantee is claimed. The owner verifies the rule in a fresh local session.
 
+
+<!-- historical-release-material: end -->

@@ -75,8 +75,8 @@ claim/renew/error release each produce their own protocol-only commit. The run's
 journal is memory/runs/RUN.md. --outputs is a comma-separated list of existing,
 instance-relative regular files. Absolute paths, drive/backslash/glob paths,
 traversal, .git, symlinks/nonfiles, reserved ledger/lease/configuration, inbox and
-profile/vendor paths are refused. The adapter includes mandatory graph/index/queues and the resolved hypotheses file
-(neutral or historical layout), the run journal, claimed inbox and existing evidence/ID.json itself.
+profile/vendor paths are refused. The adapter includes mandatory graph/index/queues and the canonical `memory/hypotheses.json` file
+(JSON reference layout only), the run journal, claimed inbox and existing evidence/ID.json itself.
 Evidence indexing remains a host step. Declare event files in outputs. Unrelated
 changed and unclaimed files are left untouched/uncommitted and reported.
 

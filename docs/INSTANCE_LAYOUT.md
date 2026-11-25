@@ -1,6 +1,9 @@
 # Target instance layout (0.7.0)
 
 The cognitive memory is application-agnostic. A persona is an optional profile.
+The physical paths below apply to the JSON reference only. Other
+[memory providers](MEMORY_PROVIDERS.md) use logical records and pinned guidance;
+they need not expose these files.
 
 | Role | Path |
 |---|---|
