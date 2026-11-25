@@ -147,7 +147,14 @@ A change has `provider_version:1`, opaque `base_snapshot`, `policy_id`, `lease_i
 | `append_verification` | `record` with attempt ID, `run_id`, `result`; retain observed configuration/limitations as needed |
 
 Sources are completed by the host transaction, not a model-supplied processed
-flag. `semanticWrites` derives CAS-bound record writes and processed/source rows.
+flag. Exactly one host candidate assembly component writes completion records:
+`semanticWrites` derives CAS-bound record writes and one processed/source row per
+claimed source, preserving prior records. The agent supplies semantic operations
+and source identities; it must not also append completion rows. The provider's
+isolated candidate must contain these records before validation. A logical
+provider need not expose `processed.json` or filesystem staging. Audits reject
+duplicate IDs (`processed: duplicate/invalid ID`) separately from source integrity
+failures; records are never silently deduplicated.
 Every cycle requires a journal and separate resolvable verification record, even
 if the verification result is a qualified or limited result. A deterministic
 fixture must never claim actual-model evaluation.

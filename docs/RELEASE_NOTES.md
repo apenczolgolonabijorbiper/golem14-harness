@@ -1,3 +1,19 @@
+# Unreleased — app-owner findings (#90)
+
+- VI-017 / #87: serialize local JSON indexer invocations and atomically publish
+  evidence files, with synchronized contention, reader, failure and interruption
+  tests in the packaged platform checks. Existing evidence and exact source bytes
+  are preserved; cognition leases are separate.
+- VI-015 / #88: define one host candidate completion-row writer for reference,
+  direct staged and provider paths. Diagnose duplicate JSON ledger rows separately
+  from source-integrity failures; preserve provider unique-ID enforcement.
+- VI-013 / #89: align current guidance with canonical JSON layout/attribution and
+  logical provider boundaries. Mark historical release material superseded for
+  current setup, check documentation consistency and regenerate embedded content.
+- No schema migration, compatibility alias, application runtime reset or release
+  publication. Manual review and published-package verification remain separate.
+  See [implementation evidence](https://github.com/apenczolgolonabijorbiper/golem14-harness/blob/master/docs/verification/app-owner-plan-90.md).
+
 # Golem XIV Harness 0.13.0
 
 Released 2026-11-24.

@@ -110,3 +110,24 @@ test('CLI optional purpose-guidance-v2: purpose-only immutable delivery and dirt
  const purpose=f.read('instance/purpose.md');f.observe();f.write('instance/purpose.md',purpose+'Dirty');const head=f.git('rev-parse','HEAD');assert.throws(()=>invoke(f,'claim'),/purpose/);assert.equal(f.git('rev-parse','HEAD'),head);f.write('instance/purpose.md',purpose);
  const c=invoke(f,'claim');assert.equal(c.guidance_version.schema_version,2);assert.equal(c.guidance_version.profile,null);assert.equal(c.guidance,purpose);assert.equal(JSON.parse(f.read(c.guidance_path)).guidance,c.guidance);f.analyze(c);assert.equal(invoke(f,'commit','--run',c.run_id).status,'committed');
 });
+
+if (!process.env.GOLEM_ADAPTER) test('reference: candidate assembler alone owns completion rows and reserved state', t => {
+  const f=fixture(t);f.observe(1);f.observe(2);
+  const claim=invoke(f,'claim');f.analyze(claim);
+  const ledger=f.read('memory/processed.json'),lease=f.read('memory/processing-lock.json'),head=f.git('rev-parse','HEAD');
+  for(const path of ['memory/processed.json','memory/processing-lock.json']) {
+    assert.throws(()=>invoke(f,'validate','--run',claim.run_id,'--outputs',path),/reserved|protocol|output/i);
+    assert.equal(f.read('memory/processed.json'),ledger);assert.equal(f.read('memory/processing-lock.json'),lease);
+  }
+  const manual=JSON.parse(ledger);manual.observations.push({id:claim.sources[0].id,status:'processed'});
+  f.write('memory/processed.json',manual);
+  for(const action of ['validate','commit'])assert.throws(()=>invoke(f,action,'--run',claim.run_id),/protocol|ledger|stale/i);
+  assert.equal(f.git('rev-parse','HEAD'),head);assert.equal(f.read('memory/processing-lock.json'),lease);
+  assert.deepEqual(JSON.parse(f.read('memory/processed.json')),manual);
+  f.write('memory/processed.json',ledger);
+  invoke(f,'validate','--run',claim.run_id);assert.equal(f.read('memory/processed.json'),ledger);
+  invoke(f,'commit','--run',claim.run_id);
+  const rows=JSON.parse(f.read('memory/processed.json')).observations;
+  assert.equal(rows.length,2);assert.deepEqual(rows.map(r=>r.id).sort(),claim.sources.map(s=>s.id).sort());
+  assert.equal(new Set(rows.map(r=>r.id)).size,2);assert.equal(invoke(f,'validate').ok,true);
+});

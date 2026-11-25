@@ -49,6 +49,10 @@ export function providerConformance(name,factory){
     assert.equal((await m.read(current.snapshot_id,'claims','clm-new')).object.value,'B');
     assert.deepEqual(await m.audit(current.snapshot_id,{previous:meta.snapshot_id}),[]);
     assert.equal((await m.stats(current.snapshot_id)).totals.processed,before.totals.processed+1);
+    const completed=await records(h.provider,current.snapshot_id,'processed');
+    assert.equal(completed.length,before.totals.processed+1);
+    assert.equal(new Set(completed.map(r=>r.id)).size,completed.length);
+    for(const source of change.sources)assert.equal(completed.filter(r=>r.id===source.id).length,1);
     assert.equal((await m.read(current.snapshot_id,'journals',change.run_id)).verification_id,change.attempt_id);
     assert.equal((await m.read(current.snapshot_id,'verification',change.attempt_id)).run_id,change.run_id);
     assert.equal((await m.recover(change.idempotency_key)).change_digest,candidate.change_digest);

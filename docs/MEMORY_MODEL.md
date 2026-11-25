@@ -13,6 +13,10 @@ scrapped and recreated with the initializer. No legacy reader, alias conversion,
 layout migration or rollback workflow is provided. Historical release documents
 remain historical evidence, not setup instructions for this version.
 
+The physical paths and graph-file procedures below describe the JSON reference.
+Other [memory providers](MEMORY_PROVIDERS.md) enforce the same logical schemas,
+evidence and history rules through records, without requiring these files.
+
 ## Provenance and history
 
 Each claim cites exact nonempty body quotations. Subject, attribution and object
@@ -126,11 +130,20 @@ lease ownership and compare-and-swap; re-read/revalidate after concurrent change
 Do not manually rewrite RELEASE.json or bypass checks in a consuming application.
 The schema checker accepts only its bundled bounded keyword vocabulary.
 
+Completion rows have one writer: the host candidate assembler (the adapter/backend
+when it owns assembly). Cognition agents do not also append rows on adapter or
+provider paths. Direct staged-file validation requires the host to supply all
+rows first; it does not generate them. Logical providers use processed records,
+not a mandatory `processed.json` file. See the
+[responsibility table](PROCESSING.md#completion-row-ownership).
+
 ## Validation rules
 
 Schema diagnostics include the failing graph path and describe shape, type, value
 or schema vocabulary violations. The following messages describe cross-record
-checks in `validateMemory`. The CLI additionally checks that the readable queue
+checks in `validateMemory`. Unsupported fields such as `speaker_id` fail schema
+validation as `unexpected field`; unsupported classifications fail as `invalid enum`.
+There is no alias-coexistence attribution check in graph v2. The CLI additionally checks that the readable queue
 contains each question's ID and text.
 
 | Diagnostic | What to check |
@@ -143,7 +156,8 @@ contains each question's ID and text.
 | `Question analysis source missing` | Every observation referenced by question analysis must exist. |
 | `Closed question needs an analyzed answer` | A closed question requires answered analysis with source observations. |
 | `Invalid processed ledger` | Supply a version 1 ledger with an observations array. |
-| `Ledger source mismatch` | Each processed row needs a unique ID and matching source path and hash. |
+| `Duplicate processed row` | Exactly one completion row is allowed per observation ID; fix the candidate assembler, never silently deduplicate. |
+| `Ledger source mismatch` | Each row must have status `processed`, an existing source and matching source path and hash. |
 | `Processed source missing from graph` | Each ledger source must be represented in the graph. |
 | `Graph source mismatch` | The graph source path, hash and timestamp must match the inbox observation. |
 | `Graph source is not processed` | Stage a matching processed ledger row for every graph source. |
@@ -151,10 +165,9 @@ contains each question's ID and text.
 | `Unknown source question` | A source's question reference must resolve in the queue. |
 | `Entity source missing` | Every entity source ID must resolve to a graph source. |
 | `Entity created after graph update` | Entity creation must be at or before the graph update. |
-| `Conflicting claim attribution` | When both attributed_to_id and legacy speaker_id are present, they must identify the same entity. |
-| `Claim entity not found` | The named subject, speaker or object field must reference an existing entity. The message includes both IDs. |
+| `Claim entity not found` | The named `subject_id`, `attributed_to_id` or `object.entity_id` field must reference an existing entity. The message includes both IDs. |
 | `Claim source/quote mismatch` | Every cited observation must be a graph source and contain the exact quote. |
-| `Entity provenance does not include claim source` | The subject, speaker and entity-valued object must each include every cited observation ID in their own `source_ids`. |
+| `Entity provenance does not include claim source` | The subject, attributed entity and entity-valued object must each include every cited observation ID in their own `source_ids`. |
 | `Hypothesis requires uncertainty` | Supply uncertainty for any hypothesis. |
 | `Invalid time range` | The validity start must be at or before its end. |
 | `Unknown time cannot assert bounds` | Unknown validity has empty bounds. |
@@ -176,6 +189,11 @@ contains each question's ID and text.
 | `Invalid claim dependency` | Every dependency exists and differs from the claim itself. |
 | `Claim dependency cycle` | Dependency edges must be acyclic; cyclic IDs are named. |
 | `Readable queue missing question` | Include the question ID and text in the Markdown queue. |
+
+Provider validation independently enforces unique IDs in each logical collection:
+`processed: duplicate/invalid ID` rejects repeated completion IDs before checking
+source integrity. It does not accept or silently deduplicate malformed records.
+The JSON duplicate diagnostic above is specific to `validateMemory`.
 
 ## Validation warnings
 

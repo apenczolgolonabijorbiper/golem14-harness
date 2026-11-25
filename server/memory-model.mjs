@@ -50,7 +50,7 @@ export function validateMemory(graph,{sources={},ledger,queue,previous,metrics}=
   end?.();end=metrics?.stage('provenance');
   if(!ledger||ledger.schema_version!==1||!Array.isArray(ledger.observations))fail('Invalid processed ledger');
   const processed=new Map();
-  for(const row of Array.isArray(ledger?.observations)?ledger.observations:[]){if(processed.has(row.id)||row.status!=='processed'||!sources[row.id]||row.source_file!==sources[row.id]?.path||row.source_sha256!==sources[row.id]?.sha256)fail('Ledger source mismatch: '+row.id);processed.set(row.id,row);if(!ss.has(row.id))fail('Processed source missing from graph: '+row.id);}
+  for(const row of Array.isArray(ledger?.observations)?ledger.observations:[]){if(processed.has(row.id))fail('Duplicate processed row: '+row.id);if(row.status!=='processed'||!sources[row.id]||row.source_file!==sources[row.id]?.path||row.source_sha256!==sources[row.id]?.sha256)fail('Ledger source mismatch: '+row.id);processed.set(row.id,row);if(!ss.has(row.id))fail('Processed source missing from graph: '+row.id);}
   for(const s of graph.sources){const actual=sources[s.id];if(!actual||actual.path!==s.path||actual.sha256!==s.sha256||actual.recorded_at!==s.recorded_at)fail('Graph source mismatch: '+s.id);if(!processed.has(s.id))fail('Graph source is not processed: '+s.id);}
   for(const [id,s]of Object.entries(sources)){if(s.id!==id||s.path!==`inbox/${id}.md`||!s.body?.trim()||!Number.isFinite(Date.parse(s.recorded_at)))fail('Invalid source: '+id);if(s.question_id&&!qi.has(s.question_id))fail('Unknown source question: '+id);}
   errors.push(...dependencyErrors(graph.claims));

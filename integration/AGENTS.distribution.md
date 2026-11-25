@@ -84,8 +84,9 @@ Never select a different provider or migrate/reset knowledge implicitly.
 
 ## Cognition contract
 
-Resolve the layout using docs/INSTANCE_LAYOUT.md (also reported by memory-tool
-validate). New instances use instance/purpose.md and memory/hypotheses.json.
+For the JSON reference only, resolve the canonical layout using
+docs/INSTANCE_LAYOUT.md (also reported by memory-tool validate).
+Required files are instance/purpose.md and memory/hypotheses.json.
 Graph v2 and hypotheses v1 are required. Historical layouts/claim aliases are not
 supported. Incompatible previous instances may be scrapped and recreated after
 an explicit setup instruction; do not auto-delete or convert user data.
@@ -128,9 +129,14 @@ confidence and updated_at in the versioned hypotheses file; optional model recor
 the host-reported value. Keep an empty versioned collection when there are none.
 Review dependency_changed and other warnings each cycle. See docs/ANALYSIS_WORKFLOW.md.
 
-Follow docs/PROCESSING.md for readiness, leases and atomic completion. Stage the
-processed ledger rows inside the isolated candidate before validating the complete
-candidate against the committed prior graph. Publish completion only through the
+Follow docs/PROCESSING.md for readiness, leases and atomic completion. Exactly one
+host candidate assembler writes completion rows. On reference adapter/provider
+paths, submit semantic artifacts/changes; never also append ledger rows or edit
+reserved lease/ledger files. The reference adapter derives rows from HEAD plus
+claimed sources and excludes those protocol files from agent `--outputs`.
+For direct staged-file validation, the host must supply completion rows in the
+isolated snapshot before validating it against the committed prior graph;
+standalone validation does not synthesize rows. Publish completion only through the
 atomic commit. On conflicts re-read, merge and revalidate.
 Never overwrite another processor's lease or force-push. Verify persisted writes.
 Record each completed cycle in memory/runs/ with sources, changes and unresolved

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {existsSync,renameSync,unlinkSync} from 'node:fs';
+import {existsSync,renameSync,unlinkSync,mkdirSync} from 'node:fs';
 import {join} from 'node:path';
 import {fixture,python,pythonCommand,harness} from './test-fixtures.mjs';
 import {physicallyWithin} from './application-profile.mjs';
@@ -28,4 +28,26 @@ test('Python launcher selection is explicit, portable and reports the attempted 
   assert.deepEqual(pythonCommand({env:{},platform:'win32'}),['py','-3']);assert.deepEqual(pythonCommand({env:{},platform:'linux'}),['python3']);assert.deepEqual(pythonCommand({env:{GOLEM_PYTHON:'C:/Program Files/Python/python.exe'},platform:'win32'}),['C:/Program Files/Python/python.exe']);
   assert.match(python(['-c','import sys; print(sys.version_info.major)']),/^3$/);
   assert.throws(()=>python(['-V'],{env:{...process.env,GOLEM_PYTHON:'missing-golem-interpreter'}}),/missing-golem-interpreter/);
+});
+
+
+test('historical persona paths cannot substitute for required canonical JSON files',async t=>{
+  const f=fixture(t);mkdirSync(join(f.root,'persona'));
+  renameSync(join(f.root,'instance/purpose.md'),join(f.root,'persona/identity.md'));
+  await assert.rejects(()=>resolveLayout(f.root),/Missing instance purpose: instance\/purpose.md/);
+  renameSync(join(f.root,'persona/identity.md'),join(f.root,'instance/purpose.md'));
+  renameSync(join(f.root,'memory/hypotheses.json'),join(f.root,'persona/hypotheses.json'));
+  await assert.rejects(()=>resolveLayout(f.root),/Missing instance hypotheses: memory\/hypotheses.json/);
+});
+
+test('legacy classification aliases and coexisting speaker_id fail canonical graph schema',async t=>{
+  const f=fixture(t);f.observe();const adapter=createAdapter({instance:f.root}),claim=await adapter.claim();
+  f.analyze(claim);await adapter.commit({run:claim.run_id});const {graph}=await loadMemory(f.root);
+  for(const classification of ['user_declaration','independently_confirmed']){
+    const bad=structuredClone(graph);bad.claims[0].classification=classification;
+    assert.ok(schemaErrors(bad).some(e=>e.includes('classification: invalid enum')));
+  }
+  const bad=structuredClone(graph);bad.claims[0].speaker_id=bad.claims[0].attributed_to_id;
+  assert.ok(schemaErrors(bad).some(e=>e.includes('speaker_id: unexpected field')));
+  assert.deepEqual(schemaErrors(graph),[]);
 });

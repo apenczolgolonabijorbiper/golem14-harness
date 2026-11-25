@@ -135,12 +135,23 @@ Save as inbox/00000000-0000-4000-8000-000000000001.md. Index it:
 python3 processor/process.py --root ../my-instance
 ```
 
+The JSON reference indexer locks one private instance across local processes and
+publishes each evidence JSON atomically. Concurrent invocations refuse promptly
+with `Indexer busy:` (exit 1); retry after the owner exits. Existing evidence is
+preserved. A killed owner releases its OS lock; the next run cleans unpublished
+temporaries. Keep `.golem-indexer.lock` in place even when idle. See the
+[indexer concurrency and recovery contract](docs/PROCESSING.md#json-reference-indexer-concurrency)
+for platform boundaries and recovery. Indexing is separate from cognition leases
+and atomic completion of an analysis cycle.
+
 Then give an authorized LLM agent this package's AGENTS.md and processing protocol,
 read/write access to ONLY the new instance, and a storage adapter capable of the
 protocol's lease/atomic completion guarantees. Tell it explicitly which instance
 to analyze. Manual analysis is the default; nothing starts by running the indexer.
-Stage the processed ledger rows before validating the complete candidate against
-the prior committed graph. See docs/PROCESSING.md for the transaction order.
+The host candidate assembler supplies completion rows before validation. With the
+reference adapter/provider, agents do not edit the ledger/lease; with direct
+staged-file validation, the host stages the rows itself. Validate the complete
+candidate against the prior committed graph. See docs/PROCESSING.md for the transaction order.
 
 ```sh
 node processor/memory-tool.mjs context --root ../my-instance --query "Test City"

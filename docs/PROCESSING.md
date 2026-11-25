@@ -42,6 +42,38 @@ deduplication rule scoped to the original feature and upstream record. Preserve
 deliberate repeat observations. During semantic review, repeated copies of the
 same material do not count as independent corroboration.
 
+## JSON reference indexer concurrency
+
+`processor/process.py` serializes participating local processes sharing one
+private instance on a supported local filesystem (Linux/macOS `flock`, Windows
+one-byte `msvcrt` lock). A competing invocation exits promptly with status 1 and
+`Indexer busy:`; retry after the owner exits. A nonoverlapping rerun skips existing
+evidence and emits no `Indexed:` lines. The instance-scoped lock covers target
+existence checks, orphan cleanup and every publication. Existing evidence is
+preserved byte for byte, including evidence from earlier runs.
+
+The OS owns the lock on the persistent `.golem-indexer.lock` file at the instance
+root. Closing the handle on success, error or process death releases ownership.
+The file's existence does not mean busy. Never delete or replace it to recover a
+lock: that could split ownership between different file objects. A hung live
+owner must exit or be terminated before retrying. This lock is independent of
+`memory/processing-lock.json`; indexing never acquires or changes a cognition lease.
+
+For each new record, write complete UTF-8 JSON to a uniquely named
+`evidence/.golem-index-*.tmp`, flush and fsync it, close it, then atomically replace
+the final `evidence/ID.json` within the same directory. `Indexed:` prints only
+after publication. Readers of final JSON names see absence or a complete record;
+temporary names are reserved and must be ignored. Ordinary failures remove the
+temporary; after a killed process the next lock owner removes orphan temporaries
+and safely retries missing targets. Already published evidence remains intact.
+
+This guarantees per-file visibility, not a whole-instance snapshot, a cognition
+transaction or durability across power loss. Network filesystems, separate
+clones/machines and writers that bypass this lock are outside the guarantee.
+All writers must participate, sources must be finalized/immutable and the instance
+must be trusted. Other memory providers implement their own equivalent logical
+evidence operations; these physical files are specific to the JSON reference.
+
 ## Lease and concurrency
 
 No pending work: exit without writing. Otherwise create a fresh run UUID and claim
@@ -57,10 +89,14 @@ The CLI and initializer do not implement these storage transactions.
 
 ## Cognition and completion
 
-Resolve purpose/hypothesis paths as described in docs/INSTANCE_LAYOUT.md. Neutral
-and historical layouts are supported without mutation; duplicate role paths fail
-closed. Use attributed_to_id and source_assertion/hypothesis/corroborated for new
-claims. Preserve all original fields/classification spellings in retained claims.
+For the JSON reference, use only `instance/purpose.md` and
+`memory/hypotheses.json` as specified in [INSTANCE_LAYOUT.md](INSTANCE_LAYOUT.md).
+Historical persona paths and claim aliases are not supported. Graph v2 claims use
+`attributed_to_id` and `source_assertion` / `hypothesis` / `corroborated`.
+Retain valid historical events and claims under the supported canonical schemas;
+preserving history does not authorize unsupported fields or classification names.
+Other memory providers use the logical contracts in MEMORY_PROVIDERS.md, without
+requiring these physical files.
 
 After the harness contract and before reasoning, load this instance's explicitly
 selected application profile on every cycle. Follow docs/APPLICATION_PROFILES.md.
@@ -78,10 +114,34 @@ memory/events/ and a readable summary in memory/index.md. Keep JSON and Markdown
 questions consistent; saving alone never closes a question. Preserve any linked
 historical question text in evidence and analysis. Document the semantic review.
 
+### Completion-row ownership
+
+Exactly one host candidate assembly component writes completion rows. When the
+adapter/backend assembles candidates, cognition agents supply semantic artifacts
+and never also append ledger rows. Validation must see the complete candidate,
+including proposed completion, before anything is published.
+
+| Integration | Completion-row writer | Agent/caller responsibility |
+|---|---|---|
+| Reference Git CLI `validate --run` / `commit --run` | Adapter derives rows from committed HEAD plus claimed sources in its private candidate | Write graph, queues, hypotheses, index, journal and declared artifacts; exclude reserved ledger/lease files from `--outputs`; never edit those files |
+| Direct `memory-tool.mjs validate --root STAGED_INSTANCE` | Host manually assembling the isolated snapshot | Stage one row per claimed source, preserving prior rows, before calling validation; this validator does not synthesize rows |
+| Logical provider/change set | Host transaction's assembly component uses `semanticWrites` to derive processed/source records | Submit semantic operations and claimed source identities; no agent-written processed flag, ledger file or filesystem staging is required |
+
+The reference CLI refuses manual working-tree ledger/lease edits; HEAD remains
+authoritative. Its candidate validation does not change the working ledger or
+lease. Commit atomically publishes the same assembled/validated completion.
+See [ADAPTERS.md](ADAPTERS.md) and [MEMORY_PROVIDERS.md](MEMORY_PROVIDERS.md).
+
 ### Validate before committing
 
-1. Create an isolated candidate snapshot. In its `memory/processed.json`, preserve
-   prior rows and add one row for each claimed source. The ledger has
+These steps describe the complete JSON candidate, not instructions for an agent
+to edit adapter-owned protocol files. For the reference CLI, its assembler performs
+the ledger/lease staging internally; invoke candidate `validate --run` and
+`commit --run` as documented in ADAPTERS.md. For direct staged-file validation,
+the host performs all staging below itself.
+
+1. Create an isolated candidate snapshot. Its sole completion-row writer preserves
+   prior rows in `memory/processed.json` and adds one row for each claimed source. The ledger has
    `schema_version: 1`, `updated_at` and `observations`. Each new row has `id`,
    `source_file`, `source_sha256`, `status: processed`, `processed_at`,
    `outputs` (paths) and `run` (journal path). These rows record proposed

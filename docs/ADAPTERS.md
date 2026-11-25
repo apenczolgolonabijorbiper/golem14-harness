@@ -75,8 +75,8 @@ claim/renew/error release each produce their own protocol-only commit. The run's
 journal is memory/runs/RUN.md. --outputs is a comma-separated list of existing,
 instance-relative regular files. Absolute paths, drive/backslash/glob paths,
 traversal, .git, symlinks/nonfiles, reserved ledger/lease/configuration, inbox and
-profile/vendor paths are refused. The adapter includes mandatory graph/index/queues and the resolved hypotheses file
-(neutral or historical layout), the run journal, claimed inbox and existing evidence/ID.json itself.
+profile/vendor paths are refused. The adapter includes mandatory graph/index/queues and the canonical `memory/hypotheses.json` file
+(JSON reference layout only), the run journal, claimed inbox and existing evidence/ID.json itself.
 Evidence indexing remains a host step. Declare event files in outputs. Unrelated
 changed and unclaimed files are left untouched/uncommitted and reported.
 
@@ -87,6 +87,23 @@ validate never releases the lease. Changed processed sources require interventio
 Ref conflicts retain the lease and require reread, merge and revalidation. Expired
 owners cannot complete or renew; an error release may clear its own expired lease
 only if it has not been replaced. Never clear another run's ownership.
+
+## Completion-row ownership
+
+The reference adapter is the sole completion-row writer for its candidate.
+`validate --run` and `commit --run` derive one new row per claimed source from
+committed HEAD, preserving prior rows. The cognition agent writes semantic
+artifacts only; it must not append to `memory/processed.json`, edit the lease or
+include either reserved file in `--outputs`. Manual protocol edits are refused
+without substituting them into the candidate. Candidate validation leaves the
+working ledger/lease and HEAD unchanged; completion publishes them atomically.
+
+For custom backends, designate exactly one host assembly component as the row
+writer. A host using direct staged-file validation must assemble its own complete
+ledger first; the standalone validator never generates rows. Logical providers
+instead derive processed/source records from semantic changes, without requiring
+physical `processed.json` files. See
+[completion responsibilities](PROCESSING.md#completion-row-ownership).
 
 ## Snapshot and concurrency guarantees
 
