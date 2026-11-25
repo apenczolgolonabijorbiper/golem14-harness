@@ -10,13 +10,14 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
+
+concurrency: harness-release-master
 
 jobs:
-  release:
+  build:
     if: github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
-    concurrency: harness-release-master
     steps:
       - uses: actions/checkout@v7.0.1
         with:
@@ -38,9 +39,7 @@ jobs:
           name: golem-harness-architecture-explorer
           path: docs/architecture-explorer.html
           if-no-files-found: error
-      - name: Build and publish
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Build the validated release
         run: |
           set -euo pipefail
           version=$(cat VERSION)
@@ -53,6 +52,45 @@ jobs:
             python3 tools/portability/check-parity.py
           fi
           python3 tools/build-release.py --output "$archive"
+          sha256sum -c "$archive.sha256"
+      - uses: actions/upload-artifact@v7.0.2
+        with:
+          name: harness-release-package
+          path: golem-cognitive-harness-*.zip*
+          if-no-files-found: error
+
+  windows:
+    needs: build
+    uses: ./.github/workflows/windows-package.yml
+    with:
+      artifact: harness-release-package
+
+  release:
+    needs: [build, windows]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7.1.0
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v8.0.2
+        with:
+          name: harness-release-package
+      - uses: actions/download-artifact@v8.0.2
+        with:
+          name: golem-harness-architecture-explorer
+          path: docs
+      - name: Publish the tested archive
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          version=$(cat VERSION)
+          archive="golem-cognitive-harness-${version}.zip"
           sha256sum -c "$archive.sha256"
           if gh release view "v$version" >/dev/null 2>&1; then
             echo "Release v$version already exists."

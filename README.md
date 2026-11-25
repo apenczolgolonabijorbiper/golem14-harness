@@ -255,3 +255,13 @@ the Git binding. Provider APIs and deterministic cognitive bookkeeping are cover
 inference, MCP and distributed workers are outside this contract. Generated ports
 must declare their verified coverage; generation does not certify compatibility.
 Core specifications and fixtures evolve in the same PR/release as core behavior.
+
+## Release validation
+
+Routine platform CI runs the full distribution builder on Ubuntu (Node 22.12
+and 24) and macOS (Node 24). Windows checks the Linux-built ZIP on both Node
+versions. Node 24 also runs installer and observation-portability checks. The
+publication workflow checks its exact ZIP on Windows before publishing.
+The separate Harness Windows reliability workflow runs the full Windows suite
+on Python 3.12 and 3.14 and measures Windows capacity. It can be dispatched
+manually and runs automatically for changes to process supervision or benchmarks.
