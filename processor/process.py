@@ -59,7 +59,9 @@ def index(root):
             temporary.unlink()
         for source in sorted((root / 'inbox').glob('*.md')):
             raw = source.read_bytes()
-            content = raw.decode('utf-8')
+            # Match text-mode universal-newline parsing without changing the
+            # original bytes used for source identity or rewriting the source.
+            content = raw.decode('utf-8').replace('\r\n', '\n').replace('\r', '\n')
             if not content.startswith('---\n') or '\n---\n' not in content[4:]:
                 print('Malformed:', source.name)
                 continue

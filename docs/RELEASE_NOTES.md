@@ -1,3 +1,19 @@
+# Golem XIV Harness 0.13.2
+
+Released 2026-11-25.
+
+- Restore universal-newline parsing in the JSON indexer after 0.13.1's raw-byte
+  hashing change. LF, Windows CRLF and CR notes are accepted; evidence hashes
+  still bind exact original source bytes, and source files remain unchanged.
+- Add a packaged regression covering all three newline forms with Unicode text,
+  normalized evidence text and byte-exact source/hash preservation. This closes
+  the newline regression found during final publication acceptance for #87.
+
+Includes the 0.13.1 atomic indexing, completion-ledger and canonical documentation
+fixes below. Runtime requirements, schemas, host contracts, local-filesystem
+concurrency limits and upgrade procedure remain as documented for 0.13.1.
+No consuming application or private instance is upgraded by this release.
+
 # Golem XIV Harness 0.13.1
 
 Released 2026-11-25.

@@ -98,3 +98,18 @@ from the merged release sources before publication.
 Consuming app-owner verification is separate from upstream completion; synthetic
 tests and publication do not claim it. Portable-script parity remains recorded
 above for #74–#77; no affected portable script specifications have shipped.
+
+## Newline regression found before upstream closure
+
+The actual 0.13.1 ZIP passed the existing packaged suites and 131 manifest hashes.
+A further synthetic Windows CRLF note independently reproduced `Malformed: note.md`
+and no evidence output. Changing from `read_text()` to raw decoding had removed
+universal-newline parsing, although the merged PR description claimed it remained
+supported. The existing tests did not cover this; #87 remained open.
+
+Release 0.13.2 restores universal-newline parsing while hashing the unchanged raw
+bytes. A new packaged indexer test checks LF, CRLF and CR, Unicode body text,
+normalized evidence text and exact source bytes/hashes. The builder now runs
+12 Python unittest cases (including four indexer cases) alongside 187 Node tests
+and both installer suites. Final CI and published-package results for 0.13.2
+are recorded in #87 and #90 before closure; 0.13.1 remains immutable.
