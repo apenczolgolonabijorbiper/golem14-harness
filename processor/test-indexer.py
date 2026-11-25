@@ -174,6 +174,23 @@ class IndexerTest(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(result.stdout.count('Indexed:'), 100)
 
+    def test_universal_newlines_preserve_exact_source_bytes_and_hash(self):
+        uid = self.ids[0]
+        text = (f'---\nid: {uid}\nrecorded_at: 2026-01-01T00:00:00.000Z\n'
+                'kind: observation\n---\n\nZażółć 世界.\nSecond line.\n')
+        for number, newline in enumerate(['\n', '\r\n', '\r']):
+            with self.subTest(newline=repr(newline)):
+                root = initialize(self.work / f'newlines-{number}')
+                source = root / 'inbox/note.md'
+                raw = text.replace('\n', newline).encode('utf-8')
+                source.write_bytes(raw)
+                result = self.run_indexer(root)
+                self.assertEqual((result.returncode, result.stdout), (0, f'Indexed: {uid}\n'), result.stderr)
+                evidence = json.loads((root / 'evidence' / f'{uid}.json').read_bytes())
+                self.assertEqual(evidence['sha256'], hashlib.sha256(raw).hexdigest())
+                self.assertEqual(evidence['text'], 'Zażółć 世界.\nSecond line.')
+                self.assertEqual(source.read_bytes(), raw)
+
 
 if __name__ == '__main__':
     if len(sys.argv) > 1 and sys.argv[1] == '--worker':
