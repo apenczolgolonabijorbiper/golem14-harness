@@ -44,7 +44,35 @@ def violations(path, text):
     return [pattern for pattern in STALE if re.search(pattern, normalized)]
 
 
+def validate_release_metadata(version, readme, notes):
+    if not re.fullmatch(r'[0-9]+\.[0-9]+\.[0-9]+', version):
+        raise ValueError('Invalid release VERSION')
+    if readme.splitlines()[0] != '# Golem native cognitive harness — ' + version:
+        raise ValueError('README title must match VERSION')
+    examples = re.findall(r'golem-cognitive-harness-([0-9]+\.[0-9]+\.[0-9]+)\.zip', readme)
+    if not examples or any(v != version for v in examples):
+        raise ValueError('README archive examples must match VERSION')
+    if notes.splitlines()[0] != '# Golem XIV Harness ' + version:
+        raise ValueError('Release notes title must match VERSION')
+
+
 class DocumentationContractTest(unittest.TestCase):
+    def test_release_version_alignment(self):
+        validate_release_metadata((ROOT / 'VERSION').read_text().strip(),
+                                  (ROOT / 'README.md').read_text(encoding='utf-8'),
+                                  (ROOT / 'docs/RELEASE_NOTES.md').read_text(encoding='utf-8'))
+
+    def test_stale_readme_and_release_notes_are_rejected(self):
+        version = '1.2.3'
+        readme = '# Golem native cognitive harness — 1.2.3\nBuild golem-cognitive-harness-1.2.3.zip\n'
+        notes = '# Golem XIV Harness 1.2.3\n'
+        validate_release_metadata(version, readme, notes)
+        for r, n in [(readme.replace('— 1.2.3', '— 1.2.2'), notes),
+                     (readme.replace('1.2.3.zip', '1.2.2.zip'), notes),
+                     (readme, notes.replace('1.2.3', '1.2.2'))]:
+            with self.assertRaises(ValueError):
+                validate_release_metadata(version, r, n)
+
     def test_known_stale_promises_fail_with_line_wrapping(self):
         for promise in [
             'Neutral and historical layouts are supported without mutation.',

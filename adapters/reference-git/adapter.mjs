@@ -304,10 +304,19 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
         const bound=await profileAt(s.head,kinds),working=await loadGuidance(root,{kinds});
         if(guidanceIdentity(bound.guidance_version)!==change.policy_id||guidanceIdentity(working.guidance_version)!==change.policy_id)throw new AdapterError('Policy changed');
       };
-      let change;
-      return action({load:()=>load(s.head),checkBindings:async c=>{change=c;await check(c);},publish:async(files,label)=>{
+      const checkTransfer=binding=>{
+        if(head()!==s.head||binding.base_snapshot!==s.head)throw new AdapterError('Base snapshot changed');
+        assertLocalProtocol(s);
+        if(state().lease.status==='processing')throw new AdapterError('Destination processing lease must be released before transfer');
+        if(scan(s).malformed.length)throw new AdapterError('Processed source changed');
+        // All committed bytes must still match their working copies, including
+        // policies not touched by the incoming bundle. New intake is preserved.
+        for(const [path,row]of snapshot(s.head))if(hash(file(path,{optional:true}))!==hash(row.bytes))throw new AdapterError('Dirty destination state: '+path);
+      };
+      let change,transfer;
+      return action({load:()=>load(s.head),checkTransfer:async binding=>{transfer=binding;checkTransfer(binding);},checkBindings:async c=>{change=c;await check(c);},publish:async(files,label)=>{
         await hooks.beforeMemoryPublish?.({head:s.head});
-        await check(change);assertLocalProtocol(s);
+        if(transfer)checkTransfer(transfer);else await check(change);assertLocalProtocol(s);
         const entries=new Map(),original=snapshot(s.head);
         for(const [path,bytes]of files){instancePath(path);const before=original.get(path)?.bytes??null;
           if(hash(before)!==hash(bytes)){
@@ -317,7 +326,7 @@ export function createAdapter({instance,harness=defaultHarness,git='git',node=pr
         }
         for(const path of original.keys())if(!files.has(path))throw new AdapterError('Provider removed retained state');
         // No asynchronous callback occurs between these final fences and CAS.
-        own(state(),change.run_id);sourceCheck(s);assertLocalProtocol(s);
+        if(transfer)checkTransfer(transfer);else {own(state(),change.run_id);sourceCheck(s);assertLocalProtocol(s);}
         const next=publish(s,entries,[...entries.keys()],label);
         return next;
       }});

@@ -12,11 +12,13 @@ import {loadGuidance} from '../../server/guidance.mjs';
 import {cycleArtifacts,renderQueue} from '../../server/cycle-artifacts.mjs';
 import {validateVocabulary,dependencyErrors,requireCapabilities} from '../../server/core-policies.mjs';
 import {instancePath} from '../../server/application-profile.mjs';
+import {inspectProcessed} from '../../server/processed-transfer.mjs';
 import {canonical,digest,matches,checkPage,changeIdentity} from '../../server/memory-contract.mjs';
 import {validateTask,validateLearning,validateContext,validateResult} from '../../server/cognitive-task.mjs';
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'../..');
 export async function execute(operation,input){
   switch(operation){
+    case 'processed-inspect':{const s=await inspectProcessed(input);return {sha256:input.sha256,selected:input.selected,included:s.rows.observations.map(r=>r.id)};}
     case 'parse-source':return parseSource(input.path,input.text);
     case 'schema':return schemaErrors(input.value);
     case 'validate':return validateMemory(input.graph,input);

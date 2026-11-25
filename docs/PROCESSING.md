@@ -240,8 +240,10 @@ committed journal merely to add its final verdict or snapshot hash.
 
 An inbox/evidence-only transfer preserves the original observations and their
 indexed evidence. A fresh instance has its own graph, ledger, and question queues,
-so the transferred observations are pending. The CLI provides no selective
-processed-memory import or export.
+so the transferred observations are pending. To preserve existing analysis instead, use the versioned
+[selective processed-observation transfer](PROCESSED_TRANSFER.md). Its export,
+inspection, transactional import and recovery commands are separate from this
+observation-only procedure.
 
 To rebuild a feature's analysis in a fresh instance, initialize the destination,
 then copy the finalized inbox notes with their IDs, filenames, and bytes intact.

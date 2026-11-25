@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "contract_version": "1.0.0",
-  "reference_harness_version": "0.13.3",
+  "contract_version": "1.1.0",
+  "reference_harness_version": "0.15.0",
   "scope": "Deterministic local core; Git assumed, inference/MCP/remote/installer/build tooling excluded",
   "inventory": [
     {
@@ -33,13 +33,13 @@
       "path": "adapters/reference-git/adapter.mjs",
       "scope": "core",
       "reason": "Deterministic installed local operation or transitive dependency.",
-      "sha256": "d668d3966352a9968f410319439fa138c8f3f2abc2bcec8f3b1d4b693f1cace0"
+      "sha256": "c5437c84d8dd57fd037ab13b09e48621b56755fd98a3f9ac05ca9abf5770b5d5"
     },
     {
       "path": "adapters/reference-json/provider.mjs",
       "scope": "core",
       "reason": "Deterministic installed local operation or transitive dependency.",
-      "sha256": "6192a84fa17e5efb4c16ca10b018aa4b1596105c712a4f4fff52cc8135a9fedf"
+      "sha256": "fd36cfb0475430e677a272caffa25f7aeb851d3db9735a6fb34bdfed12cc9a8b"
     },
     {
       "path": "adapters/template/adapter.mjs",
@@ -106,7 +106,7 @@
       "path": "processor/provider-tool.mjs",
       "scope": "core",
       "reason": "Deterministic installed local operation or transitive dependency.",
-      "sha256": "0284a96f6c694ba8c9a81c95c3bd9f13273327328fe6cedaf2be6b73f2bcf609"
+      "sha256": "e3478d1f1f7d0eadfed908ac3f274561ff4e4a88a451619e13a812e4d49b9c26"
     },
     {
       "path": "processor/source-bundle.mjs",
@@ -291,6 +291,17 @@
       "sha256": "6835c7c332a2b1ae0080a2fee5fd58d57043783eee7b192d62259bf3cb03a678"
     },
     {
+      "path": "server/processed-transfer.mjs",
+      "scope": "core",
+      "reason": "Selective processed-observation bundle/transaction contract.",
+      "sha256": "8f421b61562185f24091d2f700f14420a200fcfc83086038363f0b92f16b323c"
+    },
+    {
+      "path": "server/processed-transfer.test.mjs",
+      "scope": "test",
+      "reason": "Synthetic selective-transfer acceptance and publication-fault tests."
+    },
+    {
       "path": "server/profile-inspection.mjs",
       "scope": "core",
       "reason": "Deterministic installed local operation or transitive dependency.",
@@ -411,8 +422,8 @@
         "server/application-source.test.mjs"
       ],
       "reference_digest": "3062e5bb6c564f2fa55f8bde4ed8d2f06320d04f4e1e2cf829210025d532c724",
-      "spec_digest": "8007f22847c8b5d6fbcdc4870d6aef8fe0b2e897125d01c04c26ee6d2367aa46",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "a9024eb5fa81deb948b157868614a4c9278730d3b32cdfcc1e148889de81fa2d",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "index",
@@ -476,8 +487,8 @@
         "processor/test-observation-portability.py"
       ],
       "reference_digest": "a74c86ce09b4ecb14bad857cbbb891d7538e86358c40b26ca063116d26f3b590",
-      "spec_digest": "8007f22847c8b5d6fbcdc4870d6aef8fe0b2e897125d01c04c26ee6d2367aa46",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "a9024eb5fa81deb948b157868614a4c9278730d3b32cdfcc1e148889de81fa2d",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "parse-source",
@@ -540,8 +551,8 @@
         "tools/portability/scenarios.test.mjs"
       ],
       "reference_digest": "ba62e9e4ea44e519689759fa7aa34d57144c7f2e049859a69f1605a4360007c0",
-      "spec_digest": "8007f22847c8b5d6fbcdc4870d6aef8fe0b2e897125d01c04c26ee6d2367aa46",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "a9024eb5fa81deb948b157868614a4c9278730d3b32cdfcc1e148889de81fa2d",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "schema",
@@ -618,8 +629,8 @@
         "server/domain-memory.test.mjs"
       ],
       "reference_digest": "5921d669c531fdd6fb151f2d5b30cbe1c34a477d0f400d8de91ba7025a44653c",
-      "spec_digest": "ac30971de87df588034381958d5a410b90dbd6ea42a92619f17f664c3ce70da0",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "65102b51c62811d675002ea0247a09e70711f1361b7626a3e740cb4e0090500f",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "validate",
@@ -699,8 +710,8 @@
         "server/domain-memory.test.mjs"
       ],
       "reference_digest": "5921d669c531fdd6fb151f2d5b30cbe1c34a477d0f400d8de91ba7025a44653c",
-      "spec_digest": "ac30971de87df588034381958d5a410b90dbd6ea42a92619f17f664c3ce70da0",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "65102b51c62811d675002ea0247a09e70711f1361b7626a3e740cb4e0090500f",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "context",
@@ -784,8 +795,8 @@
         "server/domain-memory.test.mjs"
       ],
       "reference_digest": "5921d669c531fdd6fb151f2d5b30cbe1c34a477d0f400d8de91ba7025a44653c",
-      "spec_digest": "ac30971de87df588034381958d5a410b90dbd6ea42a92619f17f664c3ce70da0",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "65102b51c62811d675002ea0247a09e70711f1361b7626a3e740cb4e0090500f",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "stats",
@@ -866,8 +877,8 @@
         "server/domain-memory.test.mjs"
       ],
       "reference_digest": "5921d669c531fdd6fb151f2d5b30cbe1c34a477d0f400d8de91ba7025a44653c",
-      "spec_digest": "ac30971de87df588034381958d5a410b90dbd6ea42a92619f17f664c3ce70da0",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "65102b51c62811d675002ea0247a09e70711f1361b7626a3e740cb4e0090500f",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "warnings",
@@ -944,8 +955,8 @@
         "server/domain-memory.test.mjs"
       ],
       "reference_digest": "5921d669c531fdd6fb151f2d5b30cbe1c34a477d0f400d8de91ba7025a44653c",
-      "spec_digest": "ac30971de87df588034381958d5a410b90dbd6ea42a92619f17f664c3ce70da0",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "65102b51c62811d675002ea0247a09e70711f1361b7626a3e740cb4e0090500f",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "dependencies",
@@ -1021,8 +1032,8 @@
         "server/domain-memory.test.mjs"
       ],
       "reference_digest": "5921d669c531fdd6fb151f2d5b30cbe1c34a477d0f400d8de91ba7025a44653c",
-      "spec_digest": "ac30971de87df588034381958d5a410b90dbd6ea42a92619f17f664c3ce70da0",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "65102b51c62811d675002ea0247a09e70711f1361b7626a3e740cb4e0090500f",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "capabilities",
@@ -1098,8 +1109,8 @@
         "server/domain-memory.test.mjs"
       ],
       "reference_digest": "5921d669c531fdd6fb151f2d5b30cbe1c34a477d0f400d8de91ba7025a44653c",
-      "spec_digest": "ac30971de87df588034381958d5a410b90dbd6ea42a92619f17f664c3ce70da0",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "65102b51c62811d675002ea0247a09e70711f1361b7626a3e740cb4e0090500f",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "hypotheses",
@@ -1163,8 +1174,8 @@
         "tools/portability/scenarios.test.mjs"
       ],
       "reference_digest": "34686c0de0874cf7f7fa93dc39ef979049d4c2ca6c554c13f080eda976e4bed7",
-      "spec_digest": "ac30971de87df588034381958d5a410b90dbd6ea42a92619f17f664c3ce70da0",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "65102b51c62811d675002ea0247a09e70711f1361b7626a3e740cb4e0090500f",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "vocabulary",
@@ -1232,8 +1243,8 @@
         "tools/portability/scenarios.test.mjs"
       ],
       "reference_digest": "d5449334f954d4610a588ba5e73497d29878b504e3d684eec9b7300d97ee1f3a",
-      "spec_digest": "1dd31ac82076ae0a353bb4deef292716fdd46db058bc3bfcc636a92ffdce6ce5",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "9bc39fd15c48392de78d0ba7c1e415dd092a7c425730b56c6a0a26b7c556b157",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "guidance",
@@ -1304,8 +1315,8 @@
         "tools/portability/scenarios.test.mjs"
       ],
       "reference_digest": "19b38536461f2665bf09aa6a5cf2e29754165875edd401dadc12765c53dd252e",
-      "spec_digest": "1dd31ac82076ae0a353bb4deef292716fdd46db058bc3bfcc636a92ffdce6ce5",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "9bc39fd15c48392de78d0ba7c1e415dd092a7c425730b56c6a0a26b7c556b157",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "path",
@@ -1378,8 +1389,8 @@
         "tools/portability/scenarios.test.mjs"
       ],
       "reference_digest": "215306a5853554847c7f7a43e5bd461769121e57b669d96ad24c41a0c07e5525",
-      "spec_digest": "1dd31ac82076ae0a353bb4deef292716fdd46db058bc3bfcc636a92ffdce6ce5",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "9bc39fd15c48392de78d0ba7c1e415dd092a7c425730b56c6a0a26b7c556b157",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "profile-check",
@@ -1447,8 +1458,8 @@
         "tools/portability/scenarios.test.mjs"
       ],
       "reference_digest": "913baed782c93146e97943d188cd2c05e100656ed46bc12216449f0f4e0f8c24",
-      "spec_digest": "1dd31ac82076ae0a353bb4deef292716fdd46db058bc3bfcc636a92ffdce6ce5",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "9bc39fd15c48392de78d0ba7c1e415dd092a7c425730b56c6a0a26b7c556b157",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "vocabulary-survey",
@@ -1517,8 +1528,8 @@
         "tools/portability/scenarios.test.mjs"
       ],
       "reference_digest": "913baed782c93146e97943d188cd2c05e100656ed46bc12216449f0f4e0f8c24",
-      "spec_digest": "1dd31ac82076ae0a353bb4deef292716fdd46db058bc3bfcc636a92ffdce6ce5",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "9bc39fd15c48392de78d0ba7c1e415dd092a7c425730b56c6a0a26b7c556b157",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "source-bundle",
@@ -1591,8 +1602,8 @@
         "tools/portability/scenarios.test.mjs"
       ],
       "reference_digest": "a3fa0730113e06cd18f76c871639cf26e82a5486570458fbc62789a89f2b6258",
-      "spec_digest": "1dd31ac82076ae0a353bb4deef292716fdd46db058bc3bfcc636a92ffdce6ce5",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "9bc39fd15c48392de78d0ba7c1e415dd092a7c425730b56c6a0a26b7c556b157",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "write-candidate",
@@ -1603,16 +1614,19 @@
       "spec_files": [
         "docs/CANDIDATE_MERGE.md",
         "docs/PERFORMANCE.md",
+        "docs/PROCESSED_TRANSFER.md",
         "docs/PROCESSING.md",
         "portability/schemas/formats.schema.json",
         "portability/specs/CANDIDATE.sudo.md",
         "portability/specs/COMMON.sudo.md",
+        "portability/specs/PROCESSED_TRANSFER.sudo.md",
         "schemas/cognitive-context.schema.json",
         "schemas/cognitive-learning.schema.json",
         "schemas/cognitive-result.schema.json",
         "schemas/cognitive-task.schema.json",
         "schemas/hypotheses.schema.json",
-        "schemas/memory-graph.schema.json"
+        "schemas/memory-graph.schema.json",
+        "schemas/processed-transfer.schema.json"
       ],
       "reference_files": [
         "adapters/reference-git/adapter.mjs",
@@ -1633,6 +1647,7 @@
         "server/memory-model.mjs",
         "server/observation.mjs",
         "server/operation-metrics.mjs",
+        "server/processed-transfer.mjs",
         "server/profile-inspection.mjs",
         "server/provider-memory.mjs",
         "server/provider-validation.mjs",
@@ -1674,9 +1689,9 @@
         "tools/portability/scenarios.test.mjs",
         "server/candidate-writer.test.mjs"
       ],
-      "reference_digest": "dd3037141ece56cac63937d4d365158ea0caae5b716a50a36f7aec438f16ca87",
-      "spec_digest": "764c3d6d91edea31526ade1dcccbb2ebddfaf6239187820b88e32fbb2ef18d6f",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "reference_digest": "d9f9f23eed75970b694b0a00a3d0201b8a8c88a38dfb8b6c501819fe2a1f3ba4",
+      "spec_digest": "d07b7c91e8c30cd549ef7fe5a01a59f78b5344a446c58a88bf122002dfadd29b",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "render-queue",
@@ -1738,8 +1753,8 @@
         "tools/portability/scenarios.test.mjs"
       ],
       "reference_digest": "eef4dbcd313f35d75a113714214bbc4ee9a77833d71fd368bec60a86fbd656cf",
-      "spec_digest": "764c3d6d91edea31526ade1dcccbb2ebddfaf6239187820b88e32fbb2ef18d6f",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "44b8674434e8e7484e3eb83d511671dc88a012b9c43cf6ee008555dfbe69583c",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "cycle-artifacts",
@@ -1801,8 +1816,8 @@
         "tools/portability/scenarios.test.mjs"
       ],
       "reference_digest": "eef4dbcd313f35d75a113714214bbc4ee9a77833d71fd368bec60a86fbd656cf",
-      "spec_digest": "764c3d6d91edea31526ade1dcccbb2ebddfaf6239187820b88e32fbb2ef18d6f",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "44b8674434e8e7484e3eb83d511671dc88a012b9c43cf6ee008555dfbe69583c",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "merge",
@@ -1876,8 +1891,8 @@
         "server/candidate-merge.test.mjs"
       ],
       "reference_digest": "5921d669c531fdd6fb151f2d5b30cbe1c34a477d0f400d8de91ba7025a44653c",
-      "spec_digest": "764c3d6d91edea31526ade1dcccbb2ebddfaf6239187820b88e32fbb2ef18d6f",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "44b8674434e8e7484e3eb83d511671dc88a012b9c43cf6ee008555dfbe69583c",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "adapter-status",
@@ -1889,16 +1904,19 @@
         "docs/APPLICATION_PROFILES.md",
         "docs/APPLICATION_SOURCES.md",
         "docs/COGNITIVE_TASKS.md",
+        "docs/PROCESSED_TRANSFER.md",
         "docs/PROCESSING.md",
         "portability/schemas/formats.schema.json",
         "portability/specs/COMMON.sudo.md",
+        "portability/specs/PROCESSED_TRANSFER.sudo.md",
         "portability/specs/TRANSACTIONS.sudo.md",
         "schemas/cognitive-context.schema.json",
         "schemas/cognitive-learning.schema.json",
         "schemas/cognitive-result.schema.json",
         "schemas/cognitive-task.schema.json",
         "schemas/hypotheses.schema.json",
-        "schemas/memory-graph.schema.json"
+        "schemas/memory-graph.schema.json",
+        "schemas/processed-transfer.schema.json"
       ],
       "reference_files": [
         "adapters/reference-git/adapter.mjs",
@@ -1918,6 +1936,7 @@
         "server/memory-model.mjs",
         "server/observation.mjs",
         "server/operation-metrics.mjs",
+        "server/processed-transfer.mjs",
         "server/profile-inspection.mjs",
         "server/provider-memory.mjs",
         "server/provider-validation.mjs",
@@ -1960,9 +1979,9 @@
         "adapters/conformance/adapter.test.mjs",
         "server/profile-lifecycle.test.mjs"
       ],
-      "reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
-      "spec_digest": "a6ee4f778722a152de238c3cfb2a12def97fabd0be29c0c43fe1b93ba23e39bc",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "reference_digest": "bcd782f0968d2b6e778c0d0ded97cd021740520f7d04d8c58d35d625b107f14c",
+      "spec_digest": "5691850d4ffb31b16f5e02544a0e6e752ce86b43d7d96545beda110be874d0e5",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "adapter-claim",
@@ -1974,16 +1993,19 @@
         "docs/APPLICATION_PROFILES.md",
         "docs/APPLICATION_SOURCES.md",
         "docs/COGNITIVE_TASKS.md",
+        "docs/PROCESSED_TRANSFER.md",
         "docs/PROCESSING.md",
         "portability/schemas/formats.schema.json",
         "portability/specs/COMMON.sudo.md",
+        "portability/specs/PROCESSED_TRANSFER.sudo.md",
         "portability/specs/TRANSACTIONS.sudo.md",
         "schemas/cognitive-context.schema.json",
         "schemas/cognitive-learning.schema.json",
         "schemas/cognitive-result.schema.json",
         "schemas/cognitive-task.schema.json",
         "schemas/hypotheses.schema.json",
-        "schemas/memory-graph.schema.json"
+        "schemas/memory-graph.schema.json",
+        "schemas/processed-transfer.schema.json"
       ],
       "reference_files": [
         "adapters/reference-git/adapter.mjs",
@@ -2003,6 +2025,7 @@
         "server/memory-model.mjs",
         "server/observation.mjs",
         "server/operation-metrics.mjs",
+        "server/processed-transfer.mjs",
         "server/profile-inspection.mjs",
         "server/provider-memory.mjs",
         "server/provider-validation.mjs",
@@ -2045,9 +2068,9 @@
         "adapters/conformance/adapter.test.mjs",
         "server/profile-lifecycle.test.mjs"
       ],
-      "reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
-      "spec_digest": "a6ee4f778722a152de238c3cfb2a12def97fabd0be29c0c43fe1b93ba23e39bc",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "reference_digest": "bcd782f0968d2b6e778c0d0ded97cd021740520f7d04d8c58d35d625b107f14c",
+      "spec_digest": "5691850d4ffb31b16f5e02544a0e6e752ce86b43d7d96545beda110be874d0e5",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "adapter-renew",
@@ -2059,16 +2082,19 @@
         "docs/APPLICATION_PROFILES.md",
         "docs/APPLICATION_SOURCES.md",
         "docs/COGNITIVE_TASKS.md",
+        "docs/PROCESSED_TRANSFER.md",
         "docs/PROCESSING.md",
         "portability/schemas/formats.schema.json",
         "portability/specs/COMMON.sudo.md",
+        "portability/specs/PROCESSED_TRANSFER.sudo.md",
         "portability/specs/TRANSACTIONS.sudo.md",
         "schemas/cognitive-context.schema.json",
         "schemas/cognitive-learning.schema.json",
         "schemas/cognitive-result.schema.json",
         "schemas/cognitive-task.schema.json",
         "schemas/hypotheses.schema.json",
-        "schemas/memory-graph.schema.json"
+        "schemas/memory-graph.schema.json",
+        "schemas/processed-transfer.schema.json"
       ],
       "reference_files": [
         "adapters/reference-git/adapter.mjs",
@@ -2088,6 +2114,7 @@
         "server/memory-model.mjs",
         "server/observation.mjs",
         "server/operation-metrics.mjs",
+        "server/processed-transfer.mjs",
         "server/profile-inspection.mjs",
         "server/provider-memory.mjs",
         "server/provider-validation.mjs",
@@ -2130,9 +2157,9 @@
         "adapters/conformance/adapter.test.mjs",
         "server/profile-lifecycle.test.mjs"
       ],
-      "reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
-      "spec_digest": "a6ee4f778722a152de238c3cfb2a12def97fabd0be29c0c43fe1b93ba23e39bc",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "reference_digest": "bcd782f0968d2b6e778c0d0ded97cd021740520f7d04d8c58d35d625b107f14c",
+      "spec_digest": "5691850d4ffb31b16f5e02544a0e6e752ce86b43d7d96545beda110be874d0e5",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "adapter-release-error",
@@ -2144,16 +2171,19 @@
         "docs/APPLICATION_PROFILES.md",
         "docs/APPLICATION_SOURCES.md",
         "docs/COGNITIVE_TASKS.md",
+        "docs/PROCESSED_TRANSFER.md",
         "docs/PROCESSING.md",
         "portability/schemas/formats.schema.json",
         "portability/specs/COMMON.sudo.md",
+        "portability/specs/PROCESSED_TRANSFER.sudo.md",
         "portability/specs/TRANSACTIONS.sudo.md",
         "schemas/cognitive-context.schema.json",
         "schemas/cognitive-learning.schema.json",
         "schemas/cognitive-result.schema.json",
         "schemas/cognitive-task.schema.json",
         "schemas/hypotheses.schema.json",
-        "schemas/memory-graph.schema.json"
+        "schemas/memory-graph.schema.json",
+        "schemas/processed-transfer.schema.json"
       ],
       "reference_files": [
         "adapters/reference-git/adapter.mjs",
@@ -2173,6 +2203,7 @@
         "server/memory-model.mjs",
         "server/observation.mjs",
         "server/operation-metrics.mjs",
+        "server/processed-transfer.mjs",
         "server/profile-inspection.mjs",
         "server/provider-memory.mjs",
         "server/provider-validation.mjs",
@@ -2215,9 +2246,9 @@
         "adapters/conformance/adapter.test.mjs",
         "server/profile-lifecycle.test.mjs"
       ],
-      "reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
-      "spec_digest": "a6ee4f778722a152de238c3cfb2a12def97fabd0be29c0c43fe1b93ba23e39bc",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "reference_digest": "bcd782f0968d2b6e778c0d0ded97cd021740520f7d04d8c58d35d625b107f14c",
+      "spec_digest": "5691850d4ffb31b16f5e02544a0e6e752ce86b43d7d96545beda110be874d0e5",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "adapter-validate",
@@ -2229,16 +2260,19 @@
         "docs/APPLICATION_PROFILES.md",
         "docs/APPLICATION_SOURCES.md",
         "docs/COGNITIVE_TASKS.md",
+        "docs/PROCESSED_TRANSFER.md",
         "docs/PROCESSING.md",
         "portability/schemas/formats.schema.json",
         "portability/specs/COMMON.sudo.md",
+        "portability/specs/PROCESSED_TRANSFER.sudo.md",
         "portability/specs/TRANSACTIONS.sudo.md",
         "schemas/cognitive-context.schema.json",
         "schemas/cognitive-learning.schema.json",
         "schemas/cognitive-result.schema.json",
         "schemas/cognitive-task.schema.json",
         "schemas/hypotheses.schema.json",
-        "schemas/memory-graph.schema.json"
+        "schemas/memory-graph.schema.json",
+        "schemas/processed-transfer.schema.json"
       ],
       "reference_files": [
         "adapters/reference-git/adapter.mjs",
@@ -2258,6 +2292,7 @@
         "server/memory-model.mjs",
         "server/observation.mjs",
         "server/operation-metrics.mjs",
+        "server/processed-transfer.mjs",
         "server/profile-inspection.mjs",
         "server/provider-memory.mjs",
         "server/provider-validation.mjs",
@@ -2300,9 +2335,9 @@
         "adapters/conformance/adapter.test.mjs",
         "server/profile-lifecycle.test.mjs"
       ],
-      "reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
-      "spec_digest": "a6ee4f778722a152de238c3cfb2a12def97fabd0be29c0c43fe1b93ba23e39bc",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "reference_digest": "bcd782f0968d2b6e778c0d0ded97cd021740520f7d04d8c58d35d625b107f14c",
+      "spec_digest": "5691850d4ffb31b16f5e02544a0e6e752ce86b43d7d96545beda110be874d0e5",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "adapter-commit",
@@ -2314,16 +2349,19 @@
         "docs/APPLICATION_PROFILES.md",
         "docs/APPLICATION_SOURCES.md",
         "docs/COGNITIVE_TASKS.md",
+        "docs/PROCESSED_TRANSFER.md",
         "docs/PROCESSING.md",
         "portability/schemas/formats.schema.json",
         "portability/specs/COMMON.sudo.md",
+        "portability/specs/PROCESSED_TRANSFER.sudo.md",
         "portability/specs/TRANSACTIONS.sudo.md",
         "schemas/cognitive-context.schema.json",
         "schemas/cognitive-learning.schema.json",
         "schemas/cognitive-result.schema.json",
         "schemas/cognitive-task.schema.json",
         "schemas/hypotheses.schema.json",
-        "schemas/memory-graph.schema.json"
+        "schemas/memory-graph.schema.json",
+        "schemas/processed-transfer.schema.json"
       ],
       "reference_files": [
         "adapters/reference-git/adapter.mjs",
@@ -2343,6 +2381,7 @@
         "server/memory-model.mjs",
         "server/observation.mjs",
         "server/operation-metrics.mjs",
+        "server/processed-transfer.mjs",
         "server/profile-inspection.mjs",
         "server/provider-memory.mjs",
         "server/provider-validation.mjs",
@@ -2385,9 +2424,9 @@
         "adapters/conformance/adapter.test.mjs",
         "server/profile-lifecycle.test.mjs"
       ],
-      "reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
-      "spec_digest": "a6ee4f778722a152de238c3cfb2a12def97fabd0be29c0c43fe1b93ba23e39bc",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "reference_digest": "bcd782f0968d2b6e778c0d0ded97cd021740520f7d04d8c58d35d625b107f14c",
+      "spec_digest": "5691850d4ffb31b16f5e02544a0e6e752ce86b43d7d96545beda110be874d0e5",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "adapter-profile-status",
@@ -2399,16 +2438,19 @@
         "docs/APPLICATION_PROFILES.md",
         "docs/APPLICATION_SOURCES.md",
         "docs/COGNITIVE_TASKS.md",
+        "docs/PROCESSED_TRANSFER.md",
         "docs/PROCESSING.md",
         "portability/schemas/formats.schema.json",
         "portability/specs/COMMON.sudo.md",
+        "portability/specs/PROCESSED_TRANSFER.sudo.md",
         "portability/specs/TRANSACTIONS.sudo.md",
         "schemas/cognitive-context.schema.json",
         "schemas/cognitive-learning.schema.json",
         "schemas/cognitive-result.schema.json",
         "schemas/cognitive-task.schema.json",
         "schemas/hypotheses.schema.json",
-        "schemas/memory-graph.schema.json"
+        "schemas/memory-graph.schema.json",
+        "schemas/processed-transfer.schema.json"
       ],
       "reference_files": [
         "adapters/reference-git/adapter.mjs",
@@ -2428,6 +2470,7 @@
         "server/memory-model.mjs",
         "server/observation.mjs",
         "server/operation-metrics.mjs",
+        "server/processed-transfer.mjs",
         "server/profile-inspection.mjs",
         "server/provider-memory.mjs",
         "server/provider-validation.mjs",
@@ -2470,9 +2513,9 @@
         "adapters/conformance/adapter.test.mjs",
         "server/profile-lifecycle.test.mjs"
       ],
-      "reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
-      "spec_digest": "a6ee4f778722a152de238c3cfb2a12def97fabd0be29c0c43fe1b93ba23e39bc",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "reference_digest": "bcd782f0968d2b6e778c0d0ded97cd021740520f7d04d8c58d35d625b107f14c",
+      "spec_digest": "5691850d4ffb31b16f5e02544a0e6e752ce86b43d7d96545beda110be874d0e5",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "adapter-profile-install",
@@ -2484,16 +2527,19 @@
         "docs/APPLICATION_PROFILES.md",
         "docs/APPLICATION_SOURCES.md",
         "docs/COGNITIVE_TASKS.md",
+        "docs/PROCESSED_TRANSFER.md",
         "docs/PROCESSING.md",
         "portability/schemas/formats.schema.json",
         "portability/specs/COMMON.sudo.md",
+        "portability/specs/PROCESSED_TRANSFER.sudo.md",
         "portability/specs/TRANSACTIONS.sudo.md",
         "schemas/cognitive-context.schema.json",
         "schemas/cognitive-learning.schema.json",
         "schemas/cognitive-result.schema.json",
         "schemas/cognitive-task.schema.json",
         "schemas/hypotheses.schema.json",
-        "schemas/memory-graph.schema.json"
+        "schemas/memory-graph.schema.json",
+        "schemas/processed-transfer.schema.json"
       ],
       "reference_files": [
         "adapters/reference-git/adapter.mjs",
@@ -2513,6 +2559,7 @@
         "server/memory-model.mjs",
         "server/observation.mjs",
         "server/operation-metrics.mjs",
+        "server/processed-transfer.mjs",
         "server/profile-inspection.mjs",
         "server/provider-memory.mjs",
         "server/provider-validation.mjs",
@@ -2555,9 +2602,9 @@
         "adapters/conformance/adapter.test.mjs",
         "server/profile-lifecycle.test.mjs"
       ],
-      "reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
-      "spec_digest": "a6ee4f778722a152de238c3cfb2a12def97fabd0be29c0c43fe1b93ba23e39bc",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "reference_digest": "bcd782f0968d2b6e778c0d0ded97cd021740520f7d04d8c58d35d625b107f14c",
+      "spec_digest": "5691850d4ffb31b16f5e02544a0e6e752ce86b43d7d96545beda110be874d0e5",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "adapter-recovery",
@@ -2569,16 +2616,19 @@
         "docs/APPLICATION_PROFILES.md",
         "docs/APPLICATION_SOURCES.md",
         "docs/COGNITIVE_TASKS.md",
+        "docs/PROCESSED_TRANSFER.md",
         "docs/PROCESSING.md",
         "portability/schemas/formats.schema.json",
         "portability/specs/COMMON.sudo.md",
+        "portability/specs/PROCESSED_TRANSFER.sudo.md",
         "portability/specs/TRANSACTIONS.sudo.md",
         "schemas/cognitive-context.schema.json",
         "schemas/cognitive-learning.schema.json",
         "schemas/cognitive-result.schema.json",
         "schemas/cognitive-task.schema.json",
         "schemas/hypotheses.schema.json",
-        "schemas/memory-graph.schema.json"
+        "schemas/memory-graph.schema.json",
+        "schemas/processed-transfer.schema.json"
       ],
       "reference_files": [
         "adapters/reference-git/adapter.mjs",
@@ -2598,6 +2648,7 @@
         "server/memory-model.mjs",
         "server/observation.mjs",
         "server/operation-metrics.mjs",
+        "server/processed-transfer.mjs",
         "server/profile-inspection.mjs",
         "server/provider-memory.mjs",
         "server/provider-validation.mjs",
@@ -2640,9 +2691,9 @@
         "adapters/conformance/adapter.test.mjs",
         "server/profile-lifecycle.test.mjs"
       ],
-      "reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
-      "spec_digest": "a6ee4f778722a152de238c3cfb2a12def97fabd0be29c0c43fe1b93ba23e39bc",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "reference_digest": "bcd782f0968d2b6e778c0d0ded97cd021740520f7d04d8c58d35d625b107f14c",
+      "spec_digest": "5691850d4ffb31b16f5e02544a0e6e752ce86b43d7d96545beda110be874d0e5",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "adapter-concurrency",
@@ -2654,16 +2705,19 @@
         "docs/APPLICATION_PROFILES.md",
         "docs/APPLICATION_SOURCES.md",
         "docs/COGNITIVE_TASKS.md",
+        "docs/PROCESSED_TRANSFER.md",
         "docs/PROCESSING.md",
         "portability/schemas/formats.schema.json",
         "portability/specs/COMMON.sudo.md",
+        "portability/specs/PROCESSED_TRANSFER.sudo.md",
         "portability/specs/TRANSACTIONS.sudo.md",
         "schemas/cognitive-context.schema.json",
         "schemas/cognitive-learning.schema.json",
         "schemas/cognitive-result.schema.json",
         "schemas/cognitive-task.schema.json",
         "schemas/hypotheses.schema.json",
-        "schemas/memory-graph.schema.json"
+        "schemas/memory-graph.schema.json",
+        "schemas/processed-transfer.schema.json"
       ],
       "reference_files": [
         "adapters/reference-git/adapter.mjs",
@@ -2683,6 +2737,7 @@
         "server/memory-model.mjs",
         "server/observation.mjs",
         "server/operation-metrics.mjs",
+        "server/processed-transfer.mjs",
         "server/profile-inspection.mjs",
         "server/provider-memory.mjs",
         "server/provider-validation.mjs",
@@ -2725,9 +2780,9 @@
         "adapters/conformance/adapter.test.mjs",
         "server/profile-lifecycle.test.mjs"
       ],
-      "reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
-      "spec_digest": "a6ee4f778722a152de238c3cfb2a12def97fabd0be29c0c43fe1b93ba23e39bc",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "reference_digest": "bcd782f0968d2b6e778c0d0ded97cd021740520f7d04d8c58d35d625b107f14c",
+      "spec_digest": "5691850d4ffb31b16f5e02544a0e6e752ce86b43d7d96545beda110be874d0e5",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "provider-open",
@@ -2744,15 +2799,18 @@
         "docs/MEMORY_MODEL.md",
         "docs/MEMORY_PROVIDERS.md",
         "docs/MEMORY_PROVIDER_ACCEPTANCE.md",
+        "docs/PROCESSED_TRANSFER.md",
         "portability/schemas/formats.schema.json",
         "portability/specs/COMMON.sudo.md",
+        "portability/specs/PROCESSED_TRANSFER.sudo.md",
         "portability/specs/PROVIDER.sudo.md",
         "schemas/cognitive-context.schema.json",
         "schemas/cognitive-learning.schema.json",
         "schemas/cognitive-result.schema.json",
         "schemas/cognitive-task.schema.json",
         "schemas/hypotheses.schema.json",
-        "schemas/memory-graph.schema.json"
+        "schemas/memory-graph.schema.json",
+        "schemas/processed-transfer.schema.json"
       ],
       "reference_files": [
         "adapters/reference-git/adapter.mjs",
@@ -2774,6 +2832,7 @@
         "server/memory-transfer.mjs",
         "server/observation.mjs",
         "server/operation-metrics.mjs",
+        "server/processed-transfer.mjs",
         "server/profile-inspection.mjs",
         "server/provider-memory.mjs",
         "server/provider-validation.mjs",
@@ -2815,9 +2874,9 @@
         "tools/portability/scenarios.test.mjs",
         "adapters/conformance/provider.test.mjs"
       ],
-      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "provider-read",
@@ -2828,15 +2887,18 @@
         "docs/MEMORY_MODEL.md",
         "docs/MEMORY_PROVIDERS.md",
         "docs/MEMORY_PROVIDER_ACCEPTANCE.md",
+        "docs/PROCESSED_TRANSFER.md",
         "portability/schemas/formats.schema.json",
         "portability/specs/COMMON.sudo.md",
+        "portability/specs/PROCESSED_TRANSFER.sudo.md",
         "portability/specs/PROVIDER.sudo.md",
         "schemas/cognitive-context.schema.json",
         "schemas/cognitive-learning.schema.json",
         "schemas/cognitive-result.schema.json",
         "schemas/cognitive-task.schema.json",
         "schemas/hypotheses.schema.json",
-        "schemas/memory-graph.schema.json"
+        "schemas/memory-graph.schema.json",
+        "schemas/processed-transfer.schema.json"
       ],
       "reference_files": [
         "adapters/reference-git/adapter.mjs",
@@ -2858,6 +2920,7 @@
         "server/memory-transfer.mjs",
         "server/observation.mjs",
         "server/operation-metrics.mjs",
+        "server/processed-transfer.mjs",
         "server/profile-inspection.mjs",
         "server/provider-memory.mjs",
         "server/provider-validation.mjs",
@@ -2899,9 +2962,9 @@
         "tools/portability/scenarios.test.mjs",
         "adapters/conformance/provider.test.mjs"
       ],
-      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "provider-scan",
@@ -2912,15 +2975,18 @@
         "docs/MEMORY_MODEL.md",
         "docs/MEMORY_PROVIDERS.md",
         "docs/MEMORY_PROVIDER_ACCEPTANCE.md",
+        "docs/PROCESSED_TRANSFER.md",
         "portability/schemas/formats.schema.json",
         "portability/specs/COMMON.sudo.md",
+        "portability/specs/PROCESSED_TRANSFER.sudo.md",
         "portability/specs/PROVIDER.sudo.md",
         "schemas/cognitive-context.schema.json",
         "schemas/cognitive-learning.schema.json",
         "schemas/cognitive-result.schema.json",
         "schemas/cognitive-task.schema.json",
         "schemas/hypotheses.schema.json",
-        "schemas/memory-graph.schema.json"
+        "schemas/memory-graph.schema.json",
+        "schemas/processed-transfer.schema.json"
       ],
       "reference_files": [
         "adapters/reference-git/adapter.mjs",
@@ -2942,6 +3008,7 @@
         "server/memory-transfer.mjs",
         "server/observation.mjs",
         "server/operation-metrics.mjs",
+        "server/processed-transfer.mjs",
         "server/profile-inspection.mjs",
         "server/provider-memory.mjs",
         "server/provider-validation.mjs",
@@ -2983,9 +3050,9 @@
         "tools/portability/scenarios.test.mjs",
         "adapters/conformance/provider.test.mjs"
       ],
-      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "provider-counts",
@@ -2996,15 +3063,18 @@
         "docs/MEMORY_MODEL.md",
         "docs/MEMORY_PROVIDERS.md",
         "docs/MEMORY_PROVIDER_ACCEPTANCE.md",
+        "docs/PROCESSED_TRANSFER.md",
         "portability/schemas/formats.schema.json",
         "portability/specs/COMMON.sudo.md",
+        "portability/specs/PROCESSED_TRANSFER.sudo.md",
         "portability/specs/PROVIDER.sudo.md",
         "schemas/cognitive-context.schema.json",
         "schemas/cognitive-learning.schema.json",
         "schemas/cognitive-result.schema.json",
         "schemas/cognitive-task.schema.json",
         "schemas/hypotheses.schema.json",
-        "schemas/memory-graph.schema.json"
+        "schemas/memory-graph.schema.json",
+        "schemas/processed-transfer.schema.json"
       ],
       "reference_files": [
         "adapters/reference-git/adapter.mjs",
@@ -3026,6 +3096,7 @@
         "server/memory-transfer.mjs",
         "server/observation.mjs",
         "server/operation-metrics.mjs",
+        "server/processed-transfer.mjs",
         "server/profile-inspection.mjs",
         "server/provider-memory.mjs",
         "server/provider-validation.mjs",
@@ -3067,9 +3138,9 @@
         "tools/portability/scenarios.test.mjs",
         "adapters/conformance/provider.test.mjs"
       ],
-      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "provider-evidence",
@@ -3080,15 +3151,18 @@
         "docs/MEMORY_MODEL.md",
         "docs/MEMORY_PROVIDERS.md",
         "docs/MEMORY_PROVIDER_ACCEPTANCE.md",
+        "docs/PROCESSED_TRANSFER.md",
         "portability/schemas/formats.schema.json",
         "portability/specs/COMMON.sudo.md",
+        "portability/specs/PROCESSED_TRANSFER.sudo.md",
         "portability/specs/PROVIDER.sudo.md",
         "schemas/cognitive-context.schema.json",
         "schemas/cognitive-learning.schema.json",
         "schemas/cognitive-result.schema.json",
         "schemas/cognitive-task.schema.json",
         "schemas/hypotheses.schema.json",
-        "schemas/memory-graph.schema.json"
+        "schemas/memory-graph.schema.json",
+        "schemas/processed-transfer.schema.json"
       ],
       "reference_files": [
         "adapters/reference-git/adapter.mjs",
@@ -3110,6 +3184,7 @@
         "server/memory-transfer.mjs",
         "server/observation.mjs",
         "server/operation-metrics.mjs",
+        "server/processed-transfer.mjs",
         "server/profile-inspection.mjs",
         "server/provider-memory.mjs",
         "server/provider-validation.mjs",
@@ -3151,9 +3226,9 @@
         "tools/portability/scenarios.test.mjs",
         "adapters/conformance/provider.test.mjs"
       ],
-      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "provider-context",
@@ -3165,15 +3240,18 @@
         "docs/MEMORY_MODEL.md",
         "docs/MEMORY_PROVIDERS.md",
         "docs/MEMORY_PROVIDER_ACCEPTANCE.md",
+        "docs/PROCESSED_TRANSFER.md",
         "portability/schemas/formats.schema.json",
         "portability/specs/COMMON.sudo.md",
+        "portability/specs/PROCESSED_TRANSFER.sudo.md",
         "portability/specs/PROVIDER.sudo.md",
         "schemas/cognitive-context.schema.json",
         "schemas/cognitive-learning.schema.json",
         "schemas/cognitive-result.schema.json",
         "schemas/cognitive-task.schema.json",
         "schemas/hypotheses.schema.json",
-        "schemas/memory-graph.schema.json"
+        "schemas/memory-graph.schema.json",
+        "schemas/processed-transfer.schema.json"
       ],
       "reference_files": [
         "adapters/reference-git/adapter.mjs",
@@ -3195,6 +3273,7 @@
         "server/memory-transfer.mjs",
         "server/observation.mjs",
         "server/operation-metrics.mjs",
+        "server/processed-transfer.mjs",
         "server/profile-inspection.mjs",
         "server/provider-memory.mjs",
         "server/provider-validation.mjs",
@@ -3236,9 +3315,9 @@
         "tools/portability/scenarios.test.mjs",
         "adapters/conformance/provider.test.mjs"
       ],
-      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "provider-stats",
@@ -3250,15 +3329,18 @@
         "docs/MEMORY_MODEL.md",
         "docs/MEMORY_PROVIDERS.md",
         "docs/MEMORY_PROVIDER_ACCEPTANCE.md",
+        "docs/PROCESSED_TRANSFER.md",
         "portability/schemas/formats.schema.json",
         "portability/specs/COMMON.sudo.md",
+        "portability/specs/PROCESSED_TRANSFER.sudo.md",
         "portability/specs/PROVIDER.sudo.md",
         "schemas/cognitive-context.schema.json",
         "schemas/cognitive-learning.schema.json",
         "schemas/cognitive-result.schema.json",
         "schemas/cognitive-task.schema.json",
         "schemas/hypotheses.schema.json",
-        "schemas/memory-graph.schema.json"
+        "schemas/memory-graph.schema.json",
+        "schemas/processed-transfer.schema.json"
       ],
       "reference_files": [
         "adapters/reference-git/adapter.mjs",
@@ -3280,6 +3362,7 @@
         "server/memory-transfer.mjs",
         "server/observation.mjs",
         "server/operation-metrics.mjs",
+        "server/processed-transfer.mjs",
         "server/profile-inspection.mjs",
         "server/provider-memory.mjs",
         "server/provider-validation.mjs",
@@ -3321,9 +3404,9 @@
         "tools/portability/scenarios.test.mjs",
         "adapters/conformance/provider.test.mjs"
       ],
-      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "provider-warnings",
@@ -3335,15 +3418,18 @@
         "docs/MEMORY_MODEL.md",
         "docs/MEMORY_PROVIDERS.md",
         "docs/MEMORY_PROVIDER_ACCEPTANCE.md",
+        "docs/PROCESSED_TRANSFER.md",
         "portability/schemas/formats.schema.json",
         "portability/specs/COMMON.sudo.md",
+        "portability/specs/PROCESSED_TRANSFER.sudo.md",
         "portability/specs/PROVIDER.sudo.md",
         "schemas/cognitive-context.schema.json",
         "schemas/cognitive-learning.schema.json",
         "schemas/cognitive-result.schema.json",
         "schemas/cognitive-task.schema.json",
         "schemas/hypotheses.schema.json",
-        "schemas/memory-graph.schema.json"
+        "schemas/memory-graph.schema.json",
+        "schemas/processed-transfer.schema.json"
       ],
       "reference_files": [
         "adapters/reference-git/adapter.mjs",
@@ -3365,6 +3451,7 @@
         "server/memory-transfer.mjs",
         "server/observation.mjs",
         "server/operation-metrics.mjs",
+        "server/processed-transfer.mjs",
         "server/profile-inspection.mjs",
         "server/provider-memory.mjs",
         "server/provider-validation.mjs",
@@ -3406,9 +3493,9 @@
         "tools/portability/scenarios.test.mjs",
         "adapters/conformance/provider.test.mjs"
       ],
-      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "provider-audit",
@@ -3423,15 +3510,18 @@
         "docs/MEMORY_MODEL.md",
         "docs/MEMORY_PROVIDERS.md",
         "docs/MEMORY_PROVIDER_ACCEPTANCE.md",
+        "docs/PROCESSED_TRANSFER.md",
         "portability/schemas/formats.schema.json",
         "portability/specs/COMMON.sudo.md",
+        "portability/specs/PROCESSED_TRANSFER.sudo.md",
         "portability/specs/PROVIDER.sudo.md",
         "schemas/cognitive-context.schema.json",
         "schemas/cognitive-learning.schema.json",
         "schemas/cognitive-result.schema.json",
         "schemas/cognitive-task.schema.json",
         "schemas/hypotheses.schema.json",
-        "schemas/memory-graph.schema.json"
+        "schemas/memory-graph.schema.json",
+        "schemas/processed-transfer.schema.json"
       ],
       "reference_files": [
         "adapters/reference-git/adapter.mjs",
@@ -3453,6 +3543,7 @@
         "server/memory-transfer.mjs",
         "server/observation.mjs",
         "server/operation-metrics.mjs",
+        "server/processed-transfer.mjs",
         "server/profile-inspection.mjs",
         "server/provider-memory.mjs",
         "server/provider-validation.mjs",
@@ -3494,9 +3585,9 @@
         "tools/portability/scenarios.test.mjs",
         "adapters/conformance/provider.test.mjs"
       ],
-      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "provider-prepare",
@@ -3509,15 +3600,18 @@
         "docs/MEMORY_MODEL.md",
         "docs/MEMORY_PROVIDERS.md",
         "docs/MEMORY_PROVIDER_ACCEPTANCE.md",
+        "docs/PROCESSED_TRANSFER.md",
         "portability/schemas/formats.schema.json",
         "portability/specs/COMMON.sudo.md",
+        "portability/specs/PROCESSED_TRANSFER.sudo.md",
         "portability/specs/PROVIDER.sudo.md",
         "schemas/cognitive-context.schema.json",
         "schemas/cognitive-learning.schema.json",
         "schemas/cognitive-result.schema.json",
         "schemas/cognitive-task.schema.json",
         "schemas/hypotheses.schema.json",
-        "schemas/memory-graph.schema.json"
+        "schemas/memory-graph.schema.json",
+        "schemas/processed-transfer.schema.json"
       ],
       "reference_files": [
         "adapters/reference-git/adapter.mjs",
@@ -3539,6 +3633,7 @@
         "server/memory-transfer.mjs",
         "server/observation.mjs",
         "server/operation-metrics.mjs",
+        "server/processed-transfer.mjs",
         "server/profile-inspection.mjs",
         "server/provider-memory.mjs",
         "server/provider-validation.mjs",
@@ -3580,9 +3675,9 @@
         "tools/portability/scenarios.test.mjs",
         "adapters/conformance/provider.test.mjs"
       ],
-      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "provider-publish",
@@ -3594,15 +3689,18 @@
         "docs/MEMORY_MODEL.md",
         "docs/MEMORY_PROVIDERS.md",
         "docs/MEMORY_PROVIDER_ACCEPTANCE.md",
+        "docs/PROCESSED_TRANSFER.md",
         "portability/schemas/formats.schema.json",
         "portability/specs/COMMON.sudo.md",
+        "portability/specs/PROCESSED_TRANSFER.sudo.md",
         "portability/specs/PROVIDER.sudo.md",
         "schemas/cognitive-context.schema.json",
         "schemas/cognitive-learning.schema.json",
         "schemas/cognitive-result.schema.json",
         "schemas/cognitive-task.schema.json",
         "schemas/hypotheses.schema.json",
-        "schemas/memory-graph.schema.json"
+        "schemas/memory-graph.schema.json",
+        "schemas/processed-transfer.schema.json"
       ],
       "reference_files": [
         "adapters/reference-git/adapter.mjs",
@@ -3624,6 +3722,7 @@
         "server/memory-transfer.mjs",
         "server/observation.mjs",
         "server/operation-metrics.mjs",
+        "server/processed-transfer.mjs",
         "server/profile-inspection.mjs",
         "server/provider-memory.mjs",
         "server/provider-validation.mjs",
@@ -3665,9 +3764,9 @@
         "tools/portability/scenarios.test.mjs",
         "adapters/conformance/provider.test.mjs"
       ],
-      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "provider-abort",
@@ -3678,15 +3777,18 @@
         "docs/MEMORY_MODEL.md",
         "docs/MEMORY_PROVIDERS.md",
         "docs/MEMORY_PROVIDER_ACCEPTANCE.md",
+        "docs/PROCESSED_TRANSFER.md",
         "portability/schemas/formats.schema.json",
         "portability/specs/COMMON.sudo.md",
+        "portability/specs/PROCESSED_TRANSFER.sudo.md",
         "portability/specs/PROVIDER.sudo.md",
         "schemas/cognitive-context.schema.json",
         "schemas/cognitive-learning.schema.json",
         "schemas/cognitive-result.schema.json",
         "schemas/cognitive-task.schema.json",
         "schemas/hypotheses.schema.json",
-        "schemas/memory-graph.schema.json"
+        "schemas/memory-graph.schema.json",
+        "schemas/processed-transfer.schema.json"
       ],
       "reference_files": [
         "adapters/reference-git/adapter.mjs",
@@ -3708,6 +3810,7 @@
         "server/memory-transfer.mjs",
         "server/observation.mjs",
         "server/operation-metrics.mjs",
+        "server/processed-transfer.mjs",
         "server/profile-inspection.mjs",
         "server/provider-memory.mjs",
         "server/provider-validation.mjs",
@@ -3749,9 +3852,9 @@
         "tools/portability/scenarios.test.mjs",
         "adapters/conformance/provider.test.mjs"
       ],
-      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "provider-recover",
@@ -3763,15 +3866,18 @@
         "docs/MEMORY_MODEL.md",
         "docs/MEMORY_PROVIDERS.md",
         "docs/MEMORY_PROVIDER_ACCEPTANCE.md",
+        "docs/PROCESSED_TRANSFER.md",
         "portability/schemas/formats.schema.json",
         "portability/specs/COMMON.sudo.md",
+        "portability/specs/PROCESSED_TRANSFER.sudo.md",
         "portability/specs/PROVIDER.sudo.md",
         "schemas/cognitive-context.schema.json",
         "schemas/cognitive-learning.schema.json",
         "schemas/cognitive-result.schema.json",
         "schemas/cognitive-task.schema.json",
         "schemas/hypotheses.schema.json",
-        "schemas/memory-graph.schema.json"
+        "schemas/memory-graph.schema.json",
+        "schemas/processed-transfer.schema.json"
       ],
       "reference_files": [
         "adapters/reference-git/adapter.mjs",
@@ -3793,6 +3899,7 @@
         "server/memory-transfer.mjs",
         "server/observation.mjs",
         "server/operation-metrics.mjs",
+        "server/processed-transfer.mjs",
         "server/profile-inspection.mjs",
         "server/provider-memory.mjs",
         "server/provider-validation.mjs",
@@ -3834,9 +3941,9 @@
         "tools/portability/scenarios.test.mjs",
         "adapters/conformance/provider.test.mjs"
       ],
-      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "provider-rebase",
@@ -3849,15 +3956,18 @@
         "docs/MEMORY_MODEL.md",
         "docs/MEMORY_PROVIDERS.md",
         "docs/MEMORY_PROVIDER_ACCEPTANCE.md",
+        "docs/PROCESSED_TRANSFER.md",
         "portability/schemas/formats.schema.json",
         "portability/specs/COMMON.sudo.md",
+        "portability/specs/PROCESSED_TRANSFER.sudo.md",
         "portability/specs/PROVIDER.sudo.md",
         "schemas/cognitive-context.schema.json",
         "schemas/cognitive-learning.schema.json",
         "schemas/cognitive-result.schema.json",
         "schemas/cognitive-task.schema.json",
         "schemas/hypotheses.schema.json",
-        "schemas/memory-graph.schema.json"
+        "schemas/memory-graph.schema.json",
+        "schemas/processed-transfer.schema.json"
       ],
       "reference_files": [
         "adapters/reference-git/adapter.mjs",
@@ -3879,6 +3989,7 @@
         "server/memory-transfer.mjs",
         "server/observation.mjs",
         "server/operation-metrics.mjs",
+        "server/processed-transfer.mjs",
         "server/profile-inspection.mjs",
         "server/provider-memory.mjs",
         "server/provider-validation.mjs",
@@ -3920,9 +4031,9 @@
         "tools/portability/scenarios.test.mjs",
         "adapters/conformance/provider.test.mjs"
       ],
-      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "provider-export",
@@ -3935,15 +4046,18 @@
         "docs/MEMORY_MODEL.md",
         "docs/MEMORY_PROVIDERS.md",
         "docs/MEMORY_PROVIDER_ACCEPTANCE.md",
+        "docs/PROCESSED_TRANSFER.md",
         "portability/schemas/formats.schema.json",
         "portability/specs/COMMON.sudo.md",
+        "portability/specs/PROCESSED_TRANSFER.sudo.md",
         "portability/specs/PROVIDER.sudo.md",
         "schemas/cognitive-context.schema.json",
         "schemas/cognitive-learning.schema.json",
         "schemas/cognitive-result.schema.json",
         "schemas/cognitive-task.schema.json",
         "schemas/hypotheses.schema.json",
-        "schemas/memory-graph.schema.json"
+        "schemas/memory-graph.schema.json",
+        "schemas/processed-transfer.schema.json"
       ],
       "reference_files": [
         "adapters/reference-git/adapter.mjs",
@@ -3965,6 +4079,7 @@
         "server/memory-transfer.mjs",
         "server/observation.mjs",
         "server/operation-metrics.mjs",
+        "server/processed-transfer.mjs",
         "server/profile-inspection.mjs",
         "server/provider-memory.mjs",
         "server/provider-validation.mjs",
@@ -4006,9 +4121,9 @@
         "tools/portability/scenarios.test.mjs",
         "adapters/conformance/provider.test.mjs"
       ],
-      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "provider-import",
@@ -4021,15 +4136,18 @@
         "docs/MEMORY_MODEL.md",
         "docs/MEMORY_PROVIDERS.md",
         "docs/MEMORY_PROVIDER_ACCEPTANCE.md",
+        "docs/PROCESSED_TRANSFER.md",
         "portability/schemas/formats.schema.json",
         "portability/specs/COMMON.sudo.md",
+        "portability/specs/PROCESSED_TRANSFER.sudo.md",
         "portability/specs/PROVIDER.sudo.md",
         "schemas/cognitive-context.schema.json",
         "schemas/cognitive-learning.schema.json",
         "schemas/cognitive-result.schema.json",
         "schemas/cognitive-task.schema.json",
         "schemas/hypotheses.schema.json",
-        "schemas/memory-graph.schema.json"
+        "schemas/memory-graph.schema.json",
+        "schemas/processed-transfer.schema.json"
       ],
       "reference_files": [
         "adapters/reference-git/adapter.mjs",
@@ -4051,6 +4169,7 @@
         "server/memory-transfer.mjs",
         "server/observation.mjs",
         "server/operation-metrics.mjs",
+        "server/processed-transfer.mjs",
         "server/profile-inspection.mjs",
         "server/provider-memory.mjs",
         "server/provider-validation.mjs",
@@ -4092,9 +4211,9 @@
         "tools/portability/scenarios.test.mjs",
         "adapters/conformance/provider.test.mjs"
       ],
-      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "canonical",
@@ -4159,8 +4278,8 @@
         "tools/portability/scenarios.test.mjs"
       ],
       "reference_digest": "e553136418e14a9ec1c3c5b2f7fc3cc683de43adf3c1472049d971648eced6a7",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "c507a55821806eeaf666973faa07628aa3f3ce49359b06645f73b33ce8e4c968",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "selector",
@@ -4222,8 +4341,8 @@
         "tools/portability/scenarios.test.mjs"
       ],
       "reference_digest": "e553136418e14a9ec1c3c5b2f7fc3cc683de43adf3c1472049d971648eced6a7",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "c507a55821806eeaf666973faa07628aa3f3ce49359b06645f73b33ce8e4c968",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "page",
@@ -4289,8 +4408,8 @@
         "tools/portability/scenarios.test.mjs"
       ],
       "reference_digest": "e553136418e14a9ec1c3c5b2f7fc3cc683de43adf3c1472049d971648eced6a7",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "c507a55821806eeaf666973faa07628aa3f3ce49359b06645f73b33ce8e4c968",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "change-identity",
@@ -4352,8 +4471,8 @@
         "tools/portability/scenarios.test.mjs"
       ],
       "reference_digest": "e553136418e14a9ec1c3c5b2f7fc3cc683de43adf3c1472049d971648eced6a7",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "c507a55821806eeaf666973faa07628aa3f3ce49359b06645f73b33ce8e4c968",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "cognition-open",
@@ -4366,16 +4485,19 @@
       "spec_files": [
         "docs/COGNITIVE_CONFORMANCE.md",
         "docs/COGNITIVE_TASKS.md",
+        "docs/PROCESSED_TRANSFER.md",
         "integration/COGNITIVE_TASK.sudo.md",
         "portability/schemas/formats.schema.json",
         "portability/specs/COGNITION.sudo.md",
         "portability/specs/COMMON.sudo.md",
+        "portability/specs/PROCESSED_TRANSFER.sudo.md",
         "schemas/cognitive-context.schema.json",
         "schemas/cognitive-learning.schema.json",
         "schemas/cognitive-result.schema.json",
         "schemas/cognitive-task.schema.json",
         "schemas/hypotheses.schema.json",
-        "schemas/memory-graph.schema.json"
+        "schemas/memory-graph.schema.json",
+        "schemas/processed-transfer.schema.json"
       ],
       "reference_files": [
         "adapters/reference-git/adapter.mjs",
@@ -4395,6 +4517,7 @@
         "server/memory-model.mjs",
         "server/observation.mjs",
         "server/operation-metrics.mjs",
+        "server/processed-transfer.mjs",
         "server/profile-inspection.mjs",
         "server/provider-memory.mjs",
         "server/provider-validation.mjs",
@@ -4436,9 +4559,9 @@
         "tools/portability/scenarios.test.mjs",
         "server/cognitive-task.test.mjs"
       ],
-      "reference_digest": "9ca24e73a2d4abe74363cc09607323a21008023dddb2c26958d1209edf1a8692",
-      "spec_digest": "5a41feee5a9bf06b2c301c08b3e87ad9906e868e6c39bd9524dbd6f056660e79",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "reference_digest": "03b31f75e0ea0f1bbfaa83f4aa67cb9c3b6ac3d1eab7e38d1e7ecc06509a655f",
+      "spec_digest": "786b6b25032db5c2aac8fa7a5d6e37d1d1a04be710bd272f821ca5f86c5ce36a",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "cognition-round",
@@ -4449,16 +4572,19 @@
       "spec_files": [
         "docs/COGNITIVE_CONFORMANCE.md",
         "docs/COGNITIVE_TASKS.md",
+        "docs/PROCESSED_TRANSFER.md",
         "integration/COGNITIVE_TASK.sudo.md",
         "portability/schemas/formats.schema.json",
         "portability/specs/COGNITION.sudo.md",
         "portability/specs/COMMON.sudo.md",
+        "portability/specs/PROCESSED_TRANSFER.sudo.md",
         "schemas/cognitive-context.schema.json",
         "schemas/cognitive-learning.schema.json",
         "schemas/cognitive-result.schema.json",
         "schemas/cognitive-task.schema.json",
         "schemas/hypotheses.schema.json",
-        "schemas/memory-graph.schema.json"
+        "schemas/memory-graph.schema.json",
+        "schemas/processed-transfer.schema.json"
       ],
       "reference_files": [
         "adapters/reference-git/adapter.mjs",
@@ -4478,6 +4604,7 @@
         "server/memory-model.mjs",
         "server/observation.mjs",
         "server/operation-metrics.mjs",
+        "server/processed-transfer.mjs",
         "server/profile-inspection.mjs",
         "server/provider-memory.mjs",
         "server/provider-validation.mjs",
@@ -4519,9 +4646,9 @@
         "tools/portability/scenarios.test.mjs",
         "server/cognitive-task.test.mjs"
       ],
-      "reference_digest": "9ca24e73a2d4abe74363cc09607323a21008023dddb2c26958d1209edf1a8692",
-      "spec_digest": "5a41feee5a9bf06b2c301c08b3e87ad9906e868e6c39bd9524dbd6f056660e79",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "reference_digest": "03b31f75e0ea0f1bbfaa83f4aa67cb9c3b6ac3d1eab7e38d1e7ecc06509a655f",
+      "spec_digest": "786b6b25032db5c2aac8fa7a5d6e37d1d1a04be710bd272f821ca5f86c5ce36a",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "cognition-context",
@@ -4531,16 +4658,19 @@
       "spec_files": [
         "docs/COGNITIVE_CONFORMANCE.md",
         "docs/COGNITIVE_TASKS.md",
+        "docs/PROCESSED_TRANSFER.md",
         "integration/COGNITIVE_TASK.sudo.md",
         "portability/schemas/formats.schema.json",
         "portability/specs/COGNITION.sudo.md",
         "portability/specs/COMMON.sudo.md",
+        "portability/specs/PROCESSED_TRANSFER.sudo.md",
         "schemas/cognitive-context.schema.json",
         "schemas/cognitive-learning.schema.json",
         "schemas/cognitive-result.schema.json",
         "schemas/cognitive-task.schema.json",
         "schemas/hypotheses.schema.json",
-        "schemas/memory-graph.schema.json"
+        "schemas/memory-graph.schema.json",
+        "schemas/processed-transfer.schema.json"
       ],
       "reference_files": [
         "adapters/reference-git/adapter.mjs",
@@ -4560,6 +4690,7 @@
         "server/memory-model.mjs",
         "server/observation.mjs",
         "server/operation-metrics.mjs",
+        "server/processed-transfer.mjs",
         "server/profile-inspection.mjs",
         "server/provider-memory.mjs",
         "server/provider-validation.mjs",
@@ -4601,9 +4732,9 @@
         "tools/portability/scenarios.test.mjs",
         "server/cognitive-task.test.mjs"
       ],
-      "reference_digest": "9ca24e73a2d4abe74363cc09607323a21008023dddb2c26958d1209edf1a8692",
-      "spec_digest": "5a41feee5a9bf06b2c301c08b3e87ad9906e868e6c39bd9524dbd6f056660e79",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "reference_digest": "03b31f75e0ea0f1bbfaa83f4aa67cb9c3b6ac3d1eab7e38d1e7ecc06509a655f",
+      "spec_digest": "786b6b25032db5c2aac8fa7a5d6e37d1d1a04be710bd272f821ca5f86c5ce36a",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "cognition-source",
@@ -4613,16 +4744,19 @@
       "spec_files": [
         "docs/COGNITIVE_CONFORMANCE.md",
         "docs/COGNITIVE_TASKS.md",
+        "docs/PROCESSED_TRANSFER.md",
         "integration/COGNITIVE_TASK.sudo.md",
         "portability/schemas/formats.schema.json",
         "portability/specs/COGNITION.sudo.md",
         "portability/specs/COMMON.sudo.md",
+        "portability/specs/PROCESSED_TRANSFER.sudo.md",
         "schemas/cognitive-context.schema.json",
         "schemas/cognitive-learning.schema.json",
         "schemas/cognitive-result.schema.json",
         "schemas/cognitive-task.schema.json",
         "schemas/hypotheses.schema.json",
-        "schemas/memory-graph.schema.json"
+        "schemas/memory-graph.schema.json",
+        "schemas/processed-transfer.schema.json"
       ],
       "reference_files": [
         "adapters/reference-git/adapter.mjs",
@@ -4642,6 +4776,7 @@
         "server/memory-model.mjs",
         "server/observation.mjs",
         "server/operation-metrics.mjs",
+        "server/processed-transfer.mjs",
         "server/profile-inspection.mjs",
         "server/provider-memory.mjs",
         "server/provider-validation.mjs",
@@ -4683,9 +4818,9 @@
         "tools/portability/scenarios.test.mjs",
         "server/cognitive-task.test.mjs"
       ],
-      "reference_digest": "9ca24e73a2d4abe74363cc09607323a21008023dddb2c26958d1209edf1a8692",
-      "spec_digest": "5a41feee5a9bf06b2c301c08b3e87ad9906e868e6c39bd9524dbd6f056660e79",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "reference_digest": "03b31f75e0ea0f1bbfaa83f4aa67cb9c3b6ac3d1eab7e38d1e7ecc06509a655f",
+      "spec_digest": "786b6b25032db5c2aac8fa7a5d6e37d1d1a04be710bd272f821ca5f86c5ce36a",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "cognition-receipt",
@@ -4695,16 +4830,19 @@
       "spec_files": [
         "docs/COGNITIVE_CONFORMANCE.md",
         "docs/COGNITIVE_TASKS.md",
+        "docs/PROCESSED_TRANSFER.md",
         "integration/COGNITIVE_TASK.sudo.md",
         "portability/schemas/formats.schema.json",
         "portability/specs/COGNITION.sudo.md",
         "portability/specs/COMMON.sudo.md",
+        "portability/specs/PROCESSED_TRANSFER.sudo.md",
         "schemas/cognitive-context.schema.json",
         "schemas/cognitive-learning.schema.json",
         "schemas/cognitive-result.schema.json",
         "schemas/cognitive-task.schema.json",
         "schemas/hypotheses.schema.json",
-        "schemas/memory-graph.schema.json"
+        "schemas/memory-graph.schema.json",
+        "schemas/processed-transfer.schema.json"
       ],
       "reference_files": [
         "adapters/reference-git/adapter.mjs",
@@ -4724,6 +4862,7 @@
         "server/memory-model.mjs",
         "server/observation.mjs",
         "server/operation-metrics.mjs",
+        "server/processed-transfer.mjs",
         "server/profile-inspection.mjs",
         "server/provider-memory.mjs",
         "server/provider-validation.mjs",
@@ -4765,9 +4904,9 @@
         "tools/portability/scenarios.test.mjs",
         "server/cognitive-task.test.mjs"
       ],
-      "reference_digest": "9ca24e73a2d4abe74363cc09607323a21008023dddb2c26958d1209edf1a8692",
-      "spec_digest": "5a41feee5a9bf06b2c301c08b3e87ad9906e868e6c39bd9524dbd6f056660e79",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "reference_digest": "03b31f75e0ea0f1bbfaa83f4aa67cb9c3b6ac3d1eab7e38d1e7ecc06509a655f",
+      "spec_digest": "786b6b25032db5c2aac8fa7a5d6e37d1d1a04be710bd272f821ca5f86c5ce36a",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "cognition-finish",
@@ -4777,16 +4916,19 @@
       "spec_files": [
         "docs/COGNITIVE_CONFORMANCE.md",
         "docs/COGNITIVE_TASKS.md",
+        "docs/PROCESSED_TRANSFER.md",
         "integration/COGNITIVE_TASK.sudo.md",
         "portability/schemas/formats.schema.json",
         "portability/specs/COGNITION.sudo.md",
         "portability/specs/COMMON.sudo.md",
+        "portability/specs/PROCESSED_TRANSFER.sudo.md",
         "schemas/cognitive-context.schema.json",
         "schemas/cognitive-learning.schema.json",
         "schemas/cognitive-result.schema.json",
         "schemas/cognitive-task.schema.json",
         "schemas/hypotheses.schema.json",
-        "schemas/memory-graph.schema.json"
+        "schemas/memory-graph.schema.json",
+        "schemas/processed-transfer.schema.json"
       ],
       "reference_files": [
         "adapters/reference-git/adapter.mjs",
@@ -4806,6 +4948,7 @@
         "server/memory-model.mjs",
         "server/observation.mjs",
         "server/operation-metrics.mjs",
+        "server/processed-transfer.mjs",
         "server/profile-inspection.mjs",
         "server/provider-memory.mjs",
         "server/provider-validation.mjs",
@@ -4847,9 +4990,9 @@
         "tools/portability/scenarios.test.mjs",
         "server/cognitive-task.test.mjs"
       ],
-      "reference_digest": "9ca24e73a2d4abe74363cc09607323a21008023dddb2c26958d1209edf1a8692",
-      "spec_digest": "5a41feee5a9bf06b2c301c08b3e87ad9906e868e6c39bd9524dbd6f056660e79",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "reference_digest": "03b31f75e0ea0f1bbfaa83f4aa67cb9c3b6ac3d1eab7e38d1e7ecc06509a655f",
+      "spec_digest": "786b6b25032db5c2aac8fa7a5d6e37d1d1a04be710bd272f821ca5f86c5ce36a",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "validate-task",
@@ -4915,8 +5058,8 @@
         "tools/portability/scenarios.test.mjs"
       ],
       "reference_digest": "692f470a3285b1b10ba8b217d248ee7dad35969d95fe45e355ed0b2dbe342c1a",
-      "spec_digest": "5a41feee5a9bf06b2c301c08b3e87ad9906e868e6c39bd9524dbd6f056660e79",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "c25a8008ed15bc89f828b157f1cec03a04477e0fe3aa042821e857ba2c6094b5",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "validate-context",
@@ -4981,8 +5124,8 @@
         "tools/portability/scenarios.test.mjs"
       ],
       "reference_digest": "692f470a3285b1b10ba8b217d248ee7dad35969d95fe45e355ed0b2dbe342c1a",
-      "spec_digest": "5a41feee5a9bf06b2c301c08b3e87ad9906e868e6c39bd9524dbd6f056660e79",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "c25a8008ed15bc89f828b157f1cec03a04477e0fe3aa042821e857ba2c6094b5",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "validate-result",
@@ -5048,8 +5191,8 @@
         "tools/portability/scenarios.test.mjs"
       ],
       "reference_digest": "692f470a3285b1b10ba8b217d248ee7dad35969d95fe45e355ed0b2dbe342c1a",
-      "spec_digest": "5a41feee5a9bf06b2c301c08b3e87ad9906e868e6c39bd9524dbd6f056660e79",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "c25a8008ed15bc89f828b157f1cec03a04477e0fe3aa042821e857ba2c6094b5",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "validate-learning",
@@ -5114,8 +5257,8 @@
         "tools/portability/scenarios.test.mjs"
       ],
       "reference_digest": "692f470a3285b1b10ba8b217d248ee7dad35969d95fe45e355ed0b2dbe342c1a",
-      "spec_digest": "5a41feee5a9bf06b2c301c08b3e87ad9906e868e6c39bd9524dbd6f056660e79",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "c25a8008ed15bc89f828b157f1cec03a04477e0fe3aa042821e857ba2c6094b5",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "id": "learning-publish",
@@ -5127,16 +5270,19 @@
         "docs/APPLICATION_PROFILES.md",
         "docs/APPLICATION_SOURCES.md",
         "docs/COGNITIVE_TASKS.md",
+        "docs/PROCESSED_TRANSFER.md",
         "docs/PROCESSING.md",
         "portability/schemas/formats.schema.json",
         "portability/specs/COMMON.sudo.md",
+        "portability/specs/PROCESSED_TRANSFER.sudo.md",
         "portability/specs/TRANSACTIONS.sudo.md",
         "schemas/cognitive-context.schema.json",
         "schemas/cognitive-learning.schema.json",
         "schemas/cognitive-result.schema.json",
         "schemas/cognitive-task.schema.json",
         "schemas/hypotheses.schema.json",
-        "schemas/memory-graph.schema.json"
+        "schemas/memory-graph.schema.json",
+        "schemas/processed-transfer.schema.json"
       ],
       "reference_files": [
         "adapters/reference-git/adapter.mjs",
@@ -5155,6 +5301,7 @@
         "server/memory-model.mjs",
         "server/observation.mjs",
         "server/operation-metrics.mjs",
+        "server/processed-transfer.mjs",
         "server/profile-inspection.mjs",
         "server/provider-memory.mjs",
         "server/provider-validation.mjs",
@@ -5196,17 +5343,392 @@
         "tools/portability/scenarios.test.mjs",
         "server/cognitive-task.test.mjs"
       ],
-      "reference_digest": "daa98cd2fa6410c51b6539001ec98b8cf766a4bb2a35eb014c540d93e3edcddb",
-      "spec_digest": "a6ee4f778722a152de238c3cfb2a12def97fabd0be29c0c43fe1b93ba23e39bc",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "reference_digest": "93b932cf6927a1526bff07923f732adea5b6faa6cd9af09813091bdb026de7f8",
+      "spec_digest": "5691850d4ffb31b16f5e02544a0e6e752ce86b43d7d96545beda110be874d0e5",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
+    },
+    {
+      "id": "processed-export",
+      "surfaces": [
+        "exportProcessed",
+        "provider-tool export-processed"
+      ],
+      "spec_files": [
+        "docs/MEMORY_MODEL.md",
+        "docs/MEMORY_PROVIDERS.md",
+        "docs/MEMORY_PROVIDER_ACCEPTANCE.md",
+        "docs/PROCESSED_TRANSFER.md",
+        "portability/schemas/formats.schema.json",
+        "portability/specs/COMMON.sudo.md",
+        "portability/specs/PROCESSED_TRANSFER.sudo.md",
+        "portability/specs/PROVIDER.sudo.md",
+        "schemas/cognitive-context.schema.json",
+        "schemas/cognitive-learning.schema.json",
+        "schemas/cognitive-result.schema.json",
+        "schemas/cognitive-task.schema.json",
+        "schemas/hypotheses.schema.json",
+        "schemas/memory-graph.schema.json",
+        "schemas/processed-transfer.schema.json"
+      ],
+      "reference_files": [
+        "adapters/reference-git/adapter.mjs",
+        "adapters/reference-json/provider.mjs",
+        "adapters/template/memory-provider.mjs",
+        "processor/memory-tool.mjs",
+        "processor/provider-tool.mjs",
+        "server/application-profile.mjs",
+        "server/application-source.mjs",
+        "server/candidate-merge.mjs",
+        "server/cognitive-reference.mjs",
+        "server/cognitive-task.mjs",
+        "server/core-policies.mjs",
+        "server/guidance.mjs",
+        "server/hypotheses.mjs",
+        "server/instance-layout.mjs",
+        "server/memory-contract.mjs",
+        "server/memory-model.mjs",
+        "server/memory-transfer.mjs",
+        "server/observation.mjs",
+        "server/operation-metrics.mjs",
+        "server/processed-transfer.mjs",
+        "server/profile-inspection.mjs",
+        "server/provider-memory.mjs",
+        "server/provider-validation.mjs",
+        "server/subprocess.mjs"
+      ],
+      "fixture_files": [
+        "portability/fixtures/cases.json",
+        "portability/fixtures/empty/instance/purpose.md",
+        "portability/fixtures/empty/memory/graph.json",
+        "portability/fixtures/empty/memory/hypotheses.json",
+        "portability/fixtures/empty/memory/index.md",
+        "portability/fixtures/empty/memory/processed.json",
+        "portability/fixtures/empty/memory/processing-lock.json",
+        "portability/fixtures/empty/questions/queue.json",
+        "portability/fixtures/empty/questions/queue.md",
+        "portability/fixtures/index-cases.json",
+        "portability/fixtures/instance/inbox/11111111-1111-4111-8111-111111111111.md",
+        "portability/fixtures/instance/instance/purpose.md",
+        "portability/fixtures/instance/memory/graph.json",
+        "portability/fixtures/instance/memory/hypotheses.json",
+        "portability/fixtures/instance/memory/index.md",
+        "portability/fixtures/instance/memory/processed.json",
+        "portability/fixtures/instance/memory/processing-lock.json",
+        "portability/fixtures/instance/questions/queue.json",
+        "portability/fixtures/instance/questions/queue.md",
+        "portability/fixtures/pending/22222222-2222-4222-8222-222222222222.md",
+        "portability/fixtures/provider/change.json.tpl",
+        "portability/fixtures/scenarios.json",
+        "portability/fixtures/writer/change.json.tpl",
+        "portability/fixtures/writer/graph.json",
+        "portability/fixtures/writer/index.md.tpl",
+        "portability/fixtures/writer/journal.md.tpl"
+      ],
+      "cases": [],
+      "scenarios": [
+        "processed-transfer"
+      ],
+      "conformance_suites": [
+        "server/processed-transfer.test.mjs",
+        "tools/portability/scenarios.test.mjs"
+      ],
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
+    },
+    {
+      "id": "processed-inspect",
+      "surfaces": [
+        "inspectProcessed",
+        "provider-tool inspect-processed"
+      ],
+      "spec_files": [
+        "docs/MEMORY_MODEL.md",
+        "docs/MEMORY_PROVIDERS.md",
+        "docs/MEMORY_PROVIDER_ACCEPTANCE.md",
+        "docs/PROCESSED_TRANSFER.md",
+        "portability/schemas/formats.schema.json",
+        "portability/specs/COMMON.sudo.md",
+        "portability/specs/PROCESSED_TRANSFER.sudo.md",
+        "portability/specs/PROVIDER.sudo.md",
+        "schemas/cognitive-context.schema.json",
+        "schemas/cognitive-learning.schema.json",
+        "schemas/cognitive-result.schema.json",
+        "schemas/cognitive-task.schema.json",
+        "schemas/hypotheses.schema.json",
+        "schemas/memory-graph.schema.json",
+        "schemas/processed-transfer.schema.json"
+      ],
+      "reference_files": [
+        "adapters/reference-git/adapter.mjs",
+        "adapters/reference-json/provider.mjs",
+        "adapters/template/memory-provider.mjs",
+        "processor/memory-tool.mjs",
+        "processor/provider-tool.mjs",
+        "server/application-profile.mjs",
+        "server/application-source.mjs",
+        "server/candidate-merge.mjs",
+        "server/cognitive-reference.mjs",
+        "server/cognitive-task.mjs",
+        "server/core-policies.mjs",
+        "server/guidance.mjs",
+        "server/hypotheses.mjs",
+        "server/instance-layout.mjs",
+        "server/memory-contract.mjs",
+        "server/memory-model.mjs",
+        "server/memory-transfer.mjs",
+        "server/observation.mjs",
+        "server/operation-metrics.mjs",
+        "server/processed-transfer.mjs",
+        "server/profile-inspection.mjs",
+        "server/provider-memory.mjs",
+        "server/provider-validation.mjs",
+        "server/subprocess.mjs"
+      ],
+      "fixture_files": [
+        "portability/fixtures/cases.json",
+        "portability/fixtures/empty/instance/purpose.md",
+        "portability/fixtures/empty/memory/graph.json",
+        "portability/fixtures/empty/memory/hypotheses.json",
+        "portability/fixtures/empty/memory/index.md",
+        "portability/fixtures/empty/memory/processed.json",
+        "portability/fixtures/empty/memory/processing-lock.json",
+        "portability/fixtures/empty/questions/queue.json",
+        "portability/fixtures/empty/questions/queue.md",
+        "portability/fixtures/index-cases.json",
+        "portability/fixtures/instance/inbox/11111111-1111-4111-8111-111111111111.md",
+        "portability/fixtures/instance/instance/purpose.md",
+        "portability/fixtures/instance/memory/graph.json",
+        "portability/fixtures/instance/memory/hypotheses.json",
+        "portability/fixtures/instance/memory/index.md",
+        "portability/fixtures/instance/memory/processed.json",
+        "portability/fixtures/instance/memory/processing-lock.json",
+        "portability/fixtures/instance/questions/queue.json",
+        "portability/fixtures/instance/questions/queue.md",
+        "portability/fixtures/pending/22222222-2222-4222-8222-222222222222.md",
+        "portability/fixtures/provider/change.json.tpl",
+        "portability/fixtures/scenarios.json",
+        "portability/fixtures/writer/change.json.tpl",
+        "portability/fixtures/writer/graph.json",
+        "portability/fixtures/writer/index.md.tpl",
+        "portability/fixtures/writer/journal.md.tpl"
+      ],
+      "cases": [
+        "processed-transfer-unsupported-version"
+      ],
+      "scenarios": [
+        "processed-transfer"
+      ],
+      "conformance_suites": [
+        "server/processed-transfer.test.mjs",
+        "tools/portability/scenarios.test.mjs"
+      ],
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
+    },
+    {
+      "id": "processed-import",
+      "surfaces": [
+        "combineProcessed",
+        "importProcessed",
+        "provider-tool import-processed"
+      ],
+      "spec_files": [
+        "docs/MEMORY_MODEL.md",
+        "docs/MEMORY_PROVIDERS.md",
+        "docs/MEMORY_PROVIDER_ACCEPTANCE.md",
+        "docs/PROCESSED_TRANSFER.md",
+        "portability/schemas/formats.schema.json",
+        "portability/specs/COMMON.sudo.md",
+        "portability/specs/PROCESSED_TRANSFER.sudo.md",
+        "portability/specs/PROVIDER.sudo.md",
+        "schemas/cognitive-context.schema.json",
+        "schemas/cognitive-learning.schema.json",
+        "schemas/cognitive-result.schema.json",
+        "schemas/cognitive-task.schema.json",
+        "schemas/hypotheses.schema.json",
+        "schemas/memory-graph.schema.json",
+        "schemas/processed-transfer.schema.json"
+      ],
+      "reference_files": [
+        "adapters/reference-git/adapter.mjs",
+        "adapters/reference-json/provider.mjs",
+        "adapters/template/memory-provider.mjs",
+        "processor/memory-tool.mjs",
+        "processor/provider-tool.mjs",
+        "server/application-profile.mjs",
+        "server/application-source.mjs",
+        "server/candidate-merge.mjs",
+        "server/cognitive-reference.mjs",
+        "server/cognitive-task.mjs",
+        "server/core-policies.mjs",
+        "server/guidance.mjs",
+        "server/hypotheses.mjs",
+        "server/instance-layout.mjs",
+        "server/memory-contract.mjs",
+        "server/memory-model.mjs",
+        "server/memory-transfer.mjs",
+        "server/observation.mjs",
+        "server/operation-metrics.mjs",
+        "server/processed-transfer.mjs",
+        "server/profile-inspection.mjs",
+        "server/provider-memory.mjs",
+        "server/provider-validation.mjs",
+        "server/subprocess.mjs"
+      ],
+      "fixture_files": [
+        "portability/fixtures/cases.json",
+        "portability/fixtures/empty/instance/purpose.md",
+        "portability/fixtures/empty/memory/graph.json",
+        "portability/fixtures/empty/memory/hypotheses.json",
+        "portability/fixtures/empty/memory/index.md",
+        "portability/fixtures/empty/memory/processed.json",
+        "portability/fixtures/empty/memory/processing-lock.json",
+        "portability/fixtures/empty/questions/queue.json",
+        "portability/fixtures/empty/questions/queue.md",
+        "portability/fixtures/index-cases.json",
+        "portability/fixtures/instance/inbox/11111111-1111-4111-8111-111111111111.md",
+        "portability/fixtures/instance/instance/purpose.md",
+        "portability/fixtures/instance/memory/graph.json",
+        "portability/fixtures/instance/memory/hypotheses.json",
+        "portability/fixtures/instance/memory/index.md",
+        "portability/fixtures/instance/memory/processed.json",
+        "portability/fixtures/instance/memory/processing-lock.json",
+        "portability/fixtures/instance/questions/queue.json",
+        "portability/fixtures/instance/questions/queue.md",
+        "portability/fixtures/pending/22222222-2222-4222-8222-222222222222.md",
+        "portability/fixtures/provider/change.json.tpl",
+        "portability/fixtures/scenarios.json",
+        "portability/fixtures/writer/change.json.tpl",
+        "portability/fixtures/writer/graph.json",
+        "portability/fixtures/writer/index.md.tpl",
+        "portability/fixtures/writer/journal.md.tpl"
+      ],
+      "cases": [],
+      "scenarios": [
+        "processed-transfer"
+      ],
+      "conformance_suites": [
+        "server/processed-transfer.test.mjs",
+        "tools/portability/scenarios.test.mjs"
+      ],
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
+    },
+    {
+      "id": "processed-recover",
+      "surfaces": [
+        "recoverTransfer",
+        "provider-tool recover-transfer"
+      ],
+      "spec_files": [
+        "docs/MEMORY_MODEL.md",
+        "docs/MEMORY_PROVIDERS.md",
+        "docs/MEMORY_PROVIDER_ACCEPTANCE.md",
+        "docs/PROCESSED_TRANSFER.md",
+        "portability/schemas/formats.schema.json",
+        "portability/specs/COMMON.sudo.md",
+        "portability/specs/PROCESSED_TRANSFER.sudo.md",
+        "portability/specs/PROVIDER.sudo.md",
+        "schemas/cognitive-context.schema.json",
+        "schemas/cognitive-learning.schema.json",
+        "schemas/cognitive-result.schema.json",
+        "schemas/cognitive-task.schema.json",
+        "schemas/hypotheses.schema.json",
+        "schemas/memory-graph.schema.json",
+        "schemas/processed-transfer.schema.json"
+      ],
+      "reference_files": [
+        "adapters/reference-git/adapter.mjs",
+        "adapters/reference-json/provider.mjs",
+        "adapters/template/memory-provider.mjs",
+        "processor/memory-tool.mjs",
+        "processor/provider-tool.mjs",
+        "server/application-profile.mjs",
+        "server/application-source.mjs",
+        "server/candidate-merge.mjs",
+        "server/cognitive-reference.mjs",
+        "server/cognitive-task.mjs",
+        "server/core-policies.mjs",
+        "server/guidance.mjs",
+        "server/hypotheses.mjs",
+        "server/instance-layout.mjs",
+        "server/memory-contract.mjs",
+        "server/memory-model.mjs",
+        "server/memory-transfer.mjs",
+        "server/observation.mjs",
+        "server/operation-metrics.mjs",
+        "server/processed-transfer.mjs",
+        "server/profile-inspection.mjs",
+        "server/provider-memory.mjs",
+        "server/provider-validation.mjs",
+        "server/subprocess.mjs"
+      ],
+      "fixture_files": [
+        "portability/fixtures/cases.json",
+        "portability/fixtures/empty/instance/purpose.md",
+        "portability/fixtures/empty/memory/graph.json",
+        "portability/fixtures/empty/memory/hypotheses.json",
+        "portability/fixtures/empty/memory/index.md",
+        "portability/fixtures/empty/memory/processed.json",
+        "portability/fixtures/empty/memory/processing-lock.json",
+        "portability/fixtures/empty/questions/queue.json",
+        "portability/fixtures/empty/questions/queue.md",
+        "portability/fixtures/index-cases.json",
+        "portability/fixtures/instance/inbox/11111111-1111-4111-8111-111111111111.md",
+        "portability/fixtures/instance/instance/purpose.md",
+        "portability/fixtures/instance/memory/graph.json",
+        "portability/fixtures/instance/memory/hypotheses.json",
+        "portability/fixtures/instance/memory/index.md",
+        "portability/fixtures/instance/memory/processed.json",
+        "portability/fixtures/instance/memory/processing-lock.json",
+        "portability/fixtures/instance/questions/queue.json",
+        "portability/fixtures/instance/questions/queue.md",
+        "portability/fixtures/pending/22222222-2222-4222-8222-222222222222.md",
+        "portability/fixtures/provider/change.json.tpl",
+        "portability/fixtures/scenarios.json",
+        "portability/fixtures/writer/change.json.tpl",
+        "portability/fixtures/writer/graph.json",
+        "portability/fixtures/writer/index.md.tpl",
+        "portability/fixtures/writer/journal.md.tpl"
+      ],
+      "cases": [],
+      "scenarios": [
+        "processed-transfer"
+      ],
+      "conformance_suites": [
+        "server/processed-transfer.test.mjs",
+        "tools/portability/scenarios.test.mjs"
+      ],
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     }
   ],
   "contract_files": {
+    "docs/ADAPTERS.md": "2a4279fcdc69db0a1d225e2ad2d5ad98327ec63fe27c888673b1c483370051a9",
+    "docs/APPLICATION_PROFILES.md": "23148b915be97c9223856ef00fe25f2a259cacfae43d67317f53007a3d8ec9c7",
+    "docs/APPLICATION_SOURCES.md": "2da0b54cc3f4c5fcb7515ff6bb6e9c53229cf0c325c66c7bc0dce00af235996d",
+    "docs/CANDIDATE_MERGE.md": "9570d757a7d8f7f62ff3e66299ada4731a07b9d140fa353dd36021e25b77e63d",
+    "docs/COGNITIVE_CONFORMANCE.md": "7eae8c196a18c0a190cc1cb0375e48a1975e89ebe4a7cc53b3f801949352339c",
+    "docs/COGNITIVE_TASKS.md": "3d1708337af0cf74290764591efc97e6542df7d2c44336f8f8b81dc3ca1c5918",
+    "docs/INSTANCE_LAYOUT.md": "74c778803761da4de70b24115febdc9a9893819dc2d428b8b74e6017ff5c03bd",
+    "docs/INTAKE_PROVENANCE.md": "7e5df8e55343536ff09975f02d81342cf7619a52f1d93f664a195ca4cc262dc9",
+    "docs/MEMORY_MODEL.md": "c53b5056f6c6a4964d86e10a831083c6b35cb0d0fa21141b913a6f001f2504c2",
+    "docs/MEMORY_PROVIDERS.md": "cccc360d8677d02755d16931324731d8fc82729fc592ab411266cd13755a4b0f",
+    "docs/MEMORY_PROVIDER_ACCEPTANCE.md": "ec09158e0ac6d0642259fe95c522fd784da31fb5bbaf1cdfa89e2831fb332d78",
+    "docs/PERFORMANCE.md": "d3876a090b700f454476bf4f4fec492ad30ab38ee839829ef53dfe3c8094f295",
+    "docs/PROCESSED_TRANSFER.md": "9263cdef863ec9d02dfedd991739f0efa18f5683923f1d4ac2451953ed36c024",
+    "docs/PROCESSING.md": "56b085bca4b1a57e99433eaa12fbc051ad83cde2ec6d9a795c72c6a040965f29",
+    "integration/COGNITIVE_TASK.sudo.md": "a42a8cbfcedbcf451c49493d474bab8274ea98fe40b9d5fb33b1eb9adf9e1245",
+    "integration/SETUP.profile.md": "f2d8d8a7cc1f6bde4016df99ca2435ce2c5d9a38b4a7f302ac01c6cfb8717aa0",
     "portability/CONFORMANCE.md": "b97d72f15ff312bf1dd8b5f864f0d49b83855787ae9d7637b1e22b35190edb70",
-    "portability/GENERATE.sudo.md": "7135becc73d11c4e9381bcbeab35a2a80349f2230b80e11e3b241f03b9c3877c",
-    "portability/README.md": "f05fdd59af622225edc350619cf94a538a9e9536c9b63f2f0bf17683a6236338",
+    "portability/GENERATE.sudo.md": "ce163ab38f80c05eda55868f99c336d3ac28b60a60e12e75cfbbb018116e9c36",
+    "portability/README.md": "49355a89228168ec4cc3536e6dd710c093c82bdec3ec2e7820c8bd4610eec250",
     "portability/examples/stats.pl": "00a41e8c2b5e7a942b6586d51f7f1809e4389f2c328f1751543c20738e34878b",
-    "portability/fixtures/cases.json": "74b1823153e59190d956aac7d5a05b5b2bdbff254a866810c77d1b1f80deb28c",
+    "portability/fixtures/cases.json": "ed2e6d5bce30787f1697dd61f75644b8d6f03a3e6fc1ccf777d67174fb9fa0bc",
     "portability/fixtures/empty/instance/purpose.md": "f7de0119ab564e6c84a334b4bf93db2d16cc18bd67682618b3ebe1e90009dc21",
     "portability/fixtures/empty/memory/graph.json": "39aa78fb6575f09e20e2b9f9d51d4a1fea1f7fb87b2482edf4efbb112a2db6f1",
     "portability/fixtures/empty/memory/hypotheses.json": "70c7fa937bfbae20696569d57757cc20353bac6f95427696929208270d6a18af",
@@ -5227,43 +5749,30 @@
     "portability/fixtures/instance/questions/queue.md": "d86cda4be344ac8acc730dd4ff7c4b0f4a1d0d1671c373e370379e395776c54a",
     "portability/fixtures/pending/22222222-2222-4222-8222-222222222222.md": "810162b1e7e50a3a0b4d3e129a1fbcbe914aafaebb8120a94566790dc9a0f2a1",
     "portability/fixtures/provider/change.json.tpl": "22dc38eb8a88f9766c01987e66a0fe1d8e763396a500effc5f5a3bdefc3e2d77",
-    "portability/fixtures/scenarios.json": "28d25cf31d08bd8aa953984f118cf5ba089311c97a7991576a35eea10f9841dc",
+    "portability/fixtures/scenarios.json": "55c13a3e66b03c0fdc45d058155bac13d5f986fe3ff055781256fa9c8d1aa2f6",
     "portability/fixtures/writer/change.json.tpl": "d4f507f3a8c17cc0c6ae7edd6369eca570efdd8109254930c47d632b46c3f0a0",
     "portability/fixtures/writer/graph.json": "3421dbf9db642d835bffd6beb3e6f23e385c91cbdbfc2074769b52b872ffc44c",
     "portability/fixtures/writer/index.md.tpl": "1bf5255a6a286849468559fa004643bd33ad88abc2e9974895038fd89b314c74",
     "portability/fixtures/writer/journal.md.tpl": "2c0e50e15b8976936f8694d52e38be5b94694eacdd4f3b15124608df79136001",
     "portability/schemas/formats.schema.json": "3422de713eda51617a5cab505961a1dbf9d18f442b8051ef07e4b815afefa314",
-    "portability/schemas/implementation.schema.json": "9c11f10780353770b85984f9d43b9318e0f6fb28f747c5e9facb76cc7520fc5d",
-    "portability/schemas/manifest.schema.json": "cff1e37a5d91b8f01fbb1ab3ca68e6f130dc88711a907b6c6340365811d5caf3",
+    "portability/schemas/implementation.schema.json": "9e79c31c6b8e3e183efb60538124e473ec07f94a74615c5e9450bbc19f7a7f6d",
+    "portability/schemas/manifest.schema.json": "c0fed8e422e39974cacb97bf47b973900a8ba4ac463d1c861b48985f0d1231ca",
     "portability/specs/CANDIDATE.sudo.md": "b104ada46a69ab03ca6a5db4dd288e948588a1ff197d4bf874cd3c5df8a3008e",
     "portability/specs/COGNITION.sudo.md": "0be4e1ae7d7af1e1efcd154813f5a2a0db087e974349a5eac2cc0088afbca968",
-    "portability/specs/COMMON.sudo.md": "91f58040178dcdd7277c5325e1fd89759fb58f22553ca88770500b1792006832",
+    "portability/specs/COMMON.sudo.md": "a3532c294dff8aec3993034aa19d2db843b3c0b50e5ef24dafad83851038f0af",
     "portability/specs/INIT_INDEX.sudo.md": "16ae65c1a6e250ee54924007992492936c5f27e5b3e229a1bca8fb40cab55484",
     "portability/specs/MEMORY.sudo.md": "6eb0f112e4542bece539fcd01a3f3e0eae3cd9ba432a113788fba2ca1e2cb35a",
+    "portability/specs/PROCESSED_TRANSFER.sudo.md": "25e7653f7f20dc787e90be941de3b1dbac157c3af65b5c4f4d741471d0326a24",
     "portability/specs/PROFILE.sudo.md": "00b4f7917706ef9ac83752ddec7e864798d609bc35a8fbbccdc0bcb29c1273a7",
     "portability/specs/PROVIDER.sudo.md": "910367b206d640a7e96dd0a56a9427110779777ce16c949903ea6523e7c4af0b",
     "portability/specs/TRANSACTIONS.sudo.md": "36f41af3a40471a59044de3ce187f8d8e5ba7752fc87b8a2bb7e9cbd078fbeb1",
-    "docs/INTAKE_PROVENANCE.md": "7e5df8e55343536ff09975f02d81342cf7619a52f1d93f664a195ca4cc262dc9",
-    "docs/INSTANCE_LAYOUT.md": "74c778803761da4de70b24115febdc9a9893819dc2d428b8b74e6017ff5c03bd",
-    "docs/MEMORY_MODEL.md": "c53b5056f6c6a4964d86e10a831083c6b35cb0d0fa21141b913a6f001f2504c2",
-    "docs/APPLICATION_PROFILES.md": "23148b915be97c9223856ef00fe25f2a259cacfae43d67317f53007a3d8ec9c7",
-    "docs/APPLICATION_SOURCES.md": "2da0b54cc3f4c5fcb7515ff6bb6e9c53229cf0c325c66c7bc0dce00af235996d",
-    "integration/SETUP.profile.md": "f2d8d8a7cc1f6bde4016df99ca2435ce2c5d9a38b4a7f302ac01c6cfb8717aa0",
-    "docs/CANDIDATE_MERGE.md": "f8498e5d1751b15156a405f8a63a8d141c40b9d107e102805c13a261fa06cfeb",
-    "docs/PERFORMANCE.md": "d3876a090b700f454476bf4f4fec492ad30ab38ee839829ef53dfe3c8094f295",
-    "docs/PROCESSING.md": "cd76ad41d9022a6dbb4924af6a969abd70fa96ffa81295aafd52fbdf5724d510",
-    "docs/ADAPTERS.md": "2a4279fcdc69db0a1d225e2ad2d5ad98327ec63fe27c888673b1c483370051a9",
-    "docs/COGNITIVE_TASKS.md": "3d1708337af0cf74290764591efc97e6542df7d2c44336f8f8b81dc3ca1c5918",
-    "docs/MEMORY_PROVIDERS.md": "1261f16d2eae72fec1bc111f84d1c324385c897677b84617468a510aaa1234b4",
-    "docs/MEMORY_PROVIDER_ACCEPTANCE.md": "ec09158e0ac6d0642259fe95c522fd784da31fb5bbaf1cdfa89e2831fb332d78",
-    "docs/COGNITIVE_CONFORMANCE.md": "7eae8c196a18c0a190cc1cb0375e48a1975e89ebe4a7cc53b3f801949352339c",
-    "integration/COGNITIVE_TASK.sudo.md": "a42a8cbfcedbcf451c49493d474bab8274ea98fe40b9d5fb33b1eb9adf9e1245",
     "schemas/cognitive-context.schema.json": "56fafd43510b4d832b576036913db8a5f1773e00ddc5d35e2f643888fedc551b",
     "schemas/cognitive-learning.schema.json": "44d0f376bcdc6ba88bee09c377b1a87065509365c1c9f25e8593bd7a3c6c5079",
     "schemas/cognitive-result.schema.json": "1f6afd74a3764d883aea9b87dfe1d7bf7c9f02e9e74fc852f15e9bdd5e25dc03",
     "schemas/cognitive-task.schema.json": "d09c6f7c19402c5e441c78bf65e959d047a5bae99fcb3b04cec93604c201b8dd",
     "schemas/hypotheses.schema.json": "9cd01f4c86247d7f9273f9a93c15653bb7dc081f783514589944835c5cf2b753",
-    "schemas/memory-graph.schema.json": "722a5997ef844971195923301ce6bacf075f6d2d5a557413160ddbfcc5cfc000"
+    "schemas/memory-graph.schema.json": "722a5997ef844971195923301ce6bacf075f6d2d5a557413160ddbfcc5cfc000",
+    "schemas/processed-transfer.schema.json": "0041ae900b1cc652e0e1972984b593732e89eee5c428beb9251d2393b5bff6e1"
   },
   "required_checks": [
     "tools/portability/check-parity.py",

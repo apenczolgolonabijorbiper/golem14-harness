@@ -98,7 +98,8 @@ The six-command adapter contract is unchanged. The reference Git adapter still
 completes only its own claimed sources and does not import external completion
 rows through `commit`. A host backend must implement that publication operation
 with the checks above. No `candidate-merge-v1` adapter capability is advertised.
-Cross-instance selective processed-memory transfer (#18) remains separate.
+Cross-instance selective processed-memory transfer uses the separate
+[validated bundle/import contract](PROCESSED_TRANSFER.md).
 
 ## Host-owned reservations
 

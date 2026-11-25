@@ -1,3 +1,27 @@
+# Golem XIV Harness 0.15.0
+
+Released 2026-11-25.
+
+- Complete #18 / VI-007: versioned selective processed-observation bundles with
+  explicit dependency expansion, exact bytes/hashes, preserved analysis and
+  retained journal/guidance/artifact provenance. Source instances remain unchanged.
+- Add public export/inspection/combination APIs and standalone export, inspection,
+  transactional import and recovery commands. JSON/Git import validates combined
+  history and exact materialization, excludes active leases, refuses collisions,
+  and publishes knowledge plus its recoverable receipt with expected-head CAS.
+- Preserve existing whole-snapshot archive and observation-only re-analysis paths.
+  Version 1 requires identical policy representations and conservatively archives
+  all opaque/provenance records from the selected source snapshot; inspect expanded
+  scope before use. It does not merge identities or replace destination guidance.
+- Fix README release-title/build-example drift. Packaging now rejects README and
+  release-note versions that disagree with VERSION, including the extracted ZIP.
+- Extend the portable local contract to 1.1.0 with selective-transfer specifications,
+  schemas, traceability and acceptance scenarios in the same release.
+
+Node 22.12+, Python 3.12+ and Git requirements remain unchanged. No application
+instance is upgraded, migrated or reset by publication. See
+[transfer and recovery instructions](PROCESSED_TRANSFER.md).
+
 # Golem XIV Harness 0.14.0
 
 Released 2026-11-25.

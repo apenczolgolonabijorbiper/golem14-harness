@@ -1,501 +1,643 @@
 {
-  "contract_version": "1.0.0",
+  "contract_version": "1.1.0",
   "assessments": [
     {
       "operation": "init",
       "decision": "bootstrap",
       "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
       "reference_digest": "3062e5bb6c564f2fa55f8bde4ed8d2f06320d04f4e1e2cf829210025d532c724",
-      "spec_digest": "8007f22847c8b5d6fbcdc4870d6aef8fe0b2e897125d01c04c26ee6d2367aa46",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "a9024eb5fa81deb948b157868614a4c9278730d3b32cdfcc1e148889de81fa2d",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "index",
       "decision": "bootstrap",
       "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
       "reference_digest": "a74c86ce09b4ecb14bad857cbbb891d7538e86358c40b26ca063116d26f3b590",
-      "spec_digest": "8007f22847c8b5d6fbcdc4870d6aef8fe0b2e897125d01c04c26ee6d2367aa46",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "a9024eb5fa81deb948b157868614a4c9278730d3b32cdfcc1e148889de81fa2d",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "parse-source",
       "decision": "bootstrap",
       "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
       "reference_digest": "ba62e9e4ea44e519689759fa7aa34d57144c7f2e049859a69f1605a4360007c0",
-      "spec_digest": "8007f22847c8b5d6fbcdc4870d6aef8fe0b2e897125d01c04c26ee6d2367aa46",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "a9024eb5fa81deb948b157868614a4c9278730d3b32cdfcc1e148889de81fa2d",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "schema",
       "decision": "bootstrap",
       "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
       "reference_digest": "5921d669c531fdd6fb151f2d5b30cbe1c34a477d0f400d8de91ba7025a44653c",
-      "spec_digest": "ac30971de87df588034381958d5a410b90dbd6ea42a92619f17f664c3ce70da0",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "65102b51c62811d675002ea0247a09e70711f1361b7626a3e740cb4e0090500f",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "validate",
       "decision": "bootstrap",
       "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
       "reference_digest": "5921d669c531fdd6fb151f2d5b30cbe1c34a477d0f400d8de91ba7025a44653c",
-      "spec_digest": "ac30971de87df588034381958d5a410b90dbd6ea42a92619f17f664c3ce70da0",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "65102b51c62811d675002ea0247a09e70711f1361b7626a3e740cb4e0090500f",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "context",
       "decision": "bootstrap",
       "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
       "reference_digest": "5921d669c531fdd6fb151f2d5b30cbe1c34a477d0f400d8de91ba7025a44653c",
-      "spec_digest": "ac30971de87df588034381958d5a410b90dbd6ea42a92619f17f664c3ce70da0",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "65102b51c62811d675002ea0247a09e70711f1361b7626a3e740cb4e0090500f",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "stats",
       "decision": "bootstrap",
       "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
       "reference_digest": "5921d669c531fdd6fb151f2d5b30cbe1c34a477d0f400d8de91ba7025a44653c",
-      "spec_digest": "ac30971de87df588034381958d5a410b90dbd6ea42a92619f17f664c3ce70da0",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "65102b51c62811d675002ea0247a09e70711f1361b7626a3e740cb4e0090500f",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "warnings",
       "decision": "bootstrap",
       "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
       "reference_digest": "5921d669c531fdd6fb151f2d5b30cbe1c34a477d0f400d8de91ba7025a44653c",
-      "spec_digest": "ac30971de87df588034381958d5a410b90dbd6ea42a92619f17f664c3ce70da0",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "65102b51c62811d675002ea0247a09e70711f1361b7626a3e740cb4e0090500f",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "dependencies",
       "decision": "bootstrap",
       "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
       "reference_digest": "5921d669c531fdd6fb151f2d5b30cbe1c34a477d0f400d8de91ba7025a44653c",
-      "spec_digest": "ac30971de87df588034381958d5a410b90dbd6ea42a92619f17f664c3ce70da0",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "65102b51c62811d675002ea0247a09e70711f1361b7626a3e740cb4e0090500f",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "capabilities",
       "decision": "bootstrap",
       "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
       "reference_digest": "5921d669c531fdd6fb151f2d5b30cbe1c34a477d0f400d8de91ba7025a44653c",
-      "spec_digest": "ac30971de87df588034381958d5a410b90dbd6ea42a92619f17f664c3ce70da0",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "65102b51c62811d675002ea0247a09e70711f1361b7626a3e740cb4e0090500f",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "hypotheses",
       "decision": "bootstrap",
       "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
       "reference_digest": "34686c0de0874cf7f7fa93dc39ef979049d4c2ca6c554c13f080eda976e4bed7",
-      "spec_digest": "ac30971de87df588034381958d5a410b90dbd6ea42a92619f17f664c3ce70da0",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "65102b51c62811d675002ea0247a09e70711f1361b7626a3e740cb4e0090500f",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "vocabulary",
       "decision": "bootstrap",
       "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
       "reference_digest": "d5449334f954d4610a588ba5e73497d29878b504e3d684eec9b7300d97ee1f3a",
-      "spec_digest": "1dd31ac82076ae0a353bb4deef292716fdd46db058bc3bfcc636a92ffdce6ce5",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "9bc39fd15c48392de78d0ba7c1e415dd092a7c425730b56c6a0a26b7c556b157",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "guidance",
       "decision": "bootstrap",
       "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
       "reference_digest": "19b38536461f2665bf09aa6a5cf2e29754165875edd401dadc12765c53dd252e",
-      "spec_digest": "1dd31ac82076ae0a353bb4deef292716fdd46db058bc3bfcc636a92ffdce6ce5",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "9bc39fd15c48392de78d0ba7c1e415dd092a7c425730b56c6a0a26b7c556b157",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "path",
       "decision": "bootstrap",
       "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
       "reference_digest": "215306a5853554847c7f7a43e5bd461769121e57b669d96ad24c41a0c07e5525",
-      "spec_digest": "1dd31ac82076ae0a353bb4deef292716fdd46db058bc3bfcc636a92ffdce6ce5",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "9bc39fd15c48392de78d0ba7c1e415dd092a7c425730b56c6a0a26b7c556b157",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "profile-check",
       "decision": "bootstrap",
       "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
       "reference_digest": "913baed782c93146e97943d188cd2c05e100656ed46bc12216449f0f4e0f8c24",
-      "spec_digest": "1dd31ac82076ae0a353bb4deef292716fdd46db058bc3bfcc636a92ffdce6ce5",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "9bc39fd15c48392de78d0ba7c1e415dd092a7c425730b56c6a0a26b7c556b157",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "vocabulary-survey",
       "decision": "bootstrap",
       "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
       "reference_digest": "913baed782c93146e97943d188cd2c05e100656ed46bc12216449f0f4e0f8c24",
-      "spec_digest": "1dd31ac82076ae0a353bb4deef292716fdd46db058bc3bfcc636a92ffdce6ce5",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "9bc39fd15c48392de78d0ba7c1e415dd092a7c425730b56c6a0a26b7c556b157",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "source-bundle",
       "decision": "bootstrap",
       "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
       "reference_digest": "a3fa0730113e06cd18f76c871639cf26e82a5486570458fbc62789a89f2b6258",
-      "spec_digest": "1dd31ac82076ae0a353bb4deef292716fdd46db058bc3bfcc636a92ffdce6ce5",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "9bc39fd15c48392de78d0ba7c1e415dd092a7c425730b56c6a0a26b7c556b157",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "write-candidate",
-      "decision": "bootstrap",
-      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
-      "reference_digest": "dd3037141ece56cac63937d4d365158ea0caae5b716a50a36f7aec438f16ca87",
-      "spec_digest": "764c3d6d91edea31526ade1dcccbb2ebddfaf6239187820b88e32fbb2ef18d6f",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "decision": "no-impact",
+      "rationale": "Reviewed existing operation dispatch and publication paths: selective transfer is an additional branch/API. Existing cognition/provider/adapter operations retain their original lease, byte, CAS and history behavior; existing conformance remains required. New transitive module/schema imports do not invoke transfer on these paths.",
+      "reviewer": "ChatGPT Work (same-session maintainer review)",
+      "review_reference": "https://github.com/apenczolgolonabijorbiper/golem14-harness/issues/18",
+      "previous_reference_digest": "dd3037141ece56cac63937d4d365158ea0caae5b716a50a36f7aec438f16ca87",
+      "reference_digest": "d9f9f23eed75970b694b0a00a3d0201b8a8c88a38dfb8b6c501819fe2a1f3ba4",
+      "spec_digest": "d07b7c91e8c30cd549ef7fe5a01a59f78b5344a446c58a88bf122002dfadd29b",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "render-queue",
       "decision": "bootstrap",
       "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
       "reference_digest": "eef4dbcd313f35d75a113714214bbc4ee9a77833d71fd368bec60a86fbd656cf",
-      "spec_digest": "764c3d6d91edea31526ade1dcccbb2ebddfaf6239187820b88e32fbb2ef18d6f",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "44b8674434e8e7484e3eb83d511671dc88a012b9c43cf6ee008555dfbe69583c",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "cycle-artifacts",
       "decision": "bootstrap",
       "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
       "reference_digest": "eef4dbcd313f35d75a113714214bbc4ee9a77833d71fd368bec60a86fbd656cf",
-      "spec_digest": "764c3d6d91edea31526ade1dcccbb2ebddfaf6239187820b88e32fbb2ef18d6f",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "44b8674434e8e7484e3eb83d511671dc88a012b9c43cf6ee008555dfbe69583c",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "merge",
       "decision": "bootstrap",
       "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
       "reference_digest": "5921d669c531fdd6fb151f2d5b30cbe1c34a477d0f400d8de91ba7025a44653c",
-      "spec_digest": "764c3d6d91edea31526ade1dcccbb2ebddfaf6239187820b88e32fbb2ef18d6f",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "44b8674434e8e7484e3eb83d511671dc88a012b9c43cf6ee008555dfbe69583c",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "adapter-status",
-      "decision": "bootstrap",
-      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
-      "reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
-      "spec_digest": "a6ee4f778722a152de238c3cfb2a12def97fabd0be29c0c43fe1b93ba23e39bc",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "decision": "no-impact",
+      "rationale": "Reviewed existing operation dispatch and publication paths: selective transfer is an additional branch/API. Existing cognition/provider/adapter operations retain their original lease, byte, CAS and history behavior; existing conformance remains required. New transitive module/schema imports do not invoke transfer on these paths.",
+      "reviewer": "ChatGPT Work (same-session maintainer review)",
+      "review_reference": "https://github.com/apenczolgolonabijorbiper/golem14-harness/issues/18",
+      "previous_reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
+      "reference_digest": "bcd782f0968d2b6e778c0d0ded97cd021740520f7d04d8c58d35d625b107f14c",
+      "spec_digest": "5691850d4ffb31b16f5e02544a0e6e752ce86b43d7d96545beda110be874d0e5",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "adapter-claim",
-      "decision": "bootstrap",
-      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
-      "reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
-      "spec_digest": "a6ee4f778722a152de238c3cfb2a12def97fabd0be29c0c43fe1b93ba23e39bc",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "decision": "no-impact",
+      "rationale": "Reviewed existing operation dispatch and publication paths: selective transfer is an additional branch/API. Existing cognition/provider/adapter operations retain their original lease, byte, CAS and history behavior; existing conformance remains required. New transitive module/schema imports do not invoke transfer on these paths.",
+      "reviewer": "ChatGPT Work (same-session maintainer review)",
+      "review_reference": "https://github.com/apenczolgolonabijorbiper/golem14-harness/issues/18",
+      "previous_reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
+      "reference_digest": "bcd782f0968d2b6e778c0d0ded97cd021740520f7d04d8c58d35d625b107f14c",
+      "spec_digest": "5691850d4ffb31b16f5e02544a0e6e752ce86b43d7d96545beda110be874d0e5",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "adapter-renew",
-      "decision": "bootstrap",
-      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
-      "reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
-      "spec_digest": "a6ee4f778722a152de238c3cfb2a12def97fabd0be29c0c43fe1b93ba23e39bc",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "decision": "no-impact",
+      "rationale": "Reviewed existing operation dispatch and publication paths: selective transfer is an additional branch/API. Existing cognition/provider/adapter operations retain their original lease, byte, CAS and history behavior; existing conformance remains required. New transitive module/schema imports do not invoke transfer on these paths.",
+      "reviewer": "ChatGPT Work (same-session maintainer review)",
+      "review_reference": "https://github.com/apenczolgolonabijorbiper/golem14-harness/issues/18",
+      "previous_reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
+      "reference_digest": "bcd782f0968d2b6e778c0d0ded97cd021740520f7d04d8c58d35d625b107f14c",
+      "spec_digest": "5691850d4ffb31b16f5e02544a0e6e752ce86b43d7d96545beda110be874d0e5",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "adapter-release-error",
-      "decision": "bootstrap",
-      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
-      "reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
-      "spec_digest": "a6ee4f778722a152de238c3cfb2a12def97fabd0be29c0c43fe1b93ba23e39bc",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "decision": "no-impact",
+      "rationale": "Reviewed existing operation dispatch and publication paths: selective transfer is an additional branch/API. Existing cognition/provider/adapter operations retain their original lease, byte, CAS and history behavior; existing conformance remains required. New transitive module/schema imports do not invoke transfer on these paths.",
+      "reviewer": "ChatGPT Work (same-session maintainer review)",
+      "review_reference": "https://github.com/apenczolgolonabijorbiper/golem14-harness/issues/18",
+      "previous_reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
+      "reference_digest": "bcd782f0968d2b6e778c0d0ded97cd021740520f7d04d8c58d35d625b107f14c",
+      "spec_digest": "5691850d4ffb31b16f5e02544a0e6e752ce86b43d7d96545beda110be874d0e5",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "adapter-validate",
-      "decision": "bootstrap",
-      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
-      "reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
-      "spec_digest": "a6ee4f778722a152de238c3cfb2a12def97fabd0be29c0c43fe1b93ba23e39bc",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "decision": "no-impact",
+      "rationale": "Reviewed existing operation dispatch and publication paths: selective transfer is an additional branch/API. Existing cognition/provider/adapter operations retain their original lease, byte, CAS and history behavior; existing conformance remains required. New transitive module/schema imports do not invoke transfer on these paths.",
+      "reviewer": "ChatGPT Work (same-session maintainer review)",
+      "review_reference": "https://github.com/apenczolgolonabijorbiper/golem14-harness/issues/18",
+      "previous_reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
+      "reference_digest": "bcd782f0968d2b6e778c0d0ded97cd021740520f7d04d8c58d35d625b107f14c",
+      "spec_digest": "5691850d4ffb31b16f5e02544a0e6e752ce86b43d7d96545beda110be874d0e5",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "adapter-commit",
-      "decision": "bootstrap",
-      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
-      "reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
-      "spec_digest": "a6ee4f778722a152de238c3cfb2a12def97fabd0be29c0c43fe1b93ba23e39bc",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "decision": "no-impact",
+      "rationale": "Reviewed existing operation dispatch and publication paths: selective transfer is an additional branch/API. Existing cognition/provider/adapter operations retain their original lease, byte, CAS and history behavior; existing conformance remains required. New transitive module/schema imports do not invoke transfer on these paths.",
+      "reviewer": "ChatGPT Work (same-session maintainer review)",
+      "review_reference": "https://github.com/apenczolgolonabijorbiper/golem14-harness/issues/18",
+      "previous_reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
+      "reference_digest": "bcd782f0968d2b6e778c0d0ded97cd021740520f7d04d8c58d35d625b107f14c",
+      "spec_digest": "5691850d4ffb31b16f5e02544a0e6e752ce86b43d7d96545beda110be874d0e5",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "adapter-profile-status",
-      "decision": "bootstrap",
-      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
-      "reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
-      "spec_digest": "a6ee4f778722a152de238c3cfb2a12def97fabd0be29c0c43fe1b93ba23e39bc",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "decision": "no-impact",
+      "rationale": "Reviewed existing operation dispatch and publication paths: selective transfer is an additional branch/API. Existing cognition/provider/adapter operations retain their original lease, byte, CAS and history behavior; existing conformance remains required. New transitive module/schema imports do not invoke transfer on these paths.",
+      "reviewer": "ChatGPT Work (same-session maintainer review)",
+      "review_reference": "https://github.com/apenczolgolonabijorbiper/golem14-harness/issues/18",
+      "previous_reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
+      "reference_digest": "bcd782f0968d2b6e778c0d0ded97cd021740520f7d04d8c58d35d625b107f14c",
+      "spec_digest": "5691850d4ffb31b16f5e02544a0e6e752ce86b43d7d96545beda110be874d0e5",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "adapter-profile-install",
-      "decision": "bootstrap",
-      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
-      "reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
-      "spec_digest": "a6ee4f778722a152de238c3cfb2a12def97fabd0be29c0c43fe1b93ba23e39bc",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "decision": "no-impact",
+      "rationale": "Reviewed existing operation dispatch and publication paths: selective transfer is an additional branch/API. Existing cognition/provider/adapter operations retain their original lease, byte, CAS and history behavior; existing conformance remains required. New transitive module/schema imports do not invoke transfer on these paths.",
+      "reviewer": "ChatGPT Work (same-session maintainer review)",
+      "review_reference": "https://github.com/apenczolgolonabijorbiper/golem14-harness/issues/18",
+      "previous_reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
+      "reference_digest": "bcd782f0968d2b6e778c0d0ded97cd021740520f7d04d8c58d35d625b107f14c",
+      "spec_digest": "5691850d4ffb31b16f5e02544a0e6e752ce86b43d7d96545beda110be874d0e5",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "adapter-recovery",
-      "decision": "bootstrap",
-      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
-      "reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
-      "spec_digest": "a6ee4f778722a152de238c3cfb2a12def97fabd0be29c0c43fe1b93ba23e39bc",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "decision": "no-impact",
+      "rationale": "Reviewed existing operation dispatch and publication paths: selective transfer is an additional branch/API. Existing cognition/provider/adapter operations retain their original lease, byte, CAS and history behavior; existing conformance remains required. New transitive module/schema imports do not invoke transfer on these paths.",
+      "reviewer": "ChatGPT Work (same-session maintainer review)",
+      "review_reference": "https://github.com/apenczolgolonabijorbiper/golem14-harness/issues/18",
+      "previous_reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
+      "reference_digest": "bcd782f0968d2b6e778c0d0ded97cd021740520f7d04d8c58d35d625b107f14c",
+      "spec_digest": "5691850d4ffb31b16f5e02544a0e6e752ce86b43d7d96545beda110be874d0e5",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "adapter-concurrency",
-      "decision": "bootstrap",
-      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
-      "reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
-      "spec_digest": "a6ee4f778722a152de238c3cfb2a12def97fabd0be29c0c43fe1b93ba23e39bc",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "decision": "no-impact",
+      "rationale": "Reviewed existing operation dispatch and publication paths: selective transfer is an additional branch/API. Existing cognition/provider/adapter operations retain their original lease, byte, CAS and history behavior; existing conformance remains required. New transitive module/schema imports do not invoke transfer on these paths.",
+      "reviewer": "ChatGPT Work (same-session maintainer review)",
+      "review_reference": "https://github.com/apenczolgolonabijorbiper/golem14-harness/issues/18",
+      "previous_reference_digest": "a93b1fe736792cc31f7c86175beeb5732bd9aaba3c12546b360c91fe632b9026",
+      "reference_digest": "bcd782f0968d2b6e778c0d0ded97cd021740520f7d04d8c58d35d625b107f14c",
+      "spec_digest": "5691850d4ffb31b16f5e02544a0e6e752ce86b43d7d96545beda110be874d0e5",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "provider-open",
-      "decision": "bootstrap",
-      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
-      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "decision": "no-impact",
+      "rationale": "Reviewed existing operation dispatch and publication paths: selective transfer is an additional branch/API. Existing cognition/provider/adapter operations retain their original lease, byte, CAS and history behavior; existing conformance remains required. New transitive module/schema imports do not invoke transfer on these paths.",
+      "reviewer": "ChatGPT Work (same-session maintainer review)",
+      "review_reference": "https://github.com/apenczolgolonabijorbiper/golem14-harness/issues/18",
+      "previous_reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "provider-read",
-      "decision": "bootstrap",
-      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
-      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "decision": "no-impact",
+      "rationale": "Reviewed existing operation dispatch and publication paths: selective transfer is an additional branch/API. Existing cognition/provider/adapter operations retain their original lease, byte, CAS and history behavior; existing conformance remains required. New transitive module/schema imports do not invoke transfer on these paths.",
+      "reviewer": "ChatGPT Work (same-session maintainer review)",
+      "review_reference": "https://github.com/apenczolgolonabijorbiper/golem14-harness/issues/18",
+      "previous_reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "provider-scan",
-      "decision": "bootstrap",
-      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
-      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "decision": "no-impact",
+      "rationale": "Reviewed existing operation dispatch and publication paths: selective transfer is an additional branch/API. Existing cognition/provider/adapter operations retain their original lease, byte, CAS and history behavior; existing conformance remains required. New transitive module/schema imports do not invoke transfer on these paths.",
+      "reviewer": "ChatGPT Work (same-session maintainer review)",
+      "review_reference": "https://github.com/apenczolgolonabijorbiper/golem14-harness/issues/18",
+      "previous_reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "provider-counts",
-      "decision": "bootstrap",
-      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
-      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "decision": "no-impact",
+      "rationale": "Reviewed existing operation dispatch and publication paths: selective transfer is an additional branch/API. Existing cognition/provider/adapter operations retain their original lease, byte, CAS and history behavior; existing conformance remains required. New transitive module/schema imports do not invoke transfer on these paths.",
+      "reviewer": "ChatGPT Work (same-session maintainer review)",
+      "review_reference": "https://github.com/apenczolgolonabijorbiper/golem14-harness/issues/18",
+      "previous_reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "provider-evidence",
-      "decision": "bootstrap",
-      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
-      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "decision": "no-impact",
+      "rationale": "Reviewed existing operation dispatch and publication paths: selective transfer is an additional branch/API. Existing cognition/provider/adapter operations retain their original lease, byte, CAS and history behavior; existing conformance remains required. New transitive module/schema imports do not invoke transfer on these paths.",
+      "reviewer": "ChatGPT Work (same-session maintainer review)",
+      "review_reference": "https://github.com/apenczolgolonabijorbiper/golem14-harness/issues/18",
+      "previous_reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "provider-context",
-      "decision": "bootstrap",
-      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
-      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "decision": "no-impact",
+      "rationale": "Reviewed existing operation dispatch and publication paths: selective transfer is an additional branch/API. Existing cognition/provider/adapter operations retain their original lease, byte, CAS and history behavior; existing conformance remains required. New transitive module/schema imports do not invoke transfer on these paths.",
+      "reviewer": "ChatGPT Work (same-session maintainer review)",
+      "review_reference": "https://github.com/apenczolgolonabijorbiper/golem14-harness/issues/18",
+      "previous_reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "provider-stats",
-      "decision": "bootstrap",
-      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
-      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "decision": "no-impact",
+      "rationale": "Reviewed existing operation dispatch and publication paths: selective transfer is an additional branch/API. Existing cognition/provider/adapter operations retain their original lease, byte, CAS and history behavior; existing conformance remains required. New transitive module/schema imports do not invoke transfer on these paths.",
+      "reviewer": "ChatGPT Work (same-session maintainer review)",
+      "review_reference": "https://github.com/apenczolgolonabijorbiper/golem14-harness/issues/18",
+      "previous_reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "provider-warnings",
-      "decision": "bootstrap",
-      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
-      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "decision": "no-impact",
+      "rationale": "Reviewed existing operation dispatch and publication paths: selective transfer is an additional branch/API. Existing cognition/provider/adapter operations retain their original lease, byte, CAS and history behavior; existing conformance remains required. New transitive module/schema imports do not invoke transfer on these paths.",
+      "reviewer": "ChatGPT Work (same-session maintainer review)",
+      "review_reference": "https://github.com/apenczolgolonabijorbiper/golem14-harness/issues/18",
+      "previous_reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "provider-audit",
-      "decision": "bootstrap",
-      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
-      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "decision": "no-impact",
+      "rationale": "Reviewed existing operation dispatch and publication paths: selective transfer is an additional branch/API. Existing cognition/provider/adapter operations retain their original lease, byte, CAS and history behavior; existing conformance remains required. New transitive module/schema imports do not invoke transfer on these paths.",
+      "reviewer": "ChatGPT Work (same-session maintainer review)",
+      "review_reference": "https://github.com/apenczolgolonabijorbiper/golem14-harness/issues/18",
+      "previous_reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "provider-prepare",
-      "decision": "bootstrap",
-      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
-      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "decision": "no-impact",
+      "rationale": "Reviewed existing operation dispatch and publication paths: selective transfer is an additional branch/API. Existing cognition/provider/adapter operations retain their original lease, byte, CAS and history behavior; existing conformance remains required. New transitive module/schema imports do not invoke transfer on these paths.",
+      "reviewer": "ChatGPT Work (same-session maintainer review)",
+      "review_reference": "https://github.com/apenczolgolonabijorbiper/golem14-harness/issues/18",
+      "previous_reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "provider-publish",
-      "decision": "bootstrap",
-      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
-      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "decision": "no-impact",
+      "rationale": "Reviewed existing operation dispatch and publication paths: selective transfer is an additional branch/API. Existing cognition/provider/adapter operations retain their original lease, byte, CAS and history behavior; existing conformance remains required. New transitive module/schema imports do not invoke transfer on these paths.",
+      "reviewer": "ChatGPT Work (same-session maintainer review)",
+      "review_reference": "https://github.com/apenczolgolonabijorbiper/golem14-harness/issues/18",
+      "previous_reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "provider-abort",
-      "decision": "bootstrap",
-      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
-      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "decision": "no-impact",
+      "rationale": "Reviewed existing operation dispatch and publication paths: selective transfer is an additional branch/API. Existing cognition/provider/adapter operations retain their original lease, byte, CAS and history behavior; existing conformance remains required. New transitive module/schema imports do not invoke transfer on these paths.",
+      "reviewer": "ChatGPT Work (same-session maintainer review)",
+      "review_reference": "https://github.com/apenczolgolonabijorbiper/golem14-harness/issues/18",
+      "previous_reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "provider-recover",
-      "decision": "bootstrap",
-      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
-      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "decision": "no-impact",
+      "rationale": "Reviewed existing operation dispatch and publication paths: selective transfer is an additional branch/API. Existing cognition/provider/adapter operations retain their original lease, byte, CAS and history behavior; existing conformance remains required. New transitive module/schema imports do not invoke transfer on these paths.",
+      "reviewer": "ChatGPT Work (same-session maintainer review)",
+      "review_reference": "https://github.com/apenczolgolonabijorbiper/golem14-harness/issues/18",
+      "previous_reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "provider-rebase",
-      "decision": "bootstrap",
-      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
-      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "decision": "no-impact",
+      "rationale": "Reviewed existing operation dispatch and publication paths: selective transfer is an additional branch/API. Existing cognition/provider/adapter operations retain their original lease, byte, CAS and history behavior; existing conformance remains required. New transitive module/schema imports do not invoke transfer on these paths.",
+      "reviewer": "ChatGPT Work (same-session maintainer review)",
+      "review_reference": "https://github.com/apenczolgolonabijorbiper/golem14-harness/issues/18",
+      "previous_reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "provider-export",
-      "decision": "bootstrap",
-      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
-      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "decision": "no-impact",
+      "rationale": "Reviewed existing operation dispatch and publication paths: selective transfer is an additional branch/API. Existing cognition/provider/adapter operations retain their original lease, byte, CAS and history behavior; existing conformance remains required. New transitive module/schema imports do not invoke transfer on these paths.",
+      "reviewer": "ChatGPT Work (same-session maintainer review)",
+      "review_reference": "https://github.com/apenczolgolonabijorbiper/golem14-harness/issues/18",
+      "previous_reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "provider-import",
-      "decision": "bootstrap",
-      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
-      "reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "decision": "no-impact",
+      "rationale": "Reviewed existing operation dispatch and publication paths: selective transfer is an additional branch/API. Existing cognition/provider/adapter operations retain their original lease, byte, CAS and history behavior; existing conformance remains required. New transitive module/schema imports do not invoke transfer on these paths.",
+      "reviewer": "ChatGPT Work (same-session maintainer review)",
+      "review_reference": "https://github.com/apenczolgolonabijorbiper/golem14-harness/issues/18",
+      "previous_reference_digest": "88752e8c2c6e970072948e636631b0a17c1708fb117d8ee23bec7c9bd45d0e0b",
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "canonical",
       "decision": "bootstrap",
       "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
       "reference_digest": "e553136418e14a9ec1c3c5b2f7fc3cc683de43adf3c1472049d971648eced6a7",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "c507a55821806eeaf666973faa07628aa3f3ce49359b06645f73b33ce8e4c968",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "selector",
       "decision": "bootstrap",
       "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
       "reference_digest": "e553136418e14a9ec1c3c5b2f7fc3cc683de43adf3c1472049d971648eced6a7",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "c507a55821806eeaf666973faa07628aa3f3ce49359b06645f73b33ce8e4c968",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "page",
       "decision": "bootstrap",
       "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
       "reference_digest": "e553136418e14a9ec1c3c5b2f7fc3cc683de43adf3c1472049d971648eced6a7",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "c507a55821806eeaf666973faa07628aa3f3ce49359b06645f73b33ce8e4c968",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "change-identity",
       "decision": "bootstrap",
       "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
       "reference_digest": "e553136418e14a9ec1c3c5b2f7fc3cc683de43adf3c1472049d971648eced6a7",
-      "spec_digest": "165ace7028855b311ced5e8ce02b37e797dc1b462d7b119144eee7d791e9d031",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "c507a55821806eeaf666973faa07628aa3f3ce49359b06645f73b33ce8e4c968",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "cognition-open",
-      "decision": "bootstrap",
-      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
-      "reference_digest": "9ca24e73a2d4abe74363cc09607323a21008023dddb2c26958d1209edf1a8692",
-      "spec_digest": "5a41feee5a9bf06b2c301c08b3e87ad9906e868e6c39bd9524dbd6f056660e79",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "decision": "no-impact",
+      "rationale": "Reviewed existing operation dispatch and publication paths: selective transfer is an additional branch/API. Existing cognition/provider/adapter operations retain their original lease, byte, CAS and history behavior; existing conformance remains required. New transitive module/schema imports do not invoke transfer on these paths.",
+      "reviewer": "ChatGPT Work (same-session maintainer review)",
+      "review_reference": "https://github.com/apenczolgolonabijorbiper/golem14-harness/issues/18",
+      "previous_reference_digest": "9ca24e73a2d4abe74363cc09607323a21008023dddb2c26958d1209edf1a8692",
+      "reference_digest": "03b31f75e0ea0f1bbfaa83f4aa67cb9c3b6ac3d1eab7e38d1e7ecc06509a655f",
+      "spec_digest": "786b6b25032db5c2aac8fa7a5d6e37d1d1a04be710bd272f821ca5f86c5ce36a",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "cognition-round",
-      "decision": "bootstrap",
-      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
-      "reference_digest": "9ca24e73a2d4abe74363cc09607323a21008023dddb2c26958d1209edf1a8692",
-      "spec_digest": "5a41feee5a9bf06b2c301c08b3e87ad9906e868e6c39bd9524dbd6f056660e79",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "decision": "no-impact",
+      "rationale": "Reviewed existing operation dispatch and publication paths: selective transfer is an additional branch/API. Existing cognition/provider/adapter operations retain their original lease, byte, CAS and history behavior; existing conformance remains required. New transitive module/schema imports do not invoke transfer on these paths.",
+      "reviewer": "ChatGPT Work (same-session maintainer review)",
+      "review_reference": "https://github.com/apenczolgolonabijorbiper/golem14-harness/issues/18",
+      "previous_reference_digest": "9ca24e73a2d4abe74363cc09607323a21008023dddb2c26958d1209edf1a8692",
+      "reference_digest": "03b31f75e0ea0f1bbfaa83f4aa67cb9c3b6ac3d1eab7e38d1e7ecc06509a655f",
+      "spec_digest": "786b6b25032db5c2aac8fa7a5d6e37d1d1a04be710bd272f821ca5f86c5ce36a",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "cognition-context",
-      "decision": "bootstrap",
-      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
-      "reference_digest": "9ca24e73a2d4abe74363cc09607323a21008023dddb2c26958d1209edf1a8692",
-      "spec_digest": "5a41feee5a9bf06b2c301c08b3e87ad9906e868e6c39bd9524dbd6f056660e79",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "decision": "no-impact",
+      "rationale": "Reviewed existing operation dispatch and publication paths: selective transfer is an additional branch/API. Existing cognition/provider/adapter operations retain their original lease, byte, CAS and history behavior; existing conformance remains required. New transitive module/schema imports do not invoke transfer on these paths.",
+      "reviewer": "ChatGPT Work (same-session maintainer review)",
+      "review_reference": "https://github.com/apenczolgolonabijorbiper/golem14-harness/issues/18",
+      "previous_reference_digest": "9ca24e73a2d4abe74363cc09607323a21008023dddb2c26958d1209edf1a8692",
+      "reference_digest": "03b31f75e0ea0f1bbfaa83f4aa67cb9c3b6ac3d1eab7e38d1e7ecc06509a655f",
+      "spec_digest": "786b6b25032db5c2aac8fa7a5d6e37d1d1a04be710bd272f821ca5f86c5ce36a",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "cognition-source",
-      "decision": "bootstrap",
-      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
-      "reference_digest": "9ca24e73a2d4abe74363cc09607323a21008023dddb2c26958d1209edf1a8692",
-      "spec_digest": "5a41feee5a9bf06b2c301c08b3e87ad9906e868e6c39bd9524dbd6f056660e79",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "decision": "no-impact",
+      "rationale": "Reviewed existing operation dispatch and publication paths: selective transfer is an additional branch/API. Existing cognition/provider/adapter operations retain their original lease, byte, CAS and history behavior; existing conformance remains required. New transitive module/schema imports do not invoke transfer on these paths.",
+      "reviewer": "ChatGPT Work (same-session maintainer review)",
+      "review_reference": "https://github.com/apenczolgolonabijorbiper/golem14-harness/issues/18",
+      "previous_reference_digest": "9ca24e73a2d4abe74363cc09607323a21008023dddb2c26958d1209edf1a8692",
+      "reference_digest": "03b31f75e0ea0f1bbfaa83f4aa67cb9c3b6ac3d1eab7e38d1e7ecc06509a655f",
+      "spec_digest": "786b6b25032db5c2aac8fa7a5d6e37d1d1a04be710bd272f821ca5f86c5ce36a",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "cognition-receipt",
-      "decision": "bootstrap",
-      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
-      "reference_digest": "9ca24e73a2d4abe74363cc09607323a21008023dddb2c26958d1209edf1a8692",
-      "spec_digest": "5a41feee5a9bf06b2c301c08b3e87ad9906e868e6c39bd9524dbd6f056660e79",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "decision": "no-impact",
+      "rationale": "Reviewed existing operation dispatch and publication paths: selective transfer is an additional branch/API. Existing cognition/provider/adapter operations retain their original lease, byte, CAS and history behavior; existing conformance remains required. New transitive module/schema imports do not invoke transfer on these paths.",
+      "reviewer": "ChatGPT Work (same-session maintainer review)",
+      "review_reference": "https://github.com/apenczolgolonabijorbiper/golem14-harness/issues/18",
+      "previous_reference_digest": "9ca24e73a2d4abe74363cc09607323a21008023dddb2c26958d1209edf1a8692",
+      "reference_digest": "03b31f75e0ea0f1bbfaa83f4aa67cb9c3b6ac3d1eab7e38d1e7ecc06509a655f",
+      "spec_digest": "786b6b25032db5c2aac8fa7a5d6e37d1d1a04be710bd272f821ca5f86c5ce36a",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "cognition-finish",
-      "decision": "bootstrap",
-      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
-      "reference_digest": "9ca24e73a2d4abe74363cc09607323a21008023dddb2c26958d1209edf1a8692",
-      "spec_digest": "5a41feee5a9bf06b2c301c08b3e87ad9906e868e6c39bd9524dbd6f056660e79",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "decision": "no-impact",
+      "rationale": "Reviewed existing operation dispatch and publication paths: selective transfer is an additional branch/API. Existing cognition/provider/adapter operations retain their original lease, byte, CAS and history behavior; existing conformance remains required. New transitive module/schema imports do not invoke transfer on these paths.",
+      "reviewer": "ChatGPT Work (same-session maintainer review)",
+      "review_reference": "https://github.com/apenczolgolonabijorbiper/golem14-harness/issues/18",
+      "previous_reference_digest": "9ca24e73a2d4abe74363cc09607323a21008023dddb2c26958d1209edf1a8692",
+      "reference_digest": "03b31f75e0ea0f1bbfaa83f4aa67cb9c3b6ac3d1eab7e38d1e7ecc06509a655f",
+      "spec_digest": "786b6b25032db5c2aac8fa7a5d6e37d1d1a04be710bd272f821ca5f86c5ce36a",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "validate-task",
       "decision": "bootstrap",
       "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
       "reference_digest": "692f470a3285b1b10ba8b217d248ee7dad35969d95fe45e355ed0b2dbe342c1a",
-      "spec_digest": "5a41feee5a9bf06b2c301c08b3e87ad9906e868e6c39bd9524dbd6f056660e79",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "c25a8008ed15bc89f828b157f1cec03a04477e0fe3aa042821e857ba2c6094b5",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "validate-context",
       "decision": "bootstrap",
       "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
       "reference_digest": "692f470a3285b1b10ba8b217d248ee7dad35969d95fe45e355ed0b2dbe342c1a",
-      "spec_digest": "5a41feee5a9bf06b2c301c08b3e87ad9906e868e6c39bd9524dbd6f056660e79",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "c25a8008ed15bc89f828b157f1cec03a04477e0fe3aa042821e857ba2c6094b5",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "validate-result",
       "decision": "bootstrap",
       "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
       "reference_digest": "692f470a3285b1b10ba8b217d248ee7dad35969d95fe45e355ed0b2dbe342c1a",
-      "spec_digest": "5a41feee5a9bf06b2c301c08b3e87ad9906e868e6c39bd9524dbd6f056660e79",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "c25a8008ed15bc89f828b157f1cec03a04477e0fe3aa042821e857ba2c6094b5",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "validate-learning",
       "decision": "bootstrap",
       "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
       "reference_digest": "692f470a3285b1b10ba8b217d248ee7dad35969d95fe45e355ed0b2dbe342c1a",
-      "spec_digest": "5a41feee5a9bf06b2c301c08b3e87ad9906e868e6c39bd9524dbd6f056660e79",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "spec_digest": "c25a8008ed15bc89f828b157f1cec03a04477e0fe3aa042821e857ba2c6094b5",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     },
     {
       "operation": "learning-publish",
-      "decision": "bootstrap",
-      "rationale": "Initial language-neutral contract for unchanged reference core; retained goldens and stateful conformance cover the pinned operations. Human PR review required; no complete alternate-language implementation is certified.",
-      "reference_digest": "daa98cd2fa6410c51b6539001ec98b8cf766a4bb2a35eb014c540d93e3edcddb",
-      "spec_digest": "a6ee4f778722a152de238c3cfb2a12def97fabd0be29c0c43fe1b93ba23e39bc",
-      "fixture_digest": "19c7437dce5d9fd15b837512ccf0ef6bc32290b0be58c8a55254349f289d8a95"
+      "decision": "no-impact",
+      "rationale": "Reviewed existing operation dispatch and publication paths: selective transfer is an additional branch/API. Existing cognition/provider/adapter operations retain their original lease, byte, CAS and history behavior; existing conformance remains required. New transitive module/schema imports do not invoke transfer on these paths.",
+      "reviewer": "ChatGPT Work (same-session maintainer review)",
+      "review_reference": "https://github.com/apenczolgolonabijorbiper/golem14-harness/issues/18",
+      "previous_reference_digest": "daa98cd2fa6410c51b6539001ec98b8cf766a4bb2a35eb014c540d93e3edcddb",
+      "reference_digest": "93b932cf6927a1526bff07923f732adea5b6faa6cd9af09813091bdb026de7f8",
+      "spec_digest": "5691850d4ffb31b16f5e02544a0e6e752ce86b43d7d96545beda110be874d0e5",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
+    },
+    {
+      "operation": "processed-export",
+      "decision": "changed",
+      "rationale": "Adds selective processed bundle closure, inspection, isolated merge, transactional publication and recovery, with explicit portable scenario/fault coverage.",
+      "reviewer": "ChatGPT Work (same-session maintainer review)",
+      "review_reference": "https://github.com/apenczolgolonabijorbiper/golem14-harness/issues/18",
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
+    },
+    {
+      "operation": "processed-inspect",
+      "decision": "changed",
+      "rationale": "Adds selective processed bundle closure, inspection, isolated merge, transactional publication and recovery, with explicit portable scenario/fault coverage.",
+      "reviewer": "ChatGPT Work (same-session maintainer review)",
+      "review_reference": "https://github.com/apenczolgolonabijorbiper/golem14-harness/issues/18",
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
+    },
+    {
+      "operation": "processed-import",
+      "decision": "changed",
+      "rationale": "Adds selective processed bundle closure, inspection, isolated merge, transactional publication and recovery, with explicit portable scenario/fault coverage.",
+      "reviewer": "ChatGPT Work (same-session maintainer review)",
+      "review_reference": "https://github.com/apenczolgolonabijorbiper/golem14-harness/issues/18",
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
+    },
+    {
+      "operation": "processed-recover",
+      "decision": "changed",
+      "rationale": "Adds selective processed bundle closure, inspection, isolated merge, transactional publication and recovery, with explicit portable scenario/fault coverage.",
+      "reviewer": "ChatGPT Work (same-session maintainer review)",
+      "review_reference": "https://github.com/apenczolgolonabijorbiper/golem14-harness/issues/18",
+      "reference_digest": "825a59a475ef0d7ef574879bea65e870b61ee7a8e2d7027ccc1ce60a4218962a",
+      "spec_digest": "3d099c7010f99ae1696e6e11c50914c518c02c1acae9094c91cc0458b1cbd543",
+      "fixture_digest": "06e8f3ef5d44f60bc37c6dd98bfd39136eaaa460987d5d778a4ba016dc814fab"
     }
   ]
 }

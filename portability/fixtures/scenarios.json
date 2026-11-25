@@ -1,5 +1,5 @@
 {
-  "contract_version": "1.0.0",
+  "contract_version": "1.1.0",
   "scenarios": [
     {
       "id": "portable-goldens",
@@ -273,6 +273,30 @@
         "clock timestamps; relationships must remain exact"
       ],
       "additional_fault_suites": []
+    },
+    {
+      "id": "processed-transfer",
+      "operations": [
+        "processed-export",
+        "processed-inspect",
+        "processed-import",
+        "processed-recover"
+      ],
+      "initial_fixture": "instance",
+      "steps_and_invariants": [
+        "Export the retained completed source without inference; compare A HEAD and working tree unchanged",
+        "Inspect sorted selection and complete dependency closure; exact bytes and unchanged processed row",
+        "Import into empty B using exact base, stable ID and UTC time; audit saved B against its history",
+        "Recover same receipt after reopen; retry with same ID makes no commit; duplicate import with new ID refuses source ID",
+        "Run additional fault suite for two selected sources into nonempty B, missing dependencies, collision, drift, lease, CAS and interruption recovery"
+      ],
+      "dynamic_fields": [
+        "temporary absolute paths",
+        "Git snapshot IDs"
+      ],
+      "additional_fault_suites": [
+        "server/processed-transfer.test.mjs"
+      ]
     }
   ]
 }

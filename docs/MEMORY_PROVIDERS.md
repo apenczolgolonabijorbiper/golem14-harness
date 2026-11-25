@@ -20,6 +20,7 @@ private unless separately documented. No package-manager installation is needed.
 | `server/memory-contract.mjs` | `memoryContract`, `collections`, `canonical`, `digest`, `bytesDigest`, `matches`, `tokens`, `assertProvider`, `pages`, `records`, `get`, `evidenceBytes`, `changeIdentity` |
 | `server/provider-memory.mjs` | `createMemory`, `semanticWrites`, `rebaseChanges` |
 | `server/provider-validation.mjs` | `validateSnapshot`, `validateCandidate`, `snapshotDigest` |
+| `server/processed-transfer.mjs` | `exportProcessed`, `inspectProcessed`, `combineProcessed`, `transferView`, `transferReceiptPath`, `transferArtifactId` |
 | `server/memory-transfer.mjs` | `exportMemory`, `importMemory` |
 | `server/cognitive-reference.mjs` | `createProviderReadView` |
 | `adapters/reference-git/adapter.mjs` | `createAdapter`, including `openMemory({instance_id})` |
@@ -267,6 +268,15 @@ instead. The host supplies atomic staging/archive durability; no provider is
 switched and no active instance is overwritten by these functions. Backups,
 cutover/reverse migration and any optional future database implementation remain
 host responsibilities.
+
+## Selective processed-observation transfer
+
+[PROCESSED_TRANSFER.md](PROCESSED_TRANSFER.md) defines the optional version-1
+selective bundle, closure, isolated combination and destination transaction. It
+adds processed knowledge to an existing instance; the archive import above keeps
+its existing semantics. JSON providers expose `importProcessed` / `recoverTransfer`;
+their host store must implement the explicit `checkTransfer` publication binding.
+No provider capability is implied for a host that lacks this binding.
 
 ## Conformance and retained evidence
 

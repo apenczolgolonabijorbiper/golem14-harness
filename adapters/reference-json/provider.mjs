@@ -1,5 +1,6 @@
 // Reference JSON materialization boundary. Only this adapter translates logical
 // records to the existing instance layout. Durability is supplied by the host.
+import {combineProcessed,transferReceiptPath,inspectProcessed,transferView} from '../../server/processed-transfer.mjs';
 import {randomUUID} from 'node:crypto';
 import {memoryContract,collections,matches,checkPage,digest,changeIdentity} from '../../server/memory-contract.mjs';
 import {semanticWrites} from '../../server/provider-memory.mjs';
@@ -124,6 +125,38 @@ export function createJsonProvider({instance_id,store,now=()=>Date.now()}){
         if(issues.length)throw Error('JSON validation failed: '+issues.join('\n'));
         const snapshot_id=await tx.publish(files,'semantic-complete '+c.run_id);return {...receipt,snapshot_id};
       });
+    },
+    async importProcessed({bundle,base_snapshot,id,at}){
+      bundle=structuredClone(bundle);
+      transferReceiptPath(id);
+      await inspectProcessed(bundle);
+      // This operation owns the destination transaction; it never borrows a
+      // cognition lease, replaces policy, or publishes a partially staged import.
+      return store.transaction(async tx=>{
+        if(typeof tx.checkTransfer!=='function')throw Error('Host has no selective-transfer publication binding');
+        const physical=await tx.load(),current=await decodeJsonSnapshot({...physical,instance_id});
+        const path=transferReceiptPath(id),existing=current.files.get(path);
+        if(existing){const {bundle:saved,...receipt}=JSON.parse(utf8(existing));if(saved.sha256!==bundle.sha256)throw Error('Transfer identity conflict');return receipt;}
+        if(current.meta.snapshot_id!==base_snapshot)throw Error('Base snapshot changed');
+        if(current.lease?.status==='processing')throw Error('Destination processing lease must be released before transfer');
+        await tx.checkTransfer({base_snapshot,policy_id:current.meta.policy_id});
+        const {state,receipt}=await combineProcessed(api,base_snapshot,bundle,{id,at});
+        state.files=new Map(current.files);
+        for(const row of bundle.rows.observations){instancePath(row.path);if(state.files.has(row.path))throw Error('Observation path collision: '+row.id);state.files.set(row.path,Buffer.from(bundle.evidence[row.id],'base64'));}
+        state.files.set(path,json(receipt));
+        const files=encodeJsonSnapshot(state),roundtrip=await decodeJsonSnapshot({files,instance_id,snapshot_id:state.meta.snapshot_id});
+        const view=transferView(new Map([[base_snapshot,current],[roundtrip.meta.snapshot_id,roundtrip]]));
+        const errors=await validateSnapshot(view,roundtrip.meta.snapshot_id,{previous:base_snapshot});
+        if(errors.length)throw Error('Materialized transfer invalid: '+errors.join('\n'));
+        // Ensure materialization did not silently drop/alter a requested record.
+        for(const c of collections)if(digest([...roundtrip.rows[c]].sort((a,b)=>a.id.localeCompare(b.id)))!==digest([...state.rows[c]].sort((a,b)=>a.id.localeCompare(b.id))))throw Error('Transfer materialization mismatch: '+c);
+        const snapshot_id=await tx.publish(files,'processed-transfer '+id);
+        const {bundle:retained,...summary}=receipt;return {...summary,snapshot_id};
+      });
+    },
+    async recoverTransfer({id}){
+      const physical=await store.load(),raw=physical.files.get(transferReceiptPath(id));
+      if(!raw)return null;const {bundle,...summary}=JSON.parse(utf8(raw));return summary;
     },
     async abort({candidate_id}){const d=drafts.get(candidate_id);if(d)snapshots.delete(d.state.meta.snapshot_id);drafts.delete(candidate_id);return {status:'aborted'};},
     async recover({idempotency_key}){const current=await decodeJsonSnapshot({...await store.load(),instance_id});return structuredClone(current.rows.receipts.find(r=>r.id===idempotency_key)??null);},

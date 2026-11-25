@@ -65,7 +65,7 @@ def assess_impact(base, current, evidence):
 
 def check(root=ROOT, base=None):
     manifest = json.loads((root / 'portability/manifest.json').read_text(encoding='utf-8'))
-    if manifest['schema_version'] != 1 or manifest['contract_version'] != '1.0.0':
+    if manifest['schema_version'] != 1 or manifest['contract_version'] not in {'1.0.0', '1.1.0'}:
         raise ValueError('Unsupported portability manifest version')
     inventory = manifest['inventory']
     paths = [row['path'] for row in inventory]
