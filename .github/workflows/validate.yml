@@ -80,50 +80,33 @@ jobs:
           npm ci --prefix tools/explorer --ignore-scripts --no-audit --no-fund
           node tools/explorer/test-markdown.mjs
 
+  package:
+    needs: changes
+    if: needs.changes.outputs.platforms == 'true'
+    uses: ./.github/workflows/build-validation-package.yml
+    with:
+      os: ubuntu-latest
+      node: '24'
+      upload-package: true
+
   validate:
     needs: changes
     if: needs.changes.outputs.platforms == 'true'
-    timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
         include:
           - os: ubuntu-latest
             node: '22.12.0'
-          - os: ubuntu-latest
-            node: '24'
           - os: macos-latest
             node: '24'
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v7.0.1
-        with:
-          persist-credentials: false
-      - uses: actions/setup-node@v7.1.0
-        with:
-          node-version: ${{ matrix.node }}
-      - uses: actions/setup-python@v7.1.0
-        with:
-          python-version: '3.12'
-      - name: Platform-default fixture initialization
-        run: >-
-          node --input-type=module -e "import {fixture} from './server/test-fixtures.mjs';
-          const cleanups=[]; try { console.log(fixture({after:fn=>cleanups.push(fn)},{profile:true}).root); }
-          finally { for(const fn of cleanups.reverse()) fn(); }"
-      - name: Packaged release and installer checks
-        env:
-          GOLEM_TRACE_COMMANDS: '1'
-        run: python tools/build-release.py --output "$RUNNER_TEMP/platform-release.zip"
-
-      - uses: actions/upload-artifact@v7.0.2
-        if: matrix.os == 'ubuntu-latest' && matrix.node == '24'
-        with:
-          name: harness-validation-package
-          path: ${{ runner.temp }}/platform-release.zip*
-          if-no-files-found: error
+    uses: ./.github/workflows/build-validation-package.yml
+    with:
+      os: ${{ matrix.os }}
+      node: ${{ matrix.node }}
 
   windows:
-    needs: validate
+    needs: package
     uses: ./.github/workflows/windows-package.yml
     with:
       artifact: harness-validation-package
@@ -152,7 +135,7 @@ jobs:
 
   validation-result:
     if: always()
-    needs: [changes, explorer, portability, validate, windows, capacity]
+    needs: [changes, explorer, portability, package, validate, windows, capacity]
     runs-on: ubuntu-latest
     steps:
       - name: Require successful selected checks
@@ -160,6 +143,7 @@ jobs:
           CHANGES: ${{ needs.changes.result }}
           EXPLORER: ${{ needs.explorer.result }}
           PORTABILITY: ${{ needs.portability.result }}
+          PACKAGE: ${{ needs.package.result }}
           VALIDATE: ${{ needs.validate.result }}
           WINDOWS: ${{ needs.windows.result }}
           CAPACITY: ${{ needs.capacity.result }}
@@ -169,10 +153,12 @@ jobs:
           test "$EXPLORER" = success
           test "$PORTABILITY" = success
           if [ "$PLATFORMS" = true ]; then
+            test "$PACKAGE" = success
             test "$VALIDATE" = success
             test "$WINDOWS" = success
             test "$CAPACITY" = success
           else
+            test "$PACKAGE" = skipped
             test "$VALIDATE" = skipped
             test "$WINDOWS" = skipped
             test "$CAPACITY" = skipped

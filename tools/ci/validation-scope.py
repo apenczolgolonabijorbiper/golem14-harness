@@ -15,7 +15,8 @@ def requires_platforms(paths):
             continue
         if path.startswith('docs/') and PurePosixPath(path).suffix == '.md':
             continue
-        if path in {'.github/workflows/windows-package.yml', 'tools/ci/check-windows-package.py'}:
+        if path in {'.github/workflows/windows-package.yml', '.github/workflows/build-validation-package.yml',
+                    'tools/ci/check-windows-package.py'}:
             return True
         if path.startswith(('tools/explorer/', 'tools/ci/')):
             continue
