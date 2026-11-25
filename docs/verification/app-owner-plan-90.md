@@ -41,6 +41,13 @@ builder now runs indexer and documentation consistency tests from the staged
 package on Linux, Windows (Python 3.12 and 3.14) and macOS through existing CI.
 These platform runs must actually pass before claiming platform acceptance.
 
+The existing implementation branch was resumed in a fresh Work session and the
+full 187-test package build independently rerun. The retained log above is from
+that rerun. The explorer CI job now also runs the documentation-contract check
+after regeneration, so a documentation-only PR cannot reintroduce the known stale
+promises while bypassing platform validation. The final generated page and package
+hashes are recorded with the implementation PR.
+
 ## SudoLang / portable-script parity (#74–#77)
 
 No portable indexer/validator script specifications have shipped at this base;
