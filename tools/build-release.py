@@ -68,7 +68,7 @@ FILES = (
     'integration/AGENTS.application.md', 'integration/install-cursor.py',
     'integration/test-install-cursor.py',
     'processor/init-instance.py', 'processor/memory-tool.mjs', 'processor/process.py',
-    'processor/test-observation-portability.py', 'processor/test-validation.py',
+    'processor/test-observation-portability.py', 'processor/test-validation.py', 'processor/test-indexer.py',
     'schemas/memory-graph.schema.json', 'schemas/hypotheses.schema.json',
     'server/operation-metrics.mjs', 'server/adapter-performance.test.mjs',
     'processor/write-candidate.mjs', 'server/candidate-writer.test.mjs',
@@ -129,7 +129,7 @@ def build(output):
                         'server/adapter-performance.test.mjs', 'server/candidate-writer.test.mjs', 'server/memory-timings.test.mjs',
                         'adapters/conformance/adapter.test.mjs', 'adapters/conformance/provider.test.mjs', 'server/neutral-core.test.mjs', 'server/subprocess.test.mjs', 'server/core-priorities.test.mjs', 'server/intake.test.mjs'],
                        cwd=stage, check=True, env={**os.environ, 'GOLEM_PYTHON': os.environ.get('GOLEM_PYTHON', sys.executable)})
-        for script in ['processor/test-validation.py', 'processor/test-observation-portability.py',
+        for script in ['processor/test-validation.py', 'processor/test-observation-portability.py', 'processor/test-indexer.py',
                        'integration/test-install-cursor.py', 'integration/test-install-codex.py']:
             subprocess.run([sys.executable, script], cwd=stage, check=True)
     with zipfile.ZipFile(output, 'x') as archive:

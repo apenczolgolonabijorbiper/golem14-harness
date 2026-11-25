@@ -42,6 +42,38 @@ deduplication rule scoped to the original feature and upstream record. Preserve
 deliberate repeat observations. During semantic review, repeated copies of the
 same material do not count as independent corroboration.
 
+## JSON reference indexer concurrency
+
+`processor/process.py` serializes participating local processes sharing one
+private instance on a supported local filesystem (Linux/macOS `flock`, Windows
+one-byte `msvcrt` lock). A competing invocation exits promptly with status 1 and
+`Indexer busy:`; retry after the owner exits. A nonoverlapping rerun skips existing
+evidence and emits no `Indexed:` lines. The instance-scoped lock covers target
+existence checks, orphan cleanup and every publication. Existing evidence is
+preserved byte for byte, including evidence from earlier runs.
+
+The OS owns the lock on the persistent `.golem-indexer.lock` file at the instance
+root. Closing the handle on success, error or process death releases ownership.
+The file's existence does not mean busy. Never delete or replace it to recover a
+lock: that could split ownership between different file objects. A hung live
+owner must exit or be terminated before retrying. This lock is independent of
+`memory/processing-lock.json`; indexing never acquires or changes a cognition lease.
+
+For each new record, write complete UTF-8 JSON to a uniquely named
+`evidence/.golem-index-*.tmp`, flush and fsync it, close it, then atomically replace
+the final `evidence/ID.json` within the same directory. `Indexed:` prints only
+after publication. Readers of final JSON names see absence or a complete record;
+temporary names are reserved and must be ignored. Ordinary failures remove the
+temporary; after a killed process the next lock owner removes orphan temporaries
+and safely retries missing targets. Already published evidence remains intact.
+
+This guarantees per-file visibility, not a whole-instance snapshot, a cognition
+transaction or durability across power loss. Network filesystems, separate
+clones/machines and writers that bypass this lock are outside the guarantee.
+All writers must participate, sources must be finalized/immutable and the instance
+must be trusted. Other memory providers implement their own equivalent logical
+evidence operations; these physical files are specific to the JSON reference.
+
 ## Lease and concurrency
 
 No pending work: exit without writing. Otherwise create a fresh run UUID and claim
