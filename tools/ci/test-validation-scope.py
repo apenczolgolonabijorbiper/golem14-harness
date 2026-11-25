@@ -66,7 +66,8 @@ class ScopeTests(unittest.TestCase):
                      'schemas/memory-graph.schema.json', 'adapters/template/adapter.mjs',
                      'integration/AGENTS.distribution.md', 'integration/SETUP.work.md',
                      'tools/build-release.py', 'tools/benchmark-cycle.mjs', 'VERSION',
-                     '.github/workflows/windows-package.yml', 'tools/ci/check-windows-package.py']:
+                     '.github/workflows/windows-package.yml', '.github/workflows/build-validation-package.yml',
+                     'tools/ci/check-windows-package.py']:
             with self.subTest(path=path):
                 self.assertTrue(scope.requires_platforms(['docs/EXPLORER.md', path]))
 
