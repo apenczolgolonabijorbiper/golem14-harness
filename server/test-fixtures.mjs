@@ -12,19 +12,12 @@ export function command(executable,args,options={}) {
   return r.stdout.trim();
 }
 
-export function pythonCommand({env=process.env,platform=process.platform}={}) {
-  if(env.GOLEM_PYTHON) return [env.GOLEM_PYTHON];
-  return platform==='win32'?['py','-3']:['python3'];
-}
-export function python(args,options={}) {
-  const [executable,...prefix]=pythonCommand({env:options.env??process.env});
-  return command(executable,[...prefix,...args],options);
-}
+export function node(args,options={}) { return command(process.execPath,args,options); }
 
 export function fixture(t,{profile=false}={}) {
   const base=realpathSync(mkdtempSync(join(tmpdir(),'golem-test-'))),root=join(base,'instance');
   t.after(()=>rmSync(base,{recursive:true,force:true,maxRetries:10,retryDelay:100}));
-  python([join(harness,'processor/init-instance.py'),'--root',root,...(profile?['--profile']:[])]);
+  node([join(harness,'processor/init-instance.mjs'),'--root',root,...(profile?['--profile']:[])]);
   const read=path=>readFileSync(join(root,path),'utf8');
   const write=(path,value)=>{mkdirSync(dirname(join(root,path)),{recursive:true});writeFileSync(join(root,path),typeof value==='string'||Buffer.isBuffer(value)?value:JSON.stringify(value,null,2)+'\n');};
   const git=(...args)=>command('git',['-C',root,...args]);

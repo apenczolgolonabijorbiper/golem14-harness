@@ -3,7 +3,7 @@
 Use a fresh external target-format instance. The host provides permissions,
 inference and storage; the engine remains read-only downstream.
 
-1. Initialize an empty external root with processor/init-instance.py --root PATH
+1. Initialize an empty external root with processor/init-instance.mjs --root PATH
    --profile. State purpose, scope, language and review priorities in
    instance/purpose.md. Commit golem.config.json and all selected profile files
    together before a claim. An unconfigured instance has no domain policies.

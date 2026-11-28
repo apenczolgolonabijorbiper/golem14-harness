@@ -5,7 +5,7 @@ import {cpSync, existsSync, mkdtempSync, readFileSync, realpathSync, rmSync, wri
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {parseSource, run} from '../processor/memory-tool.mjs';
-import {harness, python} from './test-fixtures.mjs';
+import {harness, node} from './test-fixtures.mjs';
 
 const packPath = 'profiles/templates/software-development-tfs-git';
 const readJson = (root, path) => JSON.parse(readFileSync(join(root, path), 'utf8'));
@@ -57,7 +57,7 @@ test('copied software development template loads offline and validates both fixt
   const source = join(base, 'app-guidance');
   const root = join(base, 'instance');
   const plain = join(base, 'plain');
-  const init = join(harness, 'processor/init-instance.py');
+  const init = join(harness, 'processor/init-instance.mjs');
   const cli = (command, ...args) => run([command, '--root', root, ...args]);
 
   cpSync(join(harness, packPath), source, {recursive: true});
@@ -78,10 +78,10 @@ test('copied software development template loads offline and validates both fixt
     .replace('REPLACE_REPOSITORY_SCOPE', 'demo-repo')
     .replace('REPLACE_REPOSITORY_REGISTRY', 'demo-registry'));
 
-  python([init, '--root', plain]);
+  node([init, '--root', plain]);
   cpSync(join(source, 'profiles'), join(plain, 'profiles'), {recursive: true});
   assert.equal((await run(['profile-check', '--root', plain])).state, 'none');
-  python([init, '--root', root, '--profile-from', source, '--node', process.execPath]);
+  node([init, '--root', root, '--profile-from', source]);
   assert.equal((await cli('profile-check', '--source', source)).comparison.state, 'in-sync');
 
   const observations = readJson(source, 'fixtures/observations.json');

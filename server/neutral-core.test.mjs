@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {existsSync,renameSync,unlinkSync,mkdirSync} from 'node:fs';
 import {join} from 'node:path';
-import {fixture,python,pythonCommand,harness} from './test-fixtures.mjs';
+import {fixture,node,harness} from './test-fixtures.mjs';
 import {physicallyWithin} from './application-profile.mjs';
 import {resolveLayout} from './instance-layout.mjs';
 import {loadMemory,run} from '../processor/memory-tool.mjs';
@@ -24,11 +24,7 @@ test('unsupported graph formats and historical field aliases fail clearly',async
   assert.deepEqual(validateMemory(state.graph,state),[]);
 });
 
-test('Python launcher selection is explicit, portable and reports the attempted executable',()=>{
-  assert.deepEqual(pythonCommand({env:{},platform:'win32'}),['py','-3']);assert.deepEqual(pythonCommand({env:{},platform:'linux'}),['python3']);assert.deepEqual(pythonCommand({env:{GOLEM_PYTHON:'C:/Program Files/Python/python.exe'},platform:'win32'}),['C:/Program Files/Python/python.exe']);
-  assert.match(python(['-c','import sys; print(sys.version_info.major)']),/^3$/);
-  assert.throws(()=>python(['-V'],{env:{...process.env,GOLEM_PYTHON:'missing-golem-interpreter'}}),/missing-golem-interpreter/);
-});
+
 
 
 test('historical persona paths cannot substitute for required canonical JSON files',async t=>{

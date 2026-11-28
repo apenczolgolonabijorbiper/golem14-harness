@@ -18,13 +18,13 @@ Use a clean extracted release obtained through a trusted channel. Run this from
 its golem-harness directory on Windows:
 
 ```powershell
-py integration/install-codex.py --repo "C:/Projects/MyApp" --instance-root "C:/GolemData/MyApp"
+node integration/install-codex.mjs --repo "C:/Projects/MyApp" --instance-root "C:/GolemData/MyApp"
 ```
 
 On Linux or macOS:
 
 ```sh
-python3 integration/install-codex.py --repo "/home/me/projects/MyApp" --instance-root "/home/me/golem-data/MyApp"
+node integration/install-codex.mjs --repo "/home/me/projects/MyApp" --instance-root "/home/me/golem-data/MyApp"
 ```
 
 The installer verifies RELEASE.json, copies the unchanged release into

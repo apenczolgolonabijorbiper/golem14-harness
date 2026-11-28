@@ -6,7 +6,7 @@ import {join,resolve,dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {createHash} from 'node:crypto';
 import {spawn} from 'node:child_process';
-import {command,python,harness} from '../../server/test-fixtures.mjs';
+import {command,node,harness} from '../../server/test-fixtures.mjs';
 import {createAdapter} from '../../adapters/reference-git/adapter.mjs';
 import {writeCandidate} from '../../processor/write-candidate.mjs';
 import {run as memoryTool,loadMemory} from '../../processor/memory-tool.mjs';
@@ -39,21 +39,21 @@ function setup(t,mode='empty'){
 scenario('portable-goldens',async()=>{const r=await verify();assert.ok(r.cases.length>=35);});
 scenario('init-index',t=>{
   const f=setup(t),destination=join(f.temporary,'fresh');
-  python([join(harness,'processor/init-instance.py'),'--root',destination]);
+  node([join(harness,'processor/init-instance.mjs'),'--root',destination]);
   for(const p of ['instance/purpose.md','memory/index.md','questions/queue.md','memory/processing-lock.json'])assert.deepEqual(readFileSync(join(destination,p)),f.read(p));
-  assert.throws(()=>python([join(harness,'processor/init-instance.py'),'--root',destination]),/absent or empty/);
+  assert.throws(()=>node([join(harness,'processor/init-instance.mjs'),'--root',destination]),/absent or empty/);
   const original=f.observe(),lease=f.read('memory/processing-lock.json'),ledger=f.read('memory/processed.json');
   for(const vector of JSON.parse(readFileSync(join(base,'index-cases.json')))){
     f.write(original.path,vector.source_utf8);
-    const output=python([join(harness,'processor/process.py'),'--root',f.root]);assert.equal(output,vector.expected_stdout.trim());
+    const output=node([join(harness,'processor/process.mjs'),'--root',f.root]);assert.equal(output,vector.expected_stdout.trim());
     assert.equal(f.read(`evidence/${sourceId}.json`).toString(),vector.expected_evidence_utf8);
     rmSync(join(f.root,`evidence/${sourceId}.json`));
   }
-  python([join(harness,'processor/process.py'),'--root',f.root]);
+  node([join(harness,'processor/process.mjs'),'--root',f.root]);
   const output=f.read(`evidence/${sourceId}.json`),e=JSON.parse(output);
   assert.equal(e.sha256,hash(f.read(original.path)));assert.equal(e.text,'Beta ships.');assert.equal(e.interpretation,'not_inferred');
   f.write('evidence/.golem-index-orphan.tmp','unfinished');
-  python([join(harness,'processor/process.py'),'--root',f.root]);
+  node([join(harness,'processor/process.mjs'),'--root',f.root]);
   assert.deepEqual(f.read(`evidence/${sourceId}.json`),output);assert.equal(existsSync(join(f.root,'evidence/.golem-index-orphan.tmp')),false);
   assert.deepEqual(f.read('memory/processing-lock.json'),lease);assert.deepEqual(f.read('memory/processed.json'),ledger);
 });

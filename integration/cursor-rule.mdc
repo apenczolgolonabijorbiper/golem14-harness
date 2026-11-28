@@ -1,0 +1,15 @@
+---
+description: Golem cognitive engine ownership and processing contract
+alwaysApply: true
+---
+
+Read the Golem integration section in the application-root AGENTS.md, then
+vendor/golem-harness/AGENTS.md and vendor/golem-harness/docs/PROCESSING.md
+before engine use. Follow the designated external instance path in root AGENTS.md.
+The entire vendor/golem-harness directory is a read-only engine maintained
+elsewhere. Application work never authorizes changes to it. Develop adapters,
+tests and application code outside it; keep runtime state and generated files
+outside it. Do not patch, fork, format or bypass engine validation. Report engine
+defects to the human. A separate explicit engine-upgrade instruction is required
+to install a verified replacement. Installation does not start inference or a
+scheduler. Follow the engine's source-integrity and atomic processing contract.

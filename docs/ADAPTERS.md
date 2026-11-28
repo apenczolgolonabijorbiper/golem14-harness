@@ -28,7 +28,7 @@ All shipped adapter/template/test files remain integrity-covered and read-only i
 an installed release. Runtime state, scratch candidates and locks go in the private
 instance or its Git metadata, never in the engine.
 
-The reference requires Node 22.12+, Python 3.12+ for initialization/tests and Git.
+The reference requires Node 22.12+ and Git. Python is maintainer build/test tooling only.
 It supports a local, dedicated instance repository root on an attached branch.
 Initialize/validate a new external instance, git init it, and commit the initialized
 files before using the CLI. Existing instances are never initialized again. A data
@@ -189,8 +189,7 @@ This prints each synchronous child command before starting it; the last line nam
 an unresponsive child. Tracing is opt-in: command arguments and child diagnostics
 can contain private data. Remove the setting after diagnosis.
 
-Fixtures select `py -3` on Windows; set GOLEM_PYTHON to one real executable path
-when needed. No `python3` alias is required. Tests close child stdin, disable Git
+Runtime fixtures use the current Node executable. Tests close child stdin, disable Git
 terminal/credential prompts, and isolate fixture hooks and commit signing from
 user configuration. A synchronous fixture or adapter Git/validator child has a
 60-second limit; an entire CLI invocation (which can run many Git commands) has
