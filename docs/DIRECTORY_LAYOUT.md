@@ -42,16 +42,16 @@ Use the following corresponding examples, replacing the roots with your paths:
 Run from the extracted release on Windows:
 
 ```powershell
-py integration/install-codex.py --repo "C:/Projects/MyApp" --instance-root "C:/GolemData/MyApp"
+node integration/install-codex.mjs --repo "C:/Projects/MyApp" --instance-root "C:/GolemData/MyApp"
 ```
 
 Run from the extracted release on Linux or macOS:
 
 ```sh
-python3 integration/install-codex.py --repo "/home/me/projects/MyApp" --instance-root "/home/me/golem-data/MyApp"
+node integration/install-codex.mjs --repo "/home/me/projects/MyApp" --instance-root "/home/me/golem-data/MyApp"
 ```
 
-Use install-cursor.py with the same two paths for Cursor. Directory names such as
+Use install-cursor.mjs with the same two paths for Cursor. Directory names such as
 MyApp and GolemData are examples you can change. Earlier examples used
 private-instance and MyApp-golem for the same instance data role. Those names
 have no special meaning to the harness. In generic examples, /absolute/application

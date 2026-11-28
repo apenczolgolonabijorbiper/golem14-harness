@@ -1,4 +1,4 @@
-# Golem native cognitive harness — 0.15.0
+# Golem native cognitive harness — 0.16.0
 
 A host-independent cognitive harness inspired by Stanisław Lem’s Golem XIV and Xemantic’s work on metacognitive AI. The host LLM performs
 interpretation by following AGENTS.md and docs/PROCESSING.md; the executable core
@@ -38,7 +38,7 @@ for the full mapping, both layouts and how sharing an instance works.
 
 ## Codex CLI and Desktop
 
-Run `python3 integration/install-codex.py --repo /home/me/projects/MyApp --instance-root /home/me/golem-data/MyApp`
+Run `node integration/install-codex.mjs --repo /home/me/projects/MyApp --instance-root /home/me/golem-data/MyApp`
 from a clean extracted release, then start Codex in the application folder.
 The installer verifies and copies the engine and appends shared instructions to
 the application-root AGENTS.md. For guided setup, ask Codex to read
@@ -63,7 +63,7 @@ appends a clearly marked section to the application root AGENTS.md, and creates
 existing root instructions are preserved. Use absolute paths (PowerShell example):
 
 ```powershell
-py integration/install-cursor.py --repo "C:/Projects/MyApp" --instance-root "C:/GolemData/MyApp"
+node integration/install-cursor.mjs --repo "C:/Projects/MyApp" --instance-root "C:/GolemData/MyApp"
 ```
 
 An identical rerun makes no changes. Conflicting engine versions, edited managed
@@ -98,16 +98,12 @@ the installed version if recorded. Retain the existing instance path and Cursor
 rule. The first-install command refuses a different installed version. There
 is no data migration or initializer step for an upgrade.
 
-Install Python 3.12+ and Node 22.12+ (tested here on Node 24). No npm or pip packages
-are required. Run from the extracted package directory; use `py` instead of
-`python3` on Windows where appropriate. Node test fixtures use `GOLEM_PYTHON`
-when set (an executable path, including paths with spaces), otherwise `py -3` on
-Windows or `python3` elsewhere. The release builder passes its own Python executable
-to Node fixtures unless you explicitly set `GOLEM_PYTHON`. Errors name the command
-that failed. Choose a NEW private instance directory:
+Install Node 22.12+ (tested here on Node 24). No npm or pip packages
+are required for installation or runtime operation. Python 3.12+ is used only
+by maintainer build/test tooling. Run from the extracted package directory. Choose a NEW private instance directory:
 
 ```sh
-python3 processor/init-instance.py --root ../my-instance
+node processor/init-instance.mjs --root ../my-instance
 node --test server/memory-core.test.mjs
 node processor/memory-tool.mjs validate --root ../my-instance
 node processor/memory-tool.mjs stats --root ../my-instance
@@ -132,17 +128,16 @@ Synthetic Alice visited Test City.
 Save as inbox/00000000-0000-4000-8000-000000000001.md. Index it:
 
 ```sh
-python3 processor/process.py --root ../my-instance
+node processor/process.mjs --root ../my-instance
 ```
 
-The JSON reference indexer locks one private instance across local processes and
-publishes each evidence JSON atomically. Concurrent invocations refuse promptly
-with `Indexer busy:` (exit 1); retry after the owner exits. Existing evidence is
-preserved. A killed owner releases its OS lock; the next run cleans unpublished
-temporaries. Keep `.golem-indexer.lock` in place even when idle. See the
-[indexer concurrency and recovery contract](docs/PROCESSING.md#json-reference-indexer-concurrency)
-for platform boundaries and recovery. Indexing is separate from cognition leases
-and atomic completion of an analysis cycle.
+The Node JSON reference indexer excludes concurrent local processes with private
+PID/UUID ticket registers. Contention refuses promptly with `Indexer busy:` (exit
+1); retry after the owner exits. A killed owner's register and unpublished
+reserved temporaries are recovered on the next run. Finalized evidence remains
+unchanged. Use one OS identity/PID namespace on a local filesystem; pause old
+Python indexers before upgrading. See the [concurrency contract](docs/PROCESSING.md#json-reference-indexer-concurrency).
+Indexing is separate from cognition leases and atomic analysis completion.
 
 Then give an authorized LLM agent this package's AGENTS.md and processing protocol,
 read/write access to ONLY the new instance, and a storage adapter capable of the
@@ -180,7 +175,7 @@ its generator and template remain repository-only. See the
 From the maintainer checkout run:
 
 ```sh
-python3 tools/build-release.py --output ../golem-cognitive-harness-0.15.0.zip
+python3 tools/build-release.py --output ../golem-cognitive-harness-0.16.0.zip
 ```
 
 The builder rejects README title/archive examples or release-note titles that

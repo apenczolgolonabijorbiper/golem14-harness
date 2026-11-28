@@ -38,7 +38,7 @@ class ParityTest(unittest.TestCase):
             path.unlink()
 
     def test_source_spec_and_golden_edits_are_rejected(self):
-        for name, diagnostic in [('processor/process.py', 'Reference drift'),
+        for name, diagnostic in [('processor/process.mjs', 'Reference drift'),
                                  ('portability/specs/MEMORY.sudo.md', 'Specification/fixture drift'),
                                  ('portability/fixtures/cases.json', 'Specification/fixture drift')]:
             path = self.root / name
@@ -52,13 +52,13 @@ class ParityTest(unittest.TestCase):
 
     def test_refreshing_only_source_pin_cannot_bypass_evidence(self):
         manifest_path = self.root / 'portability/manifest.json'
-        source = self.root / 'processor/process.py'
+        source = self.root / 'processor/process.mjs'
         old_manifest, old_source = manifest_path.read_bytes(), source.read_bytes()
         try:
             source.write_bytes(old_source + b'\n')
             manifest = json.loads(old_manifest)
             for row in manifest['inventory']:
-                if row['path'] == 'processor/process.py':
+                if row['path'] == 'processor/process.mjs':
                     row['sha256'] = P.sha(source.read_bytes())
             manifest_path.write_text(json.dumps(manifest))
             with self.assertRaisesRegex(ValueError, 'Stale traceability/evidence'):

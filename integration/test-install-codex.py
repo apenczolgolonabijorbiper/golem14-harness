@@ -18,7 +18,7 @@ def snapshot(root):
 
 def install(host, repo, instance, success=True):
     result = subprocess.run(
-        [sys.executable, str(SOURCE / f'integration/install-{host}.py'),
+        ['node', str(SOURCE / f'integration/install-{host}.mjs'),
          '--repo', str(repo), '--instance-root', str(instance)],
         capture_output=True, text=True)
     assert (result.returncode == 0) == success, result.stdout + result.stderr

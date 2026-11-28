@@ -1,4 +1,4 @@
-// Node validation bridge for the Python fresh initializer; stdout is a captured byte snapshot.
+// Public source snapshot helper for host tools; stdout is a captured byte snapshot.
 import {readApplicationSource,readPurpose,sourceMetadata} from '../server/application-source.mjs';
 const [source,purpose]=process.argv.slice(2);
 try {

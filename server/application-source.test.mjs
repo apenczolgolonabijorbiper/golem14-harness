@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {join,dirname} from 'node:path';
 import {mkdtempSync,realpathSync,readFileSync,writeFileSync,mkdirSync,rmSync,existsSync,symlinkSync,readdirSync} from 'node:fs';
 import {tmpdir} from 'node:os';
-import {fixture,python,harness} from './test-fixtures.mjs';
+import {fixture,node,harness} from './test-fixtures.mjs';
 import {readApplicationSource,compareSource} from './application-source.mjs';
 import {loadGuidance,guidanceIdentity} from './guidance.mjs';
 import {run} from '../processor/memory-tool.mjs';
@@ -18,7 +18,7 @@ export function bundle(t,{purpose=true}={}){
 const inventory=root=>Object.fromEntries(readdirSync(root,{recursive:true,withFileTypes:true}).filter(e=>e.isFile()&&!e.parentPath?.includes('.git')).map(e=>{const path=join(e.parentPath??e.path,e.name);return [path,readFileSync(path).toString('base64')];}));
 test('source initialization captures bytes, purpose, all section selectors and identity',async t=>{
   const src=bundle(t),f=fixture(t);rmSync(f.root,{recursive:true});
-  const initialized=JSON.parse(python([join(harness,'processor/init-instance.py'),'--root',f.root,'--profile-from',src.root,'--node',process.execPath,'--json']));
+  const initialized=JSON.parse(node([join(harness,'processor/init-instance.mjs'),'--root',f.root,'--profile-from',src.root,'--json']));
   assert.equal(initialized.root,f.root);assert.equal(initialized.source.files.length,5);
   const captured=await readApplicationSource(src.root);
   for(const [path,bytes]of captured.files)assert.deepEqual(readFileSync(join(f.root,path)),bytes);
@@ -32,7 +32,7 @@ test('source initialization captures bytes, purpose, all section selectors and i
 });
 test('source errors and conflicting options expose no partial destination',async t=>{
   const src=bundle(t),f=fixture(t);rmSync(f.root,{recursive:true});
-  const initialize=(extra=[])=>python([join(harness,'processor/init-instance.py'),'--root',f.root,'--profile-from',src.root,...extra]);
+  const initialize=(extra=[])=>node([join(harness,'processor/init-instance.mjs'),'--root',f.root,'--profile-from',src.root,...extra]);
   assert.throws(()=>initialize(['--profile']));assert.equal(existsSync(f.root),false);
   assert.throws(()=>initialize(['--purpose-from',join(src.root,'purpose.md')]));assert.equal(existsSync(f.root),false);
   for(const path of ['../outside.md','instance/purpose.md','memory/graph.json','profiles/../bad.md','/absolute.md']){src.write('golem.config.json',{schema_version:1,profile:{path}});assert.throws(()=>initialize());assert.equal(existsSync(f.root),false);}
@@ -42,9 +42,9 @@ test('source errors and conflicting options expose no partial destination',async
 });
 test('purpose-only initialization leaves profile unselected; omitted purpose retains stub',async t=>{
   const src=bundle(t),f=fixture(t);rmSync(f.root,{recursive:true});
-  python([join(harness,'processor/init-instance.py'),'--root',f.root,'--purpose-from',join(src.root,'purpose.md')]);
+  node([join(harness,'processor/init-instance.mjs'),'--root',f.root,'--purpose-from',join(src.root,'purpose.md')]);
   assert.deepEqual(readFileSync(join(f.root,'instance/purpose.md')),readFileSync(join(src.root,'purpose.md')));assert.equal((await run(['profile-check','--root',f.root])).state,'none');
-  rmSync(f.root,{recursive:true});rmSync(join(src.root,'purpose.md'));python([join(harness,'processor/init-instance.py'),'--root',f.root,'--profile-from',src.root]);assert.match(readFileSync(join(f.root,'instance/purpose.md'),'utf8'),/Define the purpose/);
+  rmSync(f.root,{recursive:true});rmSync(join(src.root,'purpose.md'));node([join(harness,'processor/init-instance.mjs'),'--root',f.root,'--profile-from',src.root]);assert.match(readFileSync(join(f.root,'instance/purpose.md'),'utf8'),/Define the purpose/);
 });
 test('comparison reports stale, missing and drift independently and preserves omitted purpose',async t=>{
   const src=bundle(t,{purpose:false}),f=fixture(t,{profile:true}),before=f.read('instance/purpose.md');

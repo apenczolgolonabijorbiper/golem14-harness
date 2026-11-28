@@ -13,17 +13,12 @@ collisions. The purpose.md alias maps only to canonical instance/purpose.md. Omi
 preserves purpose; explicit missing purpose fails; it never means delete.
 
 ```sh
-python3 processor/init-instance.py --root ../fresh --profile-from ../app/golem-guidance --node node --json
-python3 processor/init-instance.py --root ../purpose-only --purpose-from ../app/purpose.md
+node processor/init-instance.mjs --root ../fresh --profile-from ../app/golem-guidance --json
+node processor/init-instance.mjs --root ../purpose-only --purpose-from ../app/purpose.md
 ```
 
-Python 3.12+ and Node 22.12+ are required for source validation. --node is a single
-executable argv element. --profile conflicts with --profile-from. Bundle purpose
-conflicts with --purpose-from. Without purpose input the initializer retains its
-stub. --json returns destination and metadata from the captured installed bytes.
-Validation finishes before staging/publication; absent/empty destinations remain
-absent/empty on validation failure. Nonempty instances are never reset. Use canonical
-paths without linked ancestors (including canonical temporary paths on macOS).
+Node 22.12+ performs source validation directly in the initializer; no Python
+interpreter or `--node` bridge option is needed.
 
 The public source-bundle.mjs helper returns base64 bytes and metadata to host tools;
 compareSource reports per-file sync/missing/differs and separate stale selected

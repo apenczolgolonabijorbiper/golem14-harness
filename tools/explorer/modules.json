@@ -9,13 +9,13 @@
       "run: Parses CLI options, validates state and dispatches the selected operation."
     ]
   ],
-  "processor/process.py": [
+  "processor/process.mjs": [
     "Evidence indexer",
     "Processing",
     "Creates evidence/UUID.json from inbox observations. Existing evidence is skipped. interpretation is not_inferred; indexing never creates semantic claims.",
     []
   ],
-  "processor/init-instance.py": [
+  "processor/init-instance.mjs": [
     "Instance initializer",
     "Integration",
     "Creates a fresh canonical graph v2, hypotheses v1, ledger, idle lease, queues, purpose and directories. --profile creates and selects a profile stub. Refuses a nonempty destination.",
@@ -94,19 +94,19 @@
     "Explicitly failing delegation scaffold for an application-owned backend. Supplies the interface, not working storage.",
     []
   ],
-  "integration/install-host.py": [
+  "integration/install-host.mjs": [
     "Shared host installer",
     "Integration",
     "Verifies release manifest hashes and installs an intact engine plus managed host instructions. Preserves unrelated application content; refuses conflicting installations.",
     []
   ],
-  "integration/install-codex.py": [
+  "integration/install-codex.mjs": [
     "Codex installer",
     "Integration",
     "Host entry point for Codex CLI/Desktop; calls shared installer. Discovery must be checked in a fresh client session.",
     []
   ],
-  "integration/install-cursor.py": [
+  "integration/install-cursor.mjs": [
     "Cursor installer",
     "Integration",
     "Installs shared instructions and an alwaysApply Cursor MDC rule. It does not initialize memory or start inference.",
@@ -191,5 +191,14 @@
     "Interface",
     "Explicit JSON/Git selection and logical claim/context/apply/recover/export commands.",
     []
+  ],
+  "processor/index-core.cjs": [
+    "Node evidence core",
+    "Processing",
+    "Synchronous embedding API and CLI-shared evidence indexing; per-process bakery exclusion, atomic writes and dead-owner recovery.",
+    [
+      "index: Preserve source bytes and existing evidence; return the indexed count.",
+      "indexerLock: Nonblocking PID/UUID ticket exclusion on a local filesystem."
+    ]
   ]
 }

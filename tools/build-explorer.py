@@ -30,10 +30,10 @@ def build(output):
     for directory in ['processor', 'server', 'adapters', 'integration', 'tools', 'cognition']:
         for path in (ROOT / directory).rglob('*'):
             name = path.relative_to(ROOT).as_posix()
-            if (path.suffix in {'.py', '.mjs'} and path.is_file()
+            if (path.suffix in {'.py', '.mjs', '.cjs'} and path.is_file()
                     and not path.name.startswith('test-') and '.test.' not in path.name
                     and path.name != 'test-fixtures.mjs'
-                    and not name.startswith('tools/explorer/')
+                    and not name.startswith(('tools/explorer/', 'tools/legacy-python/'))
                     and path.name not in {'build-explorer.py', 'test-explorer.py'}):
                 paths.append(name)
     modules = []

@@ -10,7 +10,9 @@ import unittest
 from importlib import import_module
 
 sys.dont_write_bytecode = True
-initialize = import_module('init-instance').initialize
+def initialize(root):
+    subprocess.run(['node', str(Path(__file__).with_name('init-instance.mjs')), '--root', str(root)], check=True, capture_output=True)
+    return root
 CLI = Path(__file__).with_name('memory-tool.mjs')
 SOURCE_ID = '00000000-0000-4000-8000-000000000001'
 RECORDED_AT = '2026-01-01T12:00:00.000Z'

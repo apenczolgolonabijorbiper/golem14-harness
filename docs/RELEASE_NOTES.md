@@ -1,3 +1,19 @@
+# Golem XIV Harness 0.16.0
+
+Node-only installation and deployed runtime. Python remains maintainer tooling.
+
+- Replace `processor/init-instance.py` and `processor/process.py` with Node entry
+  points and expose the synchronous index core for existing Node hosts.
+- Replace Cursor/Codex installers with Node, preserving verification, instruction
+  boundaries, idempotency and conflict refusal.
+- Semi-breaking CLI/runtime change: no Python launchers or fallback. Pause old
+  indexers and replace the complete engine. Canonical memory formats are retained.
+- Preserve exact observation hashes/evidence bytes, atomic publication and killed
+  owner recovery. Node indexers use private per-process ticket registers instead
+  of Python OS file locks; mixed old/new indexers are unsupported.
+- Retain synthetic paired performance evidence and Python baseline under
+  repository-only tooling; neither baseline is shipped as a runtime alternative.
+
 # Golem XIV Harness 0.15.0
 
 Released 2026-11-25.

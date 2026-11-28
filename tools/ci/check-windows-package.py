@@ -45,7 +45,7 @@ def check(directory, node_version):
         raise RuntimeError(f'Expected Node {node_version}, found {actual}')
     with tempfile.TemporaryDirectory(prefix='harness release ') as temp:
         stage = verify_and_extract(package, Path(temp))
-        subprocess.run(['node', '--test', 'server/subprocess.test.mjs'],
+        subprocess.run(['node', '--test', 'server/subprocess.test.mjs', 'processor/indexer.test.mjs'],
                        cwd=stage, env=env, check=True)
         subprocess.run(['node', '--input-type=module', '-e',
                         "import {fixture} from './server/test-fixtures.mjs';"

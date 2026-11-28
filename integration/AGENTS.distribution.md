@@ -35,7 +35,7 @@ See docs/CHATGPT_WORK.md for the starting and resume prompts.
 
 ## Codex CLI and Desktop operation
 
-For an explicit first-install request, run integration/install-codex.py from a
+For an explicit first-install request, run integration/install-codex.mjs from a
 clean extracted release with --repo and --instance-root. It installs the verified
 engine and a shared application-root AGENTS.md block. Follow docs/CODEX.md for
 CLI launch, Desktop project selection, sandbox access and discovery checks.
@@ -44,7 +44,7 @@ session for inference. The application supplies persistent storage transactions.
 
 ## Cursor Desktop / Claude operation
 
-For an explicit first-install request, run integration/install-cursor.py from a
+For an explicit first-install request, run integration/install-cursor.mjs from a
 clean extracted release with the human's application and private-instance paths.
 It copies a verified, unchanged engine and writes application integration files
 outside it. This bootstrap operation is allowed; it does not authorize changes to

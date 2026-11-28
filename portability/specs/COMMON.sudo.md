@@ -22,9 +22,8 @@ Contract LocalHarness(version = "1.1.0") {
 
 Legacy CLIs use argv arrays, no shell interpolation. Node CLIs accept unique
 `--key value` pairs, refuse unknown, duplicate, missing options; booleans are the
-literal strings `true`/`false`. Python init/index use their documented argparse
-flags (`--profile`/`--json` are switches); usage errors exit 2, operational errors
-exit 1. Single-result JS CLIs print two-space JSON plus LF on stdout and exit 0;
+literal strings `true`/`false`. Node init/index use their documented parseArgs
+flags (`--profile`/`--json` are switches); usage and operational errors exit 1. Single-result JS CLIs print two-space JSON plus LF on stdout and exit 0;
 errors print a diagnostic on stderr and exit 1. Merge prints its conflict report
 on stdout and exits 1 if conflicts exist. Provider export emits compact JSONL.
 Cognitive JSONL emits one compact `{id,result}` or `{error}` response per input
@@ -54,8 +53,9 @@ respect complete code points within byte budgets.
 
 Persistent JS JSON: two spaces, LF, final LF, insertion order of object keys,
 arrays preserved, unescaped Unicode and JSON escapes for controls/quotes/backslash.
-Init/index Python JSON has the same whitespace and retains Python JSON number
-formatting for decoded numeric question text (for example 1.0 remains 1.0).
+Init/index also use JS JSON serialization, including JSON.parse semantics for
+decoded question text. Producers should supply question text as JSON strings;
+non-string JSON numbers use finite IEEE-754 serialization (1.0 becomes 1).
 Fixtures are authoritative for supported finite JSON values. Do not round JSON numeric identities. Immutable source bytes
 and opaque artifacts are never reserialized. New interoperable files should use
 finite IEEE-754-safe JSON values; hashes in existing state always bind actual bytes.

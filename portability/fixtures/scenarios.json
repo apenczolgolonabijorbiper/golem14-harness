@@ -65,7 +65,13 @@
         "adapters/conformance/adapter.test.mjs",
         "adapters/conformance/provider.test.mjs"
       ],
-      "input_vectors": "index-cases.json"
+      "input_vectors": "index-cases.json",
+      "node_runtime": {
+        "initialize": "processor/init-instance.mjs",
+        "index": "processor/process.mjs",
+        "lock": "private PID/UUID ticket registers; dead-owner recovery; old Python indexers unsupported",
+        "fault_suite": "processor/indexer.test.mjs"
+      }
     },
     {
       "id": "draft-transaction",

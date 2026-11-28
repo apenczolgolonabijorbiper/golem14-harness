@@ -31,7 +31,7 @@ With Python 3.12+ and Node 22.12+, run from the installed harness directory with
 paths adjusted to your application and disposable empty instance:
 
 ```sh
-python3 processor/init-instance.py --root ../fresh --profile-from ../golem-guidance --node node
+node processor/init-instance.mjs --root ../fresh --profile-from ../golem-guidance
 node processor/memory-tool.mjs profile-check --root ../fresh --source ../golem-guidance
 node processor/memory-tool.mjs validate --root ../fresh
 ```

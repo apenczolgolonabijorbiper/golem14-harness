@@ -62,7 +62,7 @@ class ScopeTests(unittest.TestCase):
             'tools/explorer/persist.py', 'tools/ci/validation-scope.py']))
 
     def test_mixed_runtime_changes_always_get_platforms(self):
-        for path in ['server/memory-model.mjs', 'processor/process.py',
+        for path in ['server/memory-model.mjs', 'processor/process.mjs', 'processor/index-core.cjs',
                      'schemas/memory-graph.schema.json', 'adapters/template/adapter.mjs',
                      'integration/AGENTS.distribution.md', 'integration/SETUP.work.md',
                      'tools/build-release.py', 'tools/benchmark-cycle.mjs', 'VERSION',

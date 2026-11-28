@@ -15,7 +15,7 @@ class ObservationPortabilityTest(unittest.TestCase):
     def setUp(self):
         self.work = Path(self.enterContext(tempfile.TemporaryDirectory())).resolve()
         self.source = self.work / 'source'
-        self.run_python('init-instance.py', '--root', self.source)
+        self.run_python('init-instance.mjs', '--root', self.source)
         self.ids = []
         for day in (1, 2):
             source_id = f'00000000-0000-4000-8000-{day:012d}'
@@ -23,10 +23,10 @@ class ObservationPortabilityTest(unittest.TestCase):
             recorded_at = f'2026-01-0{day}T00:00:00.000Z'
             note = f'---\nid: {source_id}\nrecorded_at: {recorded_at}\n---\n\nSame synthetic text.\n'
             (self.source / 'inbox' / f'{source_id}.md').write_bytes(note.encode('utf-8'))
-        self.run_python('process.py', '--root', self.source)
+        self.run_python('process.mjs', '--root', self.source)
 
     def run_python(self, script, *args):
-        subprocess.run([sys.executable, str(PROCESSOR / script), *map(str, args)],
+        subprocess.run(['node', str(PROCESSOR / script), *map(str, args)],
                        check=True, capture_output=True)
 
     def stats(self, root):
@@ -73,7 +73,7 @@ class ObservationPortabilityTest(unittest.TestCase):
         self.assertEqual(self.stats(self.source)['processed'], 1)
 
         target = self.work / 'target'
-        self.run_python('init-instance.py', '--root', target)
+        self.run_python('init-instance.mjs', '--root', target)
         for relative in (row['source_file'], f'evidence/{source_id}.json'):
             shutil.copyfile(self.source / relative, target / relative)
         totals = self.stats(target)

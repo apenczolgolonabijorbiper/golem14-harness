@@ -39,7 +39,7 @@ even if this batch does not select them. Observation kinds never become paths.
 For a new empty instance, initialize with --profile to create and select a stub:
 
 ```sh
-python3 processor/init-instance.py --root ../private-instance --profile
+node processor/init-instance.mjs --root ../private-instance --profile
 ```
 
 The initializer still refuses nonempty destinations. For an existing instance,
@@ -177,8 +177,8 @@ and relocate an older broadly located selection before using this installer.
 No runtime file discovery or automatic activation is introduced.
 
 ```sh
-python3 processor/init-instance.py --root ../fresh --profile-from ../app/golem-guidance --node node
-python3 processor/init-instance.py --root ../purpose-only --purpose-from ../app/purpose.md
+node processor/init-instance.mjs --root ../fresh --profile-from ../app/golem-guidance
+node processor/init-instance.mjs --root ../purpose-only --purpose-from ../app/purpose.md
 node processor/memory-tool.mjs profile-check --root ../fresh --source ../app/golem-guidance
 node processor/memory-tool.mjs profile-check --root ../fresh --kinds feature_profile,git_commit_digest
 node processor/memory-tool.mjs vocabulary-survey --root ../fresh --single-valued has_state --prefix tracker:WI-

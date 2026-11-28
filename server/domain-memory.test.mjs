@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync,symlinkSync} from 'node:fs';
 import {join} from 'node:path';
-import {fixture,command,harness,python} from './test-fixtures.mjs';
+import {fixture,command,harness,node} from './test-fixtures.mjs';
 import {loadProfile,sha256} from './application-profile.mjs';
 import {schemaErrors,validateMemory,retrieveContext,collectWarnings,warningCodes} from './memory-model.mjs';
 
@@ -28,7 +28,7 @@ test('profile selects only approved sections, validates vocabulary and forbids u
 });
 test('initializer opt-in never resets or overwrites an existing instance',t=>{
   const f=fixture(t,{profile:true});const before=f.read('profiles/default.md');
-  assert.throws(()=>python([join(harness,'processor/init-instance.py'),'--root',f.root,'--profile']),/never reset/);assert.equal(f.read('profiles/default.md'),before);
+  assert.throws(()=>node([join(harness,'processor/init-instance.mjs'),'--root',f.root,'--profile']),/never reset/);assert.equal(f.read('profiles/default.md'),before);
 });
 test('kind can be added once and then is protected by previous graph validation',()=>{
   const graph={schema_version:2,updated_at:'2026-01-01T00:00:00Z',sources:[],entities:[{id:'ent-record',type:'other',label:'Record',aliases:[],source_ids:[],created_at:'2026-01-01T00:00:00Z',uncertainty:[]}],claims:[]};

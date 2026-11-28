@@ -51,7 +51,7 @@ test('identical purpose and profile bytes give identity independent of repositor
 
 test('CLI honors selected Git executable across child operations',async t=>{
  const f=fixture(t);await assert.rejects(()=>cli(['status','--instance',f.root,'--git','missing-golem-git']));
- const executable=command(process.platform==='win32'?'where':'which',['git']).split(/\r?\n/)[0];assert.equal((await cli(['status','--instance',f.root,'--git',executable,'--node',process.execPath])).contract_version,1);
+ const executable=command(process.platform==='win32'?'where':'which',['git']).split(/\r?\n/)[0];assert.equal((await cli(['status','--instance',f.root,'--git',executable])).contract_version,1);
 });
 
 test('captured install bytes remain consistent when the reviewed source changes before publication',async t=>{

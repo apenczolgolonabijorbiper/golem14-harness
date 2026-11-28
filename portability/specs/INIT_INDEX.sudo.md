@@ -2,6 +2,7 @@
 
 ## init
 
+Node CLI: `node processor/init-instance.mjs --root PATH`.
 Inputs: absent/empty absolute destination, optional profile-template boolean OR
 reviewed profile bundle, optional purpose file, optional JSON result flag.
 `--profile` and `--profile-from` conflict. Source validation follows PROFILE.
@@ -42,10 +43,20 @@ indexer below accepts it. These readers are separate contracts, not aliases.
 
 ## index
 
+Node CLI: `node processor/process.mjs --root PATH`.
 Input `--root`. No inference, no Git, no cognition lease edits. Acquire a
-nonblocking OS exclusive lock on persistent `.golem-indexer.lock` (mode 0600 on
-POSIX); Windows locks first byte, POSIX flock. OS releases ownership on process
-exit; NEVER unlink this lock inode. Contention fails with busy, exit 1.
+nonblocking Node local-process bakery lock using a permanent private
+`.golem-indexer-locks/` directory and one uniquely named PID/UUID register per
+contender. Create an exclusive empty register (choosing), publish a positive
+integer ticket followed by LF, then refuse while another live register is
+choosing or has a lower (ticket, register-name) pair. On refusal remove only
+one's own register. On completion remove only one's own register. Treat incomplete
+register reads as choosing. Probe PID liveness; remove an individually identified
+dead register only on ESRCH. EPERM and PID reuse fail closed. No shared lock inode
+is replaced or stolen. A killed owner leaves a dead register recovered by the next
+contender. This requires a local filesystem and one OS PID namespace/identity;
+network filesystems and mixed Python/Node indexers on the same instance are not
+supported. Contention fails with busy, exit 1. No inference or cognition lease edits.
 Under lock, create evidence directory if missing; remove only reserved unpublished
 `evidence/.golem-index-*.tmp`. Visit direct inbox `*.md` paths in filename order.
 Hash original bytes, decode UTF-8 and normalize CRLF/CR to LF FOR PARSING ONLY.

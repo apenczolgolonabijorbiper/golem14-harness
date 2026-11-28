@@ -89,8 +89,8 @@ An unanswered required question remains pending.
 
 For a new instance, check that the destination is absent or empty and outside the
 installed engine. With an authorized local execution environment, run the existing
-processor/init-instance.py from the selected harness with --root pointing at that
-exact destination. Use Python 3.12+ and Node 22.12+. Validate the initialized state
+processor/init-instance.mjs from the selected harness with --root pointing at that
+exact destination. Use Node 22.12+. Validate the initialized state
 with processor/memory-tool.mjs validate --root INSTANCE_ROOT and inspect stats.
 Use argument arrays or proper shell quoting for paths.
 

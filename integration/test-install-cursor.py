@@ -6,7 +6,7 @@ import sys
 import tempfile
 
 source = Path(__file__).resolve().parents[1]
-script = source / 'integration/install-cursor.py'
+script = source / 'integration/install-cursor.mjs'
 def hashes(root):
     return {p.relative_to(root).as_posix(): hashlib.sha256(p.read_bytes()).hexdigest()
             for p in root.rglob('*') if p.is_file()}
@@ -21,7 +21,7 @@ with tempfile.TemporaryDirectory() as temporary:
     (rules / 'existing.mdc').write_text('Preserve unrelated rule')
     before_source = hashes(source)
     def run(ok=True):
-        result = subprocess.run([sys.executable, str(script), '--repo', str(repo),
+        result = subprocess.run(['node', str(script), '--repo', str(repo),
                                  '--instance-root', str(instance)], capture_output=True, text=True)
         assert (result.returncode == 0) == ok, result.stdout + result.stderr
         return result
@@ -40,7 +40,7 @@ with tempfile.TemporaryDirectory() as temporary:
     run(False)
     assert hashes(repo) == before
     # Restore the rule then detect a damaged engine.
-    (rules / 'golem-harness.mdc').write_bytes((source / 'integration/install-cursor.py').read_bytes())
+    (rules / 'golem-harness.mdc').write_bytes((source / 'integration/install-cursor.mjs').read_bytes())
     # Reset rule by removing it; the modified engine must still block recreation.
     (rules / 'golem-harness.mdc').unlink()
     (repo / 'vendor/golem-harness/AGENTS.md').write_text('Altered engine')

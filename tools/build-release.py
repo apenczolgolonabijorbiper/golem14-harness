@@ -12,7 +12,7 @@ import runpy
 
 ROOT = Path(__file__).resolve().parents[1]
 FILES = (
-    'tools/assess-core-followups.mjs', 'docs/CORE_FOLLOWUP_DECISIONS.md',
+    'docs/NODE_RUNTIME.md', 'docs/validation/node-runtime-linux.json', 'tools/assess-core-followups.mjs', 'docs/CORE_FOLLOWUP_DECISIONS.md',
     'cognition/assessments/core-followups/input.json',
     'cognition/assessments/core-followups/results-linux.json',
     'server/memory-contract.mjs', 'server/provider-memory.mjs', 'server/provider-validation.mjs',
@@ -68,12 +68,12 @@ FILES = (
     'docs/PROVENANCE.md', 'docs/ARCHITECTURE_MAPPING.md',
     'docs/CHATGPT_WORK.md', 'docs/CODEX.md', 'docs/DIRECTORY_LAYOUT.md',
     'integration/SETUP.work.md', 'integration/SETUP.codex.md',
-    'integration/SETUP.instance.md', 'integration/install-host.py',
-    'integration/install-codex.py', 'integration/test-install-codex.py',
-    'integration/AGENTS.application.md', 'integration/install-cursor.py',
+    'integration/SETUP.instance.md', 'integration/install-host.mjs',
+    'integration/install-codex.mjs', 'integration/test-install-codex.py',
+    'integration/AGENTS.application.md', 'integration/install-cursor.mjs',
     'integration/test-install-cursor.py',
-    'processor/init-instance.py', 'processor/memory-tool.mjs', 'processor/process.py',
-    'processor/test-observation-portability.py', 'processor/test-validation.py', 'processor/test-indexer.py',
+    'processor/index-core.cjs', 'processor/init-instance.mjs', 'processor/memory-tool.mjs', 'processor/process.mjs',
+    'processor/test-observation-portability.py', 'processor/test-validation.py', 'processor/indexer.test.mjs', 'integration/host-block.md', 'integration/cursor-rule.mdc',
     'schemas/memory-graph.schema.json', 'schemas/hypotheses.schema.json',
     'server/operation-metrics.mjs', 'server/adapter-performance.test.mjs',
     'processor/write-candidate.mjs', 'server/candidate-writer.test.mjs',
@@ -144,7 +144,7 @@ def build(output):
         subprocess.run(['node', 'tools/portability/conformance.mjs'], cwd=stage, check=True)
         subprocess.run(['node', '--test', 'tools/portability/scenarios.test.mjs'], cwd=stage, check=True,
                        env={**os.environ, 'GOLEM_PYTHON': os.environ.get('GOLEM_PYTHON', sys.executable)})
-        subprocess.run(['node', '--test', 'server/memory-core.test.mjs', 'server/cognitive-task.test.mjs',
+        subprocess.run(['node', '--test', 'processor/indexer.test.mjs', 'server/memory-core.test.mjs', 'server/cognitive-task.test.mjs',
                         'server/cognitive-evaluation.test.mjs', 'server/application-source.test.mjs', 'server/processed-transfer.test.mjs',
                         'server/profile-inspection.test.mjs',
                         'server/software-development-template.test.mjs',
@@ -157,7 +157,7 @@ def build(output):
                        cwd=stage, check=True, env={**os.environ, 'GOLEM_PYTHON': os.environ.get('GOLEM_PYTHON', sys.executable)})
         subprocess.run(['node', 'tools/assess-core-followups.mjs'], cwd=stage, check=True,
                        env={**os.environ, 'GOLEM_PYTHON': os.environ.get('GOLEM_PYTHON', sys.executable)})
-        for script in ['tools/test-doc-contracts.py', 'processor/test-validation.py', 'processor/test-observation-portability.py', 'processor/test-indexer.py',
+        for script in ['tools/test-doc-contracts.py', 'processor/test-validation.py', 'processor/test-observation-portability.py',
                        'integration/test-install-cursor.py', 'integration/test-install-codex.py']:
             subprocess.run([sys.executable, script], cwd=stage, check=True)
     with zipfile.ZipFile(output, 'x') as archive:
